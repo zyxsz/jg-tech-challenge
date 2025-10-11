@@ -1,6 +1,6 @@
 # Teste tecnico JG
 
-Construir um Sistema de Gestão de Tarefas Colaborativo com autenticação simples, CRUD de tarefas, comentários, atribuição e notificações. O sistema deve rodar em monorepo e expor uma UI limpa, responsiva e usável. O back‑end deve ser composto por microserviços Nest que se comunicam via RabbitMQ; o acesso HTTP externo passa por um API Gateway (Nest HTTP).
+Construir um Sistema de Gestão de Tarefas Colaborativo com autenticação simples, CRUD de tarefas, comentários, atribuição e notificações. O sistema deve rodar em monorepo e expor uma UI limpa, responsiva e usável. O back‑end deve ser composto por microsserviços Nest que se comunicam via RabbitMQ; o acesso HTTP externo passa por um API Gateway (Nest HTTP).
 
 ## Apps
 
@@ -28,7 +28,7 @@ Acompanhe como foi o progresso da criação de cada serviço, todos eles estão 
 
 ## AuthService
 
-Será o microserviço reponsável por lidar com toda a parte de autenticação dos usuários sendo elas: cadastro, login, validação e refresh de tokens.
+Será o microsserviço responsável por lidar com toda a parte de autenticação dos usuários sendo elas: cadastro, login, validação e refresh de tokens.
 
 #### Estrutura
 
@@ -66,7 +66,7 @@ sequenceDiagram
 - [ ] Login do usuário (email, password)
 - [ ] Geração de tokens JWT (accessToken, refreshToken)
 - [ ] Revalidar token JWT (refreshToken)
-- [ ] Validar token JWT (acessToken)
+- [ ] Validar token JWT (accessToken)
 - [ ] Reset de senha (bônus)
 
 #### Implementações
@@ -104,5 +104,5 @@ flowchart LR
     AuthServiceUC --> HASH
     HASH --> DBInsert
     DBInsert --> GT
-    GT -->|"Responsta com tokens (accessToken, refreshToken)"| ApiGateway
+    GT -->|"Resposta com tokens (accessToken, refreshToken)"| ApiGateway
 ```
