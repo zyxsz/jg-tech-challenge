@@ -1,4 +1,3 @@
-import { addDays, addMinutes } from 'date-fns';
 import { TokenProvider } from '../providers/token.provider';
 
 export interface GenerateTokensInput {
@@ -23,11 +22,11 @@ export class GenerateTokensUseCase {
 
     const accessToken = await this.tokenProvider.generateToken(
       accessTokenPayload,
-      addMinutes(new Date(), 15),
+      60 * 15, // 15 minutos
     );
     const refreshToken = await this.tokenProvider.generateToken(
       refreshTokenPayload,
-      addDays(new Date(), 7),
+      60 * 60 * 24 * 7, // 7 dias
     );
 
     return { accessToken, refreshToken };
