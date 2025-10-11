@@ -13,18 +13,21 @@ Construir um Sistema de Gestão de Tarefas Colaborativo com autenticação simpl
 
 ## Progresso
 
-Acompanhe como foi o progresso da criação de cada serviço, todos eles estão em ordem do primeiro para o último.
+Acompanhe como foi o progresso da criação de cada serviço.
 
 - [ ] AuthService
-  - [ ] Setup inicial
-  - [ ] Criar entidades
-  - [ ] Criar use-cases
-    - [ ] Cadastro
-    - [ ] Login
-    - [ ] Gerar tokens
-    - [ ] Revalidar token
-    - [ ] Resetar senha
-  - [ ] Integrar domain com a infra
+  - [x] Criar o domínio do serviço
+    - Duração: **~2 horas**
+    - [x] Setup inicial (nestjs & jest)
+    - [x] Criar entidades
+    - [x] Criar os casos de uso
+      - [x] Cadastro
+      - [x] Login
+      - [x] Gerar tokens
+      - [x] Revalidar token
+    - [ ] Testes unitários
+  - [ ] Integrar o domínio com a infraestrutura (NestJS Microservices, JWT, Bcrypt, DB typeORM)
+  - [ ] Testes de integração/e2e
 
 ## AuthService
 
