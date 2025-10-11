@@ -1,4 +1,4 @@
-# Teste tecnico JG
+# Teste técnico JG
 
 Construir um Sistema de Gestão de Tarefas Colaborativo com autenticação simples, CRUD de tarefas, comentários, atribuição e notificações. O sistema deve rodar em monorepo e expor uma UI limpa, responsiva e usável. O back‑end deve ser composto por microsserviços Nest que se comunicam via RabbitMQ; o acesso HTTP externo passa por um API Gateway (Nest HTTP).
 
@@ -15,7 +15,7 @@ Construir um Sistema de Gestão de Tarefas Colaborativo com autenticação simpl
 
 Acompanhe como foi o progresso da criação de cada serviço.
 
-- [ ] AuthService
+- [x] AuthService
   - [x] Criar o domínio do serviço
     - Duração: **~2 horas**
     - [x] Setup inicial (nestjs & jest)
@@ -27,11 +27,12 @@ Acompanhe como foi o progresso da criação de cada serviço.
       - [x] Gerar tokens
       - [x] Revalidar token
     - [ ] Testes unitários
-  - [ ] Integrar o domínio com a infraestrutura (NestJS Microservices, JWT, Bcrypt, DB typeORM)
-    - Duração: \*
+  - [x] Integrar o domínio com a infraestrutura (NestJS Microservices, JWT, Bcrypt, DB typeORM)
+    - Duração: **~1 hora + 1/2**
+      - _+ uns 20 minutos configurando tudo do TypeORM 🥲_
     - [x] Criar repositórios/entidades utilizando TypeORM e Postgres
-    - [ ] Criar providers (Bcrypt, JWT)
-    - [ ] Criar controller
+    - [x] Criar providers (Bcrypt, JWT)
+    - [x] Criar controller
   - [ ] Testes de integração/e2e
 
 ## AuthService
