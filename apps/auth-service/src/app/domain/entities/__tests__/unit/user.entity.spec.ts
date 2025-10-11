@@ -14,21 +14,21 @@ describe('User entity unit tests', () => {
 
   it('should be able to update user email', () => {
     const newEmail = 'newEmail@example.com';
-    const updatedAt = sut.updatedAt;
+    const spyOnUpdatedAt = jest.spyOn(sut, 'updatedAt', 'set');
 
     sut.email = newEmail;
 
     expect(sut.email).toEqual(newEmail);
-    expect(sut.updatedAt).not.toEqual(updatedAt);
+    expect(spyOnUpdatedAt).toHaveBeenCalledTimes(1);
   });
 
   it('should be able to update user password', () => {
     const newPassword = 'newPassword';
-    const updatedAt = sut.updatedAt;
+    const spyOnUpdatedAt = jest.spyOn(sut, 'updatedAt', 'set');
 
     sut.password = newPassword;
 
     expect(sut.password).toEqual(newPassword);
-    expect(sut.updatedAt).not.toEqual(updatedAt);
+    expect(spyOnUpdatedAt).toHaveBeenCalledTimes(1);
   });
 });
