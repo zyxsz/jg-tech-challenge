@@ -5,7 +5,7 @@ Construir um Sistema de Gestão de Tarefas Colaborativo com autenticação simpl
 ## Apps
 
 - [api-gateway](#api-gateway)
-- [auth-service](#auth-service)
+- [auth-service](#authservice)
 
 ## Pacotes
 
@@ -20,6 +20,7 @@ Acompanhe como foi o progresso da criação de cada serviço.
     - Duração: **~2 horas**
     - [x] Setup inicial (nestjs & jest)
     - [x] Criar entidades
+    - [x] Criar repositórios
     - [x] Criar os casos de uso
       - [x] Cadastro
       - [x] Login
@@ -27,6 +28,10 @@ Acompanhe como foi o progresso da criação de cada serviço.
       - [x] Revalidar token
     - [ ] Testes unitários
   - [ ] Integrar o domínio com a infraestrutura (NestJS Microservices, JWT, Bcrypt, DB typeORM)
+    - Duração: \*
+    - [x] Criar repositórios/entidades utilizando TypeORM e Postgres
+    - [ ] Criar providers (Bcrypt, JWT)
+    - [ ] Criar controller
   - [ ] Testes de integração/e2e
 
 ## AuthService
@@ -39,7 +44,7 @@ Será o microsserviço responsável por lidar com toda a parte de autenticação
 erDiagram
     direction LR
     Users {
-        string userId PK
+        string id PK
         string email  "Unique & idx"
         string password
         date updatedAt
@@ -56,8 +61,8 @@ sequenceDiagram
     participant ApiGateway
     participant AuthService
     participant OtherService
-    ApiGateway->>AuthService: Validate token
-    AuthService->>ApiGateway: Token response
+    ApiGateway->>AuthService: Send token
+    AuthService->>ApiGateway: Token validation response
     ApiGateway->>OtherService: Send request
     OtherService->>ApiGateway: Receive response
 ```
@@ -65,7 +70,7 @@ sequenceDiagram
 #### Requisitos funcionais:
 
 - [ ] Cadastro do usuário (email, username, password)
-- [ ] Hash de senha utilizando BCrypt
+  - [ ] Hash de senha utilizando BCrypt
 - [ ] Login do usuário (email, password)
 - [ ] Geração de tokens JWT (accessToken, refreshToken)
 - [ ] Revalidar token JWT (refreshToken)

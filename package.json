@@ -1,5 +1,5 @@
 {
-  "name": "jg-tech-challange",
+  "name": "jg-tech-challenge",
   "private": true,
   "scripts": {
     "build": "turbo run build",
@@ -9,6 +9,7 @@
     "check-types": "turbo run check-types"
   },
   "devDependencies": {
+    "jest": "^30.2.0",
     "prettier": "^3.6.2",
     "turbo": "^2.5.8",
     "typescript": "5.9.2"

@@ -1,4 +1,4 @@
-import { Entity, type Optional } from '@repo/microservices/shared';
+import { Entity, type Optional } from '@repo/microservices';
 import { randomUUID } from 'node:crypto';
 
 export interface UserProps {

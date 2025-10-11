@@ -2,13 +2,21 @@
   "name": "@repo/microservices",
   "version": "0.0.0",
   "private": true,
+  "types": "./dist/index.d.ts",
   "exports": {
-    "./shared": "./src/shared/index.ts",
-    "./types": "./src/types/index.ts"
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.js"
+    },
+    "./*": {
+      "import": "./dist/*.js",
+      "require": "./dist/*.js"
+    }
   },
   "scripts": {
-    "build": "tsc",
-    "lint": "eslint . --max-warnings 0",
+    "dev": "bun run build --watch",
+    "build": "tsc -b -v",
+    "lint": "eslint \"{src,apps,libs,test}/**/*.ts\"",
     "generate:component": "turbo gen react-component",
     "check-types": "tsc --noEmit"
   },
