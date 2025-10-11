@@ -70,18 +70,22 @@ sequenceDiagram
 
 #### Requisitos funcionais:
 
-- [ ] Cadastro do usuário (email, username, password)
-  - [ ] Hash de senha utilizando BCrypt
-- [ ] Login do usuário (email, password)
-- [ ] Geração de tokens JWT (accessToken, refreshToken)
-- [ ] Revalidar token JWT (refreshToken)
-- [ ] Validar token JWT (accessToken)
+- [x] Cadastro do usuário (email, username, password)
+  - [x] Hash de senha utilizando BCrypt
+- [x] Login do usuário (email, password)
+- [x] Geração de tokens JWT (accessToken, refreshToken)
+- [x] Revalidar token JWT (refreshToken)
+- [x] Validar token JWT (accessToken)
 - [ ] Reset de senha (bônus)
 
-#### Implementações
+#### Implementações & Decisões
 
 - Nesse serviço, decidi implementar DDD (Domain-Driven Design), algo que a longo prazo, é extremamente valioso quando pensamos em flexibilidade, escalabilidade e em manutenções futuras.
   - Trade-offs: A implementação em si pode ser um pouco mais trabalhosa.
+- Realizar o gerenciamento de tokens apenas pelo JWT.
+  - Benefícios: Uma implementação bem mais simples.
+  - Trade-offs: Quando comparado com uma implementação mais complexa utilizando entidades para manter o controle dos tokens, você acaba perdendo informações/controles como: registro de localizações/data/ip, controle de acesso (revogar token), entre algumas outras coisas.
+  - Motivação: Decidi ir pelo caminho mais simples até então; como é uma aplicação um tanto quanto "simples", não vi a necessidade de realizar essa implementação mais complexa. ~~Caso sobre tempo acredito que seja um baita de um bônus.~~
 
 ## Diagramas
 
