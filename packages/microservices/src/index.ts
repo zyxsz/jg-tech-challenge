@@ -1,7 +1,1 @@
-
-
-export type A = 'd'
-
-export const Bla = {
-  bla: 'bla'
-}
+export * from "./shared/index";
