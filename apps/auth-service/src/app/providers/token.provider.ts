@@ -1,4 +1,7 @@
 export abstract class TokenProvider {
-  abstract generateToken<T>(payload: T, expiresDate: Date): Promise<string>;
-  abstract validateToken<T>(token: string): Promise<T>;
+  abstract generateToken<T extends object>(
+    payload: T,
+    expiresIn: number,
+  ): Promise<string>;
+  abstract validateToken<T extends object>(token: string): Promise<T>;
 }
