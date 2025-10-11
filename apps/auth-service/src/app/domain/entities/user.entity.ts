@@ -1,0 +1,53 @@
+import { Entity, type Optional } from '@repo/microservices/shared';
+import { randomUUID } from 'node:crypto';
+
+export interface UserProps {
+  username: string;
+  email: string;
+  password: string;
+  updatedAt: Date;
+  createdAt: Date;
+}
+
+export class User extends Entity<UserProps> {
+  public get email() {
+    return this.props.email;
+  }
+  public get password() {
+    return this.props.password;
+  }
+  public get updatedAt() {
+    return this.props.updatedAt;
+  }
+  public get createdAt() {
+    return this.props.createdAt;
+  }
+
+  public set updatedAt(v) {
+    this.props.updatedAt = v;
+  }
+
+  public set email(v) {
+    if (this.props.email !== v) this.updatedAt = new Date();
+    this.props.email = v;
+  }
+
+  public set password(v) {
+    if (this.props.password !== v) this.updatedAt = new Date();
+    this.props.password = v;
+  }
+
+  static create(
+    props: Optional<UserProps, 'updatedAt' | 'createdAt'>,
+    id?: string,
+  ) {
+    return new User(
+      {
+        ...props,
+        updatedAt: props.updatedAt ?? new Date(),
+        createdAt: props.createdAt ?? new Date(),
+      },
+      id ?? randomUUID(),
+    );
+  }
+}
