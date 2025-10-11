@@ -31,4 +31,14 @@ describe('User entity unit tests', () => {
     expect(sut.password).toEqual(newPassword);
     expect(spyOnUpdatedAt).toHaveBeenCalledTimes(1);
   });
+
+  it('should be able to update user username', () => {
+    const newUsername = 'johnD';
+    const spyOnUpdatedAt = jest.spyOn(sut, 'updatedAt', 'set');
+
+    sut.username = newUsername;
+
+    expect(sut.username).toEqual(newUsername);
+    expect(spyOnUpdatedAt).toHaveBeenCalledTimes(1);
+  });
 });

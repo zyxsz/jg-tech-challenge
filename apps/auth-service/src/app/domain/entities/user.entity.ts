@@ -10,6 +10,9 @@ export interface UserProps {
 }
 
 export class User extends Entity<UserProps> {
+  public get username() {
+    return this.props.username;
+  }
   public get email() {
     return this.props.email;
   }
@@ -25,6 +28,11 @@ export class User extends Entity<UserProps> {
 
   public set updatedAt(v) {
     this.props.updatedAt = v;
+  }
+
+  public set username(v) {
+    if (this.props.username !== v) this.updatedAt = new Date();
+    this.props.username = v;
   }
 
   public set email(v) {
