@@ -39,20 +39,6 @@ Acompanhe como foi o progresso da criação de cada serviço.
 
 Será o microsserviço responsável por lidar com toda a parte de autenticação dos usuários sendo elas: cadastro, login, validação e refresh de tokens.
 
-#### Estrutura
-
-```mermaid
-erDiagram
-    direction LR
-    Users {
-        string id PK
-        string email  "Unique & idx"
-        string password
-        date updatedAt
-        date createdAt
-    }
-```
-
 #### Arquitetura
 
 Como a autenticação deve ser integrada utilizando o ApiGateway e outros serviços:
@@ -62,10 +48,25 @@ sequenceDiagram
     participant ApiGateway
     participant AuthService
     participant OtherService
-    ApiGateway->>AuthService: Send token
+    ApiGateway->>AuthService: "Send token (validate-token)"
     AuthService->>ApiGateway: Token validation response
     ApiGateway->>OtherService: Send request
     OtherService->>ApiGateway: Receive response
+```
+
+#### Entidades
+
+```mermaid
+erDiagram
+    direction LR
+    Users {
+        string id PK
+        string username
+        string email
+        string password
+        date updatedAt
+        date createdAt
+    }
 ```
 
 #### Requisitos funcionais:
@@ -85,7 +86,8 @@ sequenceDiagram
 - Realizar o gerenciamento de tokens apenas pelo JWT.
   - Benefícios: Uma implementação bem mais simples.
   - Trade-offs: Quando comparado com uma implementação mais complexa utilizando entidades para manter o controle dos tokens, você acaba perdendo informações/controles como: registro de localizações/data/ip, controle de acesso (revogar token), entre algumas outras coisas.
-  - Motivação: Decidi ir pelo caminho mais simples até então; como é uma aplicação um tanto quanto "simples", não vi a necessidade de realizar essa implementação mais complexa. ~~Caso sobre tempo acredito que seja um baita de um bônus.~~
+  - Motivação: Decidi ir pelo caminho mais simples até então; como é uma aplicação um tanto quanto "simples", não vi a necessidade de realizar essa implementação mais complexa.
+  - _Caso sobre tempo acredito que seja um baita de um bônus._
 
 ## Diagramas
 
