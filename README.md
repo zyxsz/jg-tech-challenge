@@ -4,8 +4,9 @@ Construir um Sistema de Gestão de Tarefas Colaborativo com autenticação simpl
 
 ## Apps
 
-- [api-gateway](#api-gateway)
-- [auth-service](#authservice)
+- [Api gateway](#apigateway)
+- [Auth service](#authservice)
+- [Tasks service](#authservice)
 
 ## Pacotes
 
@@ -34,6 +35,32 @@ Acompanhe como foi o progresso da criação de cada serviço.
     - [x] Criar providers (Bcrypt, JWT)
     - [x] Criar controller
   - [ ] Testes de integração/e2e
+- [ ] ApiGateway
+  - [x] Setup inicial
+  - [x] Autenticação
+    - Duração: **~30 minutos**
+    - [x] AuthModule (controller & service & dto)
+      - [x] Integração com [auth-service](#authservice)
+    - [x] AuthGuards (controle de autenticação)
+  - [ ] Tarefas
+    - [ ] Criar serviço para realizar a integração com [task-service](#taskservice)
+    - [ ] Criar dtos
+    - [ ] Criar rotas
+
+## ApiGateway
+
+Serviço responsável por realizar o acesso HTTP aos demais serviços.
+
+Requisitos:
+
+- [ ] Autenticação com Guards
+- [ ] Integrar todos os serviços com **RabbitMQ**
+- [ ] DTOs (`class-validator` e `class-transformer`)
+- [ ] Rate limit (10 req/seg)
+- [ ] Documentação com Swagger
+- [ ] Gateway WebSocket para notificações em tempo real
+- [ ] Health checks
+- [ ] Logging com Pino
 
 ## AuthService
 
@@ -89,35 +116,61 @@ erDiagram
   - Motivação: Decidi ir pelo caminho mais simples até então; como é uma aplicação um tanto quanto "simples", não vi a necessidade de realizar essa implementação mais complexa.
   - _Caso sobre tempo acredito que seja um baita de um bônus._
 
-## Diagramas
+## TaskService
 
-#### AuthService
+Será o serviço responsável por lidar com toda a parte de tarefas, sendo elas: CRUD completo, comentários, audit log.
+
+#### Entidades
 
 ```mermaid
----
-title: Cadastro de usuários
----
-flowchart LR
-    ApiGateway["ApiGateway (/auth/register)"]
-    Validation["Validação de campos"]
-    AuthServiceRU["AuthService (register-user)"]
-    AuthServiceUC["`**Caso de uso**
-    - Procurar por duplicatas
-    - Hash na senha
-    - Salvar no banco de dados
-    - Gerar tokens`"]
-    DBDuplicata[(Procurar por duplicata)]
-    DBInsert[(Inserir usuário)]
-    HASH["Encriptar senha com Hash"]
-    GT["Gerar token (caso de uso)"]
-
-    ApiGateway --> Validation
-    Validation --> AuthServiceRU
-    AuthServiceRU --> AuthServiceUC
-    AuthServiceUC --> DBDuplicata
-    DBDuplicata --> AuthServiceUC
-    AuthServiceUC --> HASH
-    HASH --> DBInsert
-    DBInsert --> GT
-    GT -->|"Resposta com tokens (accessToken, refreshToken)"| ApiGateway
+erDiagram
+    direction LR
+    Tasks {
+        string id PK
+        string authorId
+        string title
+        string description
+        priority enum
+        status enum
+        date term
+        date createdAt
+    }
+    AuditLogs {
+        string id PK
+        string taskId FK
+        string authorId
+        string actionType
+        json modifications
+        string createdAt
+    }
+    Comments {
+        string id PK
+        string taskId FK
+        string authorId
+        string content
+        date createdAt
+    }
+    Tasks ||--o{ Comments : "has many"
+    Tasks ||--o{ AuditLogs : "has many"
 ```
+
+> Prioridade: `LOW`, `MEDIUM`, `HIGH`, `URGENT`
+> Status: `TODO`, `IN_PROGRESS`, `REVIEW`, `DONE`
+
+#### Requisitos funcionais:
+
+- [ ] Tarefas
+  - [ ] Busca por múltiplas tarefas com paginação
+  - [ ] Busca por uma tarefa especifica
+  - [ ] Criação de novas tarefas
+  - [ ] Atualizar tarefa
+  - [ ] Excluir tarefa
+- [ ] Histórico de alterações
+  - [ ] Ao alterar uma tarefa deverá ser necessário o registro dessa alteração
+- [ ] Comentários
+  - [ ] Criar comentários associas a uma tarefa especifica
+  - [ ] Listar comentários de uma tarefa em especifico
+
+#### Implementações & Decisões
+
+- ...
