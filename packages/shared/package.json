@@ -1,0 +1,31 @@
+{
+  "name": "@repo/shared",
+  "version": "0.0.0",
+  "private": true,
+  "types": "./dist/index.d.ts",
+  "exports": {
+    "./types": {
+      "import": "./dist/types/index.js",
+      "require": "./dist/types/index.js",
+      "types": "./dist/types/index.d.ts"
+    },
+    "./domain": {
+      "import": "./dist/domain/index.js",
+      "require": "./dist/domain/index.js",
+      "types": "./dist/domain/index.d.ts"
+    }
+  },
+  "scripts": {
+    "dev": "bun run build --watch",
+    "build": "tsc -b -v",
+    "lint": "eslint \"{src,apps,libs,test}/**/*.ts\"",
+    "generate:component": "turbo gen react-component",
+    "check-types": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@repo/eslint-config": "*",
+    "@repo/typescript-config": "*",
+    "eslint": "^9.34.0",
+    "typescript": "5.9.2"
+  }
+}
