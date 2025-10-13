@@ -4,7 +4,7 @@ import {
   TaskStatus,
 } from '@/tasks/domain/entities/task.entity';
 import { TasksRepository } from '@/tasks/domain/repositories/tasks.repository';
-import { TaskOutputMapper } from '../dtos/task-output';
+import { TaskOutput, TaskOutputMapper } from '../dtos/task-output';
 
 export interface CreateTaskUseCaseInput {
   authorId: string;
@@ -15,7 +15,7 @@ export interface CreateTaskUseCaseInput {
   term: Date;
 }
 
-export interface CreateTaskUseCaseOutput {}
+export interface CreateTaskUseCaseOutput extends TaskOutput {}
 
 export class CreateTaskUseCase {
   constructor(private tasksRepository: TasksRepository) {}

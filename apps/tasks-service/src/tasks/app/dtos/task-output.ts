@@ -12,6 +12,7 @@ export interface TaskOutput {
   priority: TaskPriority;
   status: TaskStatus;
   term: Date;
+  createdAt: Date;
 }
 
 export class TaskOutputMapper {
@@ -24,6 +25,7 @@ export class TaskOutputMapper {
       priority: entity.priority,
       status: entity.status,
       term: entity.term,
+      createdAt: entity.createdAt,
     } satisfies TaskOutput;
   }
 }
