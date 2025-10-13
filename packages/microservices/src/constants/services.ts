@@ -20,4 +20,11 @@ export namespace TasksService {
     UPDATE_TASK = "update-task",
     DELETE_TASK = "delete-task",
   }
+
+  export namespace Comments {
+    export enum Messages {
+      CREATE_COMMENT = "create-comment",
+      GET_COMMENTS_WITH_PAGINATION = "get-comments-with-pagination",
+    }
+  }
 }

@@ -70,4 +70,40 @@ export namespace TasksServiceTypes {
   export interface DeleteTaskOutput {
     success: boolean;
   }
+
+  export namespace Comments {
+    export interface Comment {
+      id: string;
+      taskId: string;
+      authorId: string;
+      content: string;
+      createdAt: Date;
+    }
+
+    // Create comment
+    export interface CreateCommentInput {
+      authorId: string;
+      taskId: string;
+      content: string;
+    }
+
+    export interface CreateCommentOutput extends Comment {}
+
+    // Get comments with pagination
+    export interface GetCommentWithPaginationInput {
+      taskId: string;
+      page: number;
+      limitPerPage: number;
+    }
+
+    export interface GetCommentWithPaginationOutput {
+      data: Comment[];
+      pagination: {
+        page: number;
+        limitPerPage: number;
+        totalPages: number;
+        totalCount: number;
+      };
+    }
+  }
 }
