@@ -35,6 +35,36 @@ Acompanhe como foi o progresso da criação de cada serviço.
     - [x] Criar providers (Bcrypt, JWT)
     - [x] Criar controller
   - [ ] Testes de integração/e2e
+- [ ] TaskService
+  - [x] Criar o domínio das tasks
+    - Duração: **~1 hora**
+    - [x] Criar entidades
+    - [x] Criar repositórios
+    - [x] Criar casos de uso
+      - [x] Buscar tarefa
+      - [x] Buscar múltiplas tarefas com paginação
+      - [x] Criar tarefa
+      - [x] Atualizar tarefa
+      - [x] Deletar tarefa
+    - [ ] Testes unitários
+  - [x] Integrar o domínio das tarefas com a infraestrutura
+    - Duração: **~1 hora**
+    - [x] Criar DTOs compartilhados (@shared)
+    - [x] Criar repositórios/entidades utilizando TypeORM e Postgres
+    - [x] Criar controller
+  - [ ] Criar domínio dos comentários
+    - [ ] Criar entidades
+    - [ ] Criar repositórios
+    - [ ] Criar casos de uso
+      - [ ] Criar comentário
+      - [ ] Listar comentários de uma tarefa especifica com paginação
+  - [ ] Criar domínio do histórico de atualizações
+    - [ ] Criar entidades
+    - [ ] Criar repositórios
+    - [ ] Criar casos de uso
+      - [ ] Criar registro de alteração
+      - [ ] Listar registro de alterações com paginação
+
 - [ ] ApiGateway
   - [x] Setup inicial
   - [x] Autenticação
@@ -159,12 +189,12 @@ erDiagram
 
 #### Requisitos funcionais:
 
-- [ ] Tarefas
-  - [ ] Busca por múltiplas tarefas com paginação
-  - [ ] Busca por uma tarefa especifica
-  - [ ] Criação de novas tarefas
-  - [ ] Atualizar tarefa
-  - [ ] Excluir tarefa
+- [x] Tarefas
+  - [x] Busca por múltiplas tarefas com paginação
+  - [x] Busca por uma tarefa especifica
+  - [x] Criação de novas tarefas
+  - [x] Atualizar tarefa
+  - [x] Excluir tarefa
 - [ ] Histórico de alterações
   - [ ] Ao alterar uma tarefa deverá ser necessário o registro dessa alteração
 - [ ] Comentários
