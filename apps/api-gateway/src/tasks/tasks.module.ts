@@ -2,27 +2,28 @@ import { Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { Services } from '@repo/microservices';
-import { AuthService } from './auth.service';
-import { AuthController } from './auth.controller';
+import { TasksService } from './tasks.service';
+import { TasksController } from './tasks.controller';
+import { AuthModule } from '@/auth/auth.module';
 
 @Module({
   imports: [
+    AuthModule,
     ClientsModule.registerAsync([
       {
-        name: Services.AUTH_SERVICE,
+        name: Services.TASKS_SERVICE,
         useFactory: async (configService: ConfigService) => ({
           transport: Transport.TCP,
           options: {
-            url: configService.get('AUTH_SERVICE_URL'),
-            port: parseInt(configService.getOrThrow('AUTH_SERVICE_PORT')),
+            url: configService.get('TASKS_SERVICE_URL'),
+            port: parseInt(configService.getOrThrow('TASKS_SERVICE_PORT')),
           },
         }),
         inject: [ConfigService],
       },
     ]),
   ],
-  providers: [AuthService],
-  controllers: [AuthController],
-  exports: [AuthService],
+  providers: [TasksService],
+  controllers: [TasksController],
 })
-export class AuthModule {}
+export class TasksModule {}
