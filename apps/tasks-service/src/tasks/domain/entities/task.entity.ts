@@ -1,4 +1,6 @@
-import { Entity, Optional } from '@repo/microservices';
+import { Entity } from '@repo/shared/domain';
+import { Optional } from '@repo/shared/types';
+
 import { randomUUID } from 'node:crypto';
 
 export type TaskPriority = 'LOW' | 'MEDIUM' | 'HIGH' | 'URGENT';
@@ -35,6 +37,22 @@ export class Task extends Entity<TaskProps> {
   }
   public get createdAt() {
     return this.props.createdAt;
+  }
+
+  public set title(v) {
+    this.props.title = v;
+  }
+  public set description(v) {
+    this.props.description = v;
+  }
+  public set priority(v) {
+    this.props.priority = v;
+  }
+  public set status(v) {
+    this.props.status = v;
+  }
+  public set term(v) {
+    this.props.term = v;
   }
 
   static create(props: Optional<TaskProps, 'createdAt'>, id?: string) {
