@@ -23,7 +23,7 @@ enum TaskPriority {
 
 type Data = TasksServiceTypes.UpdateTaskInput["data"];
 
-export class UpdateTaskData implements Data {
+export class UpdateTaskBodyDto implements Data {
   @IsOptional()
   @Length(4, 128)
   title: string;
@@ -44,10 +44,14 @@ export class UpdateTaskData implements Data {
   term?: Date;
 }
 
+export class UpdateTaskParamsDto {
+  @IsNotEmpty()
+  taskId: string;
+}
+
 export class UpdateTaskDto implements TasksServiceTypes.UpdateTaskInput {
   @IsNotEmpty()
   taskId: string;
 
-  @IsNotEmptyObject()
-  data: UpdateTaskData;
+  data: UpdateTaskBodyDto;
 }
