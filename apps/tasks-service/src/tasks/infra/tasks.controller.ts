@@ -67,8 +67,8 @@ export class TasksController {
   async deleteTask(
     @Payload() payload: DeleteTaskDto,
   ): Promise<TasksServiceTypes.DeleteTaskOutput> {
-    const response = await this.deleteTaskUseCase.execute(payload);
+    await this.deleteTaskUseCase.execute(payload);
 
-    return response;
+    return { success: true };
   }
 }
