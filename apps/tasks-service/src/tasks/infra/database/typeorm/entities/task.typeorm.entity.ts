@@ -1,13 +1,11 @@
-import {
-  type TaskStatus,
-  type TaskPriority,
-} from '@/tasks/domain/entities/task.entity';
+import { CommentEntity } from '../../../../../comments/infra/database/typeorm/entities/comment.typeorm.entity';
 import {
   Entity,
   Column,
   PrimaryColumn,
   Index,
   CreateDateColumn,
+  OneToMany,
 } from 'typeorm';
 
 @Entity({ name: 'tasks' })
@@ -29,17 +27,20 @@ export class TaskEntity {
     type: 'enum',
     enum: ['LOW', 'MEDIUM', 'HIGH', 'URGENT'],
   })
-  priority: TaskPriority;
+  priority: 'LOW' | 'MEDIUM' | 'HIGH' | 'URGENT';
 
   @Column({
     type: 'enum',
     enum: ['TODO', 'IN_PROGRESS', 'REVIEW', 'DONE'],
   })
-  status: TaskStatus;
+  status: 'TODO' | 'IN_PROGRESS' | 'REVIEW' | 'DONE';
 
   @Column()
   term: Date;
 
   @CreateDateColumn()
   createdAt: Date;
+
+  @OneToMany(() => CommentEntity, (comment) => comment.task)
+  comments: CommentEntity[];
 }
