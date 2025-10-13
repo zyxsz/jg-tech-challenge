@@ -67,5 +67,7 @@ export namespace TasksServiceTypes {
     taskId: string;
   }
 
-  export type DeleteTaskOutput = void;
+  export interface DeleteTaskOutput {
+    success: boolean;
+  }
 }
