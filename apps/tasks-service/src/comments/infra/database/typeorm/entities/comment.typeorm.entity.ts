@@ -5,7 +5,6 @@ import {
   PrimaryColumn,
   Index,
   CreateDateColumn,
-  ManyToMany,
   JoinColumn,
   ManyToOne,
 } from 'typeorm';
@@ -23,6 +22,7 @@ export class CommentEntity {
   @JoinColumn({ name: 'taskId' })
   task: TaskEntity;
 
+  @Column()
   taskId: string;
 
   @Column()
