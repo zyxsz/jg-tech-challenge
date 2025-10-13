@@ -1,7 +1,7 @@
 import { PaginationInput, PaginationOutput } from '@repo/shared/domain';
 import { Comment } from '../entities/comment.entity';
 
-export abstract class CommentRepository {
+export abstract class CommentsRepository {
   abstract findManyWithPagination(
     data: PaginationInput,
   ): Promise<PaginationOutput<Comment>>;
