@@ -52,12 +52,18 @@ Acompanhe como foi o progresso da criação de cada serviço.
     - [x] Criar DTOs compartilhados (@shared)
     - [x] Criar repositórios/entidades utilizando TypeORM e Postgres
     - [x] Criar controller
-  - [ ] Criar domínio dos comentários
-    - [ ] Criar entidades
-    - [ ] Criar repositórios
-    - [ ] Criar casos de uso
-      - [ ] Criar comentário
-      - [ ] Listar comentários de uma tarefa especifica com paginação
+  - [x] Criar domínio dos comentários
+    - Duração: **<1 hora**
+    - [x] Criar entidades
+    - [x] Criar repositórios
+    - [x] Criar casos de uso
+      - [x] Criar comentário
+      - [x] Listar comentários de uma tarefa especifica com paginação
+  - [x] Integrar o domínio dos comentários com a infraestrutura
+    - Duração: **~1 hora**
+    - [x] Criar DTOs compartilhados (@shared)
+    - [x] Criar repositórios/entidades utilizando TypeORM e Postgres
+    - [x] Criar controller
   - [ ] Criar domínio do histórico de atualizações
     - [ ] Criar entidades
     - [ ] Criar repositórios
@@ -72,10 +78,16 @@ Acompanhe como foi o progresso da criação de cada serviço.
     - [x] AuthModule (controller & service & dto)
       - [x] Integração com [auth-service](#authservice)
     - [x] AuthGuards (controle de autenticação)
-  - [ ] Tarefas
-    - [ ] Criar serviço para realizar a integração com [task-service](#taskservice)
-    - [ ] Criar dtos
-    - [ ] Criar rotas
+  - [x] Tarefas
+    - Duração: **<30 minutos**
+    - [x] Criar serviço para realizar a integração com [task-service](#taskservice)
+    - [x] Criar dtos
+    - [x] Criar rotas
+  - [x] Comentários
+    - Duração: **<20 minutos**
+    - [x] Criar serviço para realizar a integração com [task-service/comments](#taskservice)
+    - [x] Criar dtos
+    - [x] Criar rotas
 
 ## ApiGateway
 
