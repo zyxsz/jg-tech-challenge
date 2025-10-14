@@ -16,6 +16,16 @@ Construir um Sistema de Gestão de Tarefas Colaborativo com autenticação simpl
 
 Acompanhe como foi o progresso da criação de cada serviço.
 
+- [ ] WebApp
+  - [x] Configurar projeto
+  - [x] Criar rotas publicas & privadas (com autenticação)
+    - Duração: **~1 hora**
+  - [x] Criar páginas de login/cadastro
+    - Duração: **>1 hora**
+  - [x] Criar página de tarefas
+    - Duração: **>1 hora**
+  - [ ] Criar página de detalhes de uma tarefas
+
 - [x] AuthService
   - [x] Criar o domínio do serviço
     - Duração: **~2 horas**
