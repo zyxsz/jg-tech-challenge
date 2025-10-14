@@ -1,0 +1,111 @@
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "../ui/form";
+import { Button } from "../ui/button";
+import { Input } from "../ui/input";
+import { useTransition } from "react";
+import { AuthService } from "@/api/services/auth.service";
+import { useNavigate } from "@tanstack/react-router";
+import { AxiosError } from "axios";
+import { toast } from "sonner";
+
+const formSchema = z.object({
+  email: z.email(),
+  password: z.string().min(5).max(128),
+});
+
+export const LoginForm = () => {
+  const [isSubmitPending, startSubmitTransition] = useTransition();
+  const navigate = useNavigate();
+
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
+
+  function onSubmit(data: z.infer<typeof formSchema>) {
+    startSubmitTransition(async () => {
+      try {
+        const response = await AuthService.loginUser(data);
+
+        localStorage.setItem("accessToken", response.accessToken);
+        localStorage.setItem("refreshToken", response.refreshToken);
+
+        toast.success("Login realizado com sucesso, redirecionando...");
+
+        navigate({ to: "/", reloadDocument: true });
+      } catch (error: unknown | AxiosError) {
+        if (error instanceof AxiosError) {
+          const message =
+            error.response?.data.message ||
+            "Não foi possível realizar o seu login.";
+
+          toast.error(message);
+        } else {
+          toast.error("Não foi possível realizar o seu login.");
+        }
+      }
+    });
+  }
+
+  return (
+    <Form {...form}>
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="w-full max-w-xl space-y-4 bg-card rounded-md border border-border p-4"
+      >
+        <div className="space-y-4">
+          <FormField
+            control={form.control}
+            name="email"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Email</FormLabel>
+                <FormControl>
+                  <Input placeholder="Ex: example@tasks.com" {...field} />
+                </FormControl>
+                {/* <FormDescription>
+                This is your public display name.
+              </FormDescription> */}
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="password"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Senha</FormLabel>
+                <FormControl>
+                  <Input placeholder="Ex: *******" {...field} />
+                </FormControl>
+                {/* <FormDescription>
+                This is your public display name.
+              </FormDescription> */}
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+        <div className="w-full flex items-center justify-end gap-4">
+          <Button className="w-full" type="submit" disabled={isSubmitPending}>
+            Entrar
+          </Button>
+        </div>
+      </form>
+    </Form>
+  );
+};
