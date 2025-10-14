@@ -30,6 +30,8 @@ export class TasksController {
 
   @Get('/')
   async getTasksWithPagination(@Query() query: GetTasksWithPaginationDto) {
+    console.log(query);
+
     return await this.tasksService.getTasksWithPagination(query);
   }
 
