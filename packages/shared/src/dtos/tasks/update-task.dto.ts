@@ -53,5 +53,8 @@ export class UpdateTaskDto implements TasksServiceTypes.UpdateTaskInput {
   @IsNotEmpty()
   taskId: string;
 
+  @IsNotEmpty()
+  authorId: string;
+
   data: UpdateTaskBodyDto;
 }

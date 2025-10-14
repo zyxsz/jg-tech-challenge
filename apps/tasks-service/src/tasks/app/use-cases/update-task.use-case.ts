@@ -1,8 +1,11 @@
 import { TasksRepository } from '@/tasks/domain/repositories/tasks.repository';
 import { TaskOutput, TaskOutputMapper } from '../dtos/task-output';
 import { TaskProps } from '@/tasks/domain/entities/task.entity';
+import { AuditLogsService } from '@/shared/services/audit-logs.service';
+import { ObjectDiffProvider } from '@/shared/providers/object-diff.provider';
 
 export interface UpdateTaskUseCaseInput {
+  authorId: string;
   taskId: string;
 
   data: Partial<
@@ -13,12 +16,26 @@ export interface UpdateTaskUseCaseInput {
 export interface UpdateTaskUseCaseOutput extends TaskOutput {}
 
 export class UpdateTaskUseCase {
-  constructor(private tasksRepository: TasksRepository) {}
+  constructor(
+    private tasksRepository: TasksRepository,
+    private auditLogsService: AuditLogsService,
+    private objectDiffProvider: ObjectDiffProvider,
+  ) {}
 
   async execute(
     input: UpdateTaskUseCaseInput,
   ): Promise<UpdateTaskUseCaseOutput> {
     const task = await this.tasksRepository.findById(input.taskId);
+    const firstOutput = {
+      id: task.id,
+      authorId: task.authorId,
+      title: task.title,
+      description: task.description,
+      priority: task.priority,
+      status: task.status,
+      term: task.term,
+      createdAt: task.createdAt,
+    } satisfies TaskOutput;
 
     if (input.data.title) task.title = input.data.title;
     if (input.data.description) task.description = input.data.description;
@@ -28,6 +45,22 @@ export class UpdateTaskUseCase {
 
     await this.tasksRepository.update(task);
 
-    return TaskOutputMapper.toOutput(task);
+    const updatedOutput = TaskOutputMapper.toOutput(task);
+
+    if (this.auditLogsService) {
+      const diff = this.objectDiffProvider.detailedDiff(
+        firstOutput,
+        updatedOutput,
+      );
+
+      await this.auditLogsService.log(
+        input.taskId,
+        input.authorId,
+        'UPDATE',
+        diff,
+      );
+    }
+
+    return updatedOutput;
   }
 }

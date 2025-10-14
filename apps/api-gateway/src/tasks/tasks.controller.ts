@@ -53,10 +53,12 @@ export class TasksController {
   async updateTask(
     @Param() params: UpdateTaskParamsDto,
     @Body() body: UpdateTaskBodyDto,
+    @AuthenticatedUser() user: UserType,
   ) {
     return await this.tasksService.updateTask({
       taskId: params.taskId,
       data: body,
+      authorId: user.id,
     });
   }
 

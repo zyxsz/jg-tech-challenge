@@ -1,3 +1,4 @@
+import { AuditLogEntity } from '../../../../../audit-logs/infra/database/typeorm/entities/audit-log.typeorm.entity';
 import { CommentEntity } from '../../../../../comments/infra/database/typeorm/entities/comment.typeorm.entity';
 import {
   Entity,
@@ -43,4 +44,7 @@ export class TaskEntity {
 
   @OneToMany(() => CommentEntity, (comment) => comment.task)
   comments: CommentEntity[];
+
+  @OneToMany(() => AuditLogEntity, (log) => log.task)
+  auditLogs: AuditLogEntity[];
 }

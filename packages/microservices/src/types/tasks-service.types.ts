@@ -54,6 +54,7 @@ export namespace TasksServiceTypes {
 
   export interface UpdateTaskInput {
     taskId: string;
+    authorId: string;
     data: Partial<
       Pick<Task, "title" | "description" | "priority" | "status" | "term">
     >;

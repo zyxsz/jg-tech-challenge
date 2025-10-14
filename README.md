@@ -64,11 +64,12 @@ Acompanhe como foi o progresso da criação de cada serviço.
     - [x] Criar DTOs compartilhados (@shared)
     - [x] Criar repositórios/entidades utilizando TypeORM e Postgres
     - [x] Criar controller
-  - [ ] Criar domínio do histórico de atualizações
-    - [ ] Criar entidades
-    - [ ] Criar repositórios
-    - [ ] Criar casos de uso
-      - [ ] Criar registro de alteração
+  - [x] Criar domínio do histórico de atualizações + integração com casos de uso das tarefas
+    - Duração: **<1 hora**
+    - [x] Criar entidades
+    - [x] Criar repositórios
+    - [x] Criar casos de uso
+      - [x] Criar registro de alteração
       - [ ] Listar registro de alterações com paginação
 
 - [ ] ApiGateway
@@ -183,7 +184,7 @@ erDiagram
         string authorId
         string actionType
         json modifications
-        string createdAt
+        date createdAt
     }
     Comments {
         string id PK
