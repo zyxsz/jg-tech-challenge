@@ -89,6 +89,13 @@ code {
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(0.274 0.006 286.033);
   --sidebar-ring: oklch(0.442 0.017 285.786);
+
+  .monaco-editor,
+  .monaco-diff-editor,
+  .monaco-component {
+    --vscode-editorGutter-background: #303234 !important;
+    --vscode-editor-background: #303234 !important;
+  }
 }
 
 @theme inline {
@@ -137,5 +144,46 @@ code {
   }
   body {
     @apply bg-background text-foreground;
+  }
+
+  .markdown {
+    h1 {
+      @apply not-first:mt-6 scroll-m-20 text-card-foreground text-4xl font-black tracking-tight text-balance;
+    }
+
+    h2 {
+      @apply mt-6 scroll-m-20 text-card-foreground text-3xl font-extrabold tracking-tight first:mt-0;
+    }
+
+    h3 {
+      @apply mt-4 scroll-m-20 text-card-foreground text-2xl font-semibold tracking-tight;
+    }
+
+    h4 {
+      @apply mt-4 scroll-m-20 text-card-foreground text-xl font-semibold tracking-tight;
+    }
+
+    p {
+      @apply leading-7 [&:not(:first-child)]:mt-6;
+    }
+
+    blockquote {
+      @apply mt-6 border-l-2 pl-6 italic;
+    }
+
+    ul {
+      @apply my-2 ml-6 list-disc [&>li]:mt-2;
+    }
+
+    code {
+      @apply bg-muted relative rounded px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold;
+    }
+    a {
+      @apply underline;
+    }
+
+    .task-list-item input {
+      @apply mr-2;
+    }
   }
 }

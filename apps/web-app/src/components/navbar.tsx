@@ -15,7 +15,7 @@ export const Navbar = () => {
   const user = userStore((state) => state.user);
 
   return (
-    <nav className="bg-background fixed top-0 left-0 right-0 border-b border-border">
+    <nav className="bg-background fixed top-0 left-0 right-0 border-b border-border z-20">
       <div className="w-full max-w-screen-lg mx-auto p-2 py-4 flex items-center justify-between gap-4">
         <div className="flex items-center gap-2">
           {/* <figure className="mr-6">

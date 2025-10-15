@@ -35,12 +35,15 @@ import {
 } from "@/components/ui/tooltip";
 import { distanceToNow, formatDate } from "@/lib/date";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
+import { Link } from "@tanstack/react-router";
 import { parseISO } from "date-fns";
 import {
   ArrowRightIcon,
   CalendarIcon,
+  CalendarPlus2Icon,
   ChevronDownIcon,
   ListTodoIcon,
+  UserPlusIcon,
   Users2Icon,
 } from "lucide-react";
 import { parseAsInteger, useQueryState } from "nuqs";
@@ -96,8 +99,10 @@ export const TasksPage = () => {
             Veja a lista com todas as tarefas criadas até o momento.
           </p>
         </div>
-        <Button variant="secondary">
-          Criar nova tarefa <ArrowRightIcon />
+        <Button variant="secondary" asChild>
+          <Link to="/tasks/create">
+            Criar nova tarefa <ArrowRightIcon />
+          </Link>
         </Button>
       </header>
       {isLoading ? (
@@ -108,14 +113,33 @@ export const TasksPage = () => {
             <div key={task.id} className="p-4 border rounded-md bg-card">
               <header className="flex items-center justify-between gap-6">
                 <div>
-                  <h3 className="text-xl font-bold">{task.title}</h3>
+                  <div className="flex items-center gap-2">
+                    <h3 className="text-xl font-bold">{task.title}</h3>
+                    {task.relations?.author && (
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Tag>
+                            <UserPlusIcon />
+                          </Tag>
+                        </TooltipTrigger>
+                        <TooltipContent side="bottom" sideOffset={4}>
+                          <p>
+                            Tarefa criada por{" "}
+                            <strong>{task.relations.author.username}</strong>
+                          </p>
+                        </TooltipContent>
+                      </Tooltip>
+                    )}
+                  </div>
                   <p className="text-muted-foreground text-sm text-ellipsis overflow-hidden line-clamp-1">
                     {task.description}
                   </p>
                 </div>
                 <div className="flex items-center justify-end gap-2">
-                  <Button variant="link">
-                    Ver detalhes <ArrowRightIcon />
+                  <Button variant="link" asChild>
+                    <Link to="/tasks/$taskId" params={{ taskId: task.id }}>
+                      Ver detalhes <ArrowRightIcon />
+                    </Link>
                   </Button>
                 </div>
               </header>

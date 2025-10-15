@@ -17,7 +17,10 @@ import { HomePage } from "./routes/(privateRoutes)/home.page.tsx";
 import { LoginPage } from "./routes/(publicRoutes)/login.page.tsx";
 import { Providers } from "./providers/index.tsx";
 import { RegisterPage } from "./routes/(publicRoutes)/register.page.tsx";
-import { TasksPage } from "./routes/(privateRoutes)/tasks.page.tsx";
+import { TasksPage } from "./routes/(privateRoutes)/tasks/tasks.page.tsx";
+import { TaskDetails } from "./routes/(privateRoutes)/tasks/task-details.page.tsx";
+import { CreateTaskPage } from "./routes/(privateRoutes)/tasks/create-task.page.tsx";
+import { UpdateTaskPage } from "./routes/(privateRoutes)/tasks/update-task.page.tsx";
 
 const rootRoute = createRootRoute({
   component: RootLayout,
@@ -65,9 +68,34 @@ const tasksPageRoute = createRoute({
   component: TasksPage,
 });
 
+const taskDetailsRoute = createRoute({
+  getParentRoute: () => privateRoutes,
+  path: "/tasks/$taskId",
+  component: TaskDetails,
+});
+
+const updateTaskRoute = createRoute({
+  getParentRoute: () => privateRoutes,
+  path: "/tasks/$taskId/update",
+  component: UpdateTaskPage,
+});
+
+const createTaskRoute = createRoute({
+  getParentRoute: () => privateRoutes,
+  path: "/tasks/create",
+  component: CreateTaskPage,
+});
+
 const routeTree = rootRoute.addChildren([
   privateRoutes.addChildren([homePageRoute]),
-  publicRoutes.addChildren([loginPageRoute, registerPageRoute, tasksPageRoute]),
+  publicRoutes.addChildren([
+    loginPageRoute,
+    registerPageRoute,
+    createTaskRoute,
+    updateTaskRoute,
+    tasksPageRoute,
+    taskDetailsRoute,
+  ]),
 ]);
 
 const router = createRouter({
