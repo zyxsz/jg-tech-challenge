@@ -10,20 +10,47 @@ import { ValidateTokenUseCase } from '@/app/use-cases/validate-token.use-case';
 import { UsersRepository } from '@/app/domain/repositories/users.repository';
 import { HashProvider } from '@/app/providers/hash.provider';
 import { TokenProvider } from '@/app/providers/token.provider';
+import { NotificationsService } from '@/app/services/notifications.service';
+import { RabbitMQNotificationsService } from './rabbitmq-notifications.service';
+import { ClientsModule, Transport } from '@nestjs/microservices';
+import { Services } from '@repo/microservices';
+import { ConfigService } from '@nestjs/config';
 
 @Module({
-  imports: [DatabaseModule, ProvidersModule],
+  imports: [
+    DatabaseModule,
+    ProvidersModule,
+    ClientsModule.registerAsync([
+      {
+        name: Services.TASKS_SERVICE,
+        useFactory: async (configService: ConfigService) => ({
+          transport: Transport.TCP,
+          options: {
+            url: configService.get('TASKS_SERVICE_URL'),
+            port: parseInt(configService.getOrThrow('TASKS_SERVICE_PORT')),
+          },
+        }),
+        inject: [ConfigService],
+      },
+    ]),
+  ],
   controllers: [AuthController],
   providers: [
+    { provide: NotificationsService, useClass: RabbitMQNotificationsService },
     {
       provide: RegisterUserUseCase,
       useFactory: (
         usersRepository: UsersRepository,
         hashProvider: HashProvider,
+        notificationsService: NotificationsService,
       ) => {
-        return new RegisterUserUseCase(usersRepository, hashProvider);
+        return new RegisterUserUseCase(
+          usersRepository,
+          hashProvider,
+          notificationsService,
+        );
       },
-      inject: [UsersRepository, HashProvider],
+      inject: [UsersRepository, HashProvider, NotificationsService],
     },
     {
       provide: LoginUseCase,

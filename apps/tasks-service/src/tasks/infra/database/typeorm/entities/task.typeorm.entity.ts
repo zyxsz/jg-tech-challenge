@@ -1,3 +1,4 @@
+import { UserEntity } from '../../../../../users/infra/database/typeorm/entities/users.typeorm.entity';
 import { AuditLogEntity } from '../../../../../audit-logs/infra/database/typeorm/entities/audit-log.typeorm.entity';
 import { CommentEntity } from '../../../../../comments/infra/database/typeorm/entities/comment.typeorm.entity';
 import {
@@ -7,6 +8,8 @@ import {
   Index,
   CreateDateColumn,
   OneToMany,
+  ManyToOne,
+  JoinColumn,
 } from 'typeorm';
 
 @Entity({ name: 'tasks' })
@@ -15,7 +18,6 @@ export class TaskEntity {
   id: string;
 
   @Column()
-  @Index()
   authorId: string;
 
   @Column()
@@ -47,4 +49,8 @@ export class TaskEntity {
 
   @OneToMany(() => AuditLogEntity, (log) => log.task)
   auditLogs: AuditLogEntity[];
+
+  @ManyToOne(() => UserEntity, { onUpdate: 'CASCADE', onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'authorId' })
+  author: UserEntity;
 }

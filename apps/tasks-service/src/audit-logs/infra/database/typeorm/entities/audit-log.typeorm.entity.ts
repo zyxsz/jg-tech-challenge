@@ -1,3 +1,4 @@
+import { UserEntity } from '../../../../../users/infra/database/typeorm/entities/users.typeorm.entity';
 import { TaskEntity } from '../../../../../tasks/infra/database/typeorm/entities/task.typeorm.entity';
 import {
   Entity,
@@ -34,4 +35,8 @@ export class AuditLogEntity {
   @ManyToOne(() => TaskEntity, { onUpdate: 'CASCADE', onDelete: 'CASCADE' })
   @JoinColumn({ name: 'taskId' })
   task: TaskEntity;
+
+  @ManyToOne(() => UserEntity, { onUpdate: 'CASCADE', onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'authorId' })
+  author: UserEntity;
 }

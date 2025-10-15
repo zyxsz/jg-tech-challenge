@@ -1,3 +1,4 @@
+import { User } from '@/users/domain/entities/user.entity';
 import { Entity } from '@repo/shared/domain';
 import { Optional } from '@repo/shared/types';
 
@@ -16,7 +17,11 @@ export interface TaskProps {
   createdAt: Date;
 }
 
-export class Task extends Entity<TaskProps> {
+export interface TaskRelations {
+  author?: User;
+}
+
+export class Task extends Entity<TaskProps, TaskRelations> {
   public get authorId() {
     return this.props.authorId;
   }
@@ -55,13 +60,18 @@ export class Task extends Entity<TaskProps> {
     this.props.term = v;
   }
 
-  static create(props: Optional<TaskProps, 'createdAt'>, id?: string) {
+  static create(
+    props: Optional<TaskProps, 'createdAt'>,
+    id?: string,
+    relations?: TaskRelations,
+  ) {
     return new Task(
       {
         ...props,
         createdAt: props.createdAt ?? new Date(),
       },
       id ?? randomUUID(),
+      relations,
     );
   }
 }

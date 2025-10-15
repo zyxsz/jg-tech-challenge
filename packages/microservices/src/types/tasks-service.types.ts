@@ -107,4 +107,12 @@ export namespace TasksServiceTypes {
       };
     }
   }
+
+  // Events
+
+  export interface CreateUserEventPayload {
+    id: string;
+    email: string;
+    username: string;
+  }
 }

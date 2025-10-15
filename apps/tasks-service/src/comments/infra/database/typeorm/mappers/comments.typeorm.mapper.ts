@@ -1,6 +1,6 @@
-import { Task } from '@/tasks/domain/entities/task.entity';
 import { CommentEntity } from '../entities/comment.typeorm.entity';
 import { Comment } from '@/comments/domain/entities/comment.entity';
+import { UsersTypeORMMapper } from '@/users/infra/database/typeorm/mappers/users.typeorm.mapper';
 
 export class CommentsTypeORMMapper {
   static toEntity(entity: CommentEntity) {
@@ -12,6 +12,11 @@ export class CommentsTypeORMMapper {
         createdAt: entity.createdAt,
       },
       entity.id,
+      {
+        author: entity.author
+          ? UsersTypeORMMapper.toEntity(entity.author)
+          : undefined,
+      },
     );
   }
 

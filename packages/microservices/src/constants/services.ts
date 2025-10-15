@@ -13,6 +13,10 @@ export namespace AuthService {
 }
 
 export namespace TasksService {
+  export enum Events {
+    CREATE_USER = "create-user",
+  }
+
   export enum Messages {
     CREATE_TASK = "create-task",
     GET_TASK = "get-task",

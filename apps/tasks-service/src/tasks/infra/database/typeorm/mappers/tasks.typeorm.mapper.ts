@@ -1,5 +1,6 @@
 import { Task } from '@/tasks/domain/entities/task.entity';
 import { TaskEntity } from '../entities/task.typeorm.entity';
+import { UsersTypeORMMapper } from '@/users/infra/database/typeorm/mappers/users.typeorm.mapper';
 
 export class TasksTypeORMMapper {
   static toEntity(entity: TaskEntity) {
@@ -14,6 +15,11 @@ export class TasksTypeORMMapper {
         createdAt: entity.createdAt,
       },
       entity.id,
+      {
+        author: entity.author
+          ? UsersTypeORMMapper.toEntity(entity.author)
+          : undefined,
+      },
     );
   }
 

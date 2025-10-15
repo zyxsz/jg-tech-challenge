@@ -53,4 +53,10 @@ export namespace AuthServiceTypes {
         };
       }
     | { isValid: false; user: null };
+
+  export interface CreateUserEventPayload {
+    id: string;
+    email: string;
+    username: string;
+  }
 }

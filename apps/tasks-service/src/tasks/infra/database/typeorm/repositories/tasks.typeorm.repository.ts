@@ -30,6 +30,9 @@ export class TasksTypeORMRepository implements TasksRepository {
       skip,
       take: data.limitPerPage,
       order: { createdAt: 'DESC' },
+      relations: {
+        author: true,
+      },
     });
 
     const totalPages = Math.ceil(count / data.limitPerPage);

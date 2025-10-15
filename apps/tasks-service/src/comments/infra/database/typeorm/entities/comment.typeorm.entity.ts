@@ -1,3 +1,4 @@
+import { UserEntity } from '../../../../../users/infra/database/typeorm/entities/users.typeorm.entity';
 import { TaskEntity } from '../../../../../tasks/infra/database/typeorm/entities/task.typeorm.entity';
 import {
   Entity,
@@ -15,7 +16,6 @@ export class CommentEntity {
   id: string;
 
   @Column()
-  @Index()
   authorId: string;
 
   @ManyToOne(() => TaskEntity, { onUpdate: 'CASCADE', onDelete: 'CASCADE' })
@@ -30,4 +30,8 @@ export class CommentEntity {
 
   @CreateDateColumn()
   createdAt: Date;
+
+  @ManyToOne(() => UserEntity, { onUpdate: 'CASCADE', onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'authorId' })
+  author: UserEntity;
 }

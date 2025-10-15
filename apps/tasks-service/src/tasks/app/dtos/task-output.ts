@@ -13,6 +13,14 @@ export interface TaskOutput {
   status: TaskStatus;
   term: Date;
   createdAt: Date;
+
+  relations?: {
+    author?: {
+      id: string;
+      email: string;
+      username: string;
+    };
+  };
 }
 
 export class TaskOutputMapper {
@@ -26,6 +34,18 @@ export class TaskOutputMapper {
       status: entity.status,
       term: entity.term,
       createdAt: entity.createdAt,
+
+      relations: entity.relations
+        ? {
+            author: entity.relations.author
+              ? {
+                  id: entity.relations.author.id,
+                  username: entity.relations.author.username,
+                  email: entity.relations.author.email,
+                }
+              : undefined,
+          }
+        : undefined,
     } satisfies TaskOutput;
   }
 }

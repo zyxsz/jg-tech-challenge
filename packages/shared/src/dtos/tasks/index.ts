@@ -5,3 +5,4 @@ export * from "./delete-task.dto";
 export * from "./update-task.dto";
 
 export * from "./comments/index";
+export * from "./users/index";

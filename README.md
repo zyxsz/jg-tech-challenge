@@ -23,7 +23,7 @@ Acompanhe como foi o progresso da criação de cada serviço.
   - [x] Criar páginas de login/cadastro
     - Duração: **>1 hora**
   - [x] Criar página de tarefas
-    - Duração: **>1 hora**
+    - Duração: **~1 hora + 1/2**
   - [ ] Criar página de detalhes de uma tarefas
 
 - [x] AuthService
@@ -37,14 +37,12 @@ Acompanhe como foi o progresso da criação de cada serviço.
       - [x] Login
       - [x] Gerar tokens
       - [x] Revalidar token
-    - [ ] Testes unitários
   - [x] Integrar o domínio com a infraestrutura (NestJS Microservices, JWT, Bcrypt, DB typeORM)
     - Duração: **~1 hora + 1/2**
       - _+ uns 20 minutos configurando tudo do TypeORM 🥲_
     - [x] Criar repositórios/entidades utilizando TypeORM e Postgres
     - [x] Criar providers (Bcrypt, JWT)
     - [x] Criar controller
-  - [ ] Testes de integração/e2e
 - [ ] TaskService
   - [x] Criar o domínio das tasks
     - Duração: **~1 hora**
@@ -56,7 +54,6 @@ Acompanhe como foi o progresso da criação de cada serviço.
       - [x] Criar tarefa
       - [x] Atualizar tarefa
       - [x] Deletar tarefa
-    - [ ] Testes unitários
   - [x] Integrar o domínio das tarefas com a infraestrutura
     - Duração: **~1 hora**
     - [x] Criar DTOs compartilhados (@shared)
