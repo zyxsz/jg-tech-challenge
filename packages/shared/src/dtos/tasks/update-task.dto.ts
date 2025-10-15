@@ -5,6 +5,7 @@ import {
   IsNotEmptyObject,
   IsOptional,
   Length,
+  MinLength,
 } from "class-validator";
 
 enum TaskStatus {
@@ -29,7 +30,7 @@ export class UpdateTaskBodyDto implements Data {
   title: string;
 
   @IsOptional()
-  @Length(2, 256)
+  @MinLength(2)
   description?: string;
 
   @IsOptional()

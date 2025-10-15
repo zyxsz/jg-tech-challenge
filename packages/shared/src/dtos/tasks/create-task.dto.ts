@@ -1,5 +1,12 @@
 import type { TasksServiceTypes } from "@repo/microservices";
-import { IsEnum, IsNotEmpty, Length, Max, Min } from "class-validator";
+import {
+  IsEnum,
+  IsNotEmpty,
+  Length,
+  Max,
+  Min,
+  MinLength,
+} from "class-validator";
 import { TaskPriority, TaskStatus } from "./enums";
 
 export class CreateTaskDto implements TasksServiceTypes.CreateTaskInput {
@@ -11,7 +18,7 @@ export class CreateTaskDto implements TasksServiceTypes.CreateTaskInput {
   title: string;
 
   @IsNotEmpty()
-  @Length(2, 256)
+  @MinLength(2)
   description: string;
 
   @IsNotEmpty()
@@ -32,7 +39,7 @@ export class CreateTaskBodyDto {
   title: string;
 
   @IsNotEmpty()
-  @Length(2, 256)
+  @MinLength(2)
   description: string;
 
   @IsNotEmpty()
