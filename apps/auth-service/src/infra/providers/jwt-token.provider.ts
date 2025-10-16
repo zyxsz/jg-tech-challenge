@@ -1,6 +1,7 @@
 import { TokenProvider } from '@/app/providers/token.provider';
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { InvalidCredentialsError } from '@repo/errors/exceptions';
 
 @Injectable()
 export class JWTTokenProvider implements TokenProvider {
@@ -10,12 +11,26 @@ export class JWTTokenProvider implements TokenProvider {
     payload: T,
     expiresIn: number,
   ): Promise<string> {
-    return this.jwtService.signAsync<object>(payload, {
-      expiresIn: expiresIn,
-    });
+    try {
+      const response = this.jwtService.signAsync<object>(payload, {
+        expiresIn: expiresIn,
+      });
+
+      return response;
+    } catch (err) {
+      throw new InvalidCredentialsError(
+        'Não foi possível criar o seu token de acesso',
+      );
+    }
   }
 
-  validateToken<T extends object>(token: string): Promise<T> {
-    return this.jwtService.verifyAsync<T>(token);
+  async validateToken<T extends object>(token: string): Promise<T> {
+    try {
+      const response = await this.jwtService.verifyAsync<T>(token);
+
+      return response;
+    } catch (err) {
+      throw new InvalidCredentialsError('Não foi possível validar o seu token');
+    }
   }
 }

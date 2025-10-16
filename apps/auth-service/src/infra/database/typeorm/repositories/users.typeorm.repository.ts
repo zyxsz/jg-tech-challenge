@@ -3,8 +3,8 @@ import { Repository } from 'typeorm';
 import { UserEntity } from '../entities/user.typeorm.entity';
 import { UsersRepository } from '../../../../app/domain/repositories/users.repository';
 import { User } from '../../../../app/domain/entities/user.entity';
-import { NotFoundError } from '../../../../app/errors/not-found.error';
 import { UsersTypeORMMapper } from '../mappers/users.typeorm.mapper';
+import { NotFoundError } from '@repo/errors/exceptions';
 
 export class UsersTypeORMRepository implements UsersRepository {
   constructor(
@@ -15,7 +15,7 @@ export class UsersTypeORMRepository implements UsersRepository {
   async findById(id: string): Promise<User> {
     const user = await this.usersRepository.findOne({ where: { id } });
 
-    if (!user) throw new NotFoundError('User not found');
+    if (!user) throw new NotFoundError('Usuário não encontrado');
 
     return UsersTypeORMMapper.toEntity(user);
   }
@@ -25,7 +25,7 @@ export class UsersTypeORMRepository implements UsersRepository {
       where: { email: email.toLowerCase() },
     });
 
-    if (!user) throw new NotFoundError('User not found');
+    if (!user) throw new NotFoundError('Usuário não encontrado');
 
     return UsersTypeORMMapper.toEntity(user);
   }

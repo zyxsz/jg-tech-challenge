@@ -1,5 +1,6 @@
-import { Entity, type Optional } from '@repo/microservices';
 import { randomUUID } from 'node:crypto';
+import { Entity } from '@repo/shared/domain';
+import { Optional } from '@repo/shared/types';
 
 export interface UserProps {
   username: string;
@@ -9,7 +10,7 @@ export interface UserProps {
   createdAt: Date;
 }
 
-export class User extends Entity<UserProps> {
+export class User extends Entity<UserProps, {}> {
   public get username() {
     return this.props.username;
   }

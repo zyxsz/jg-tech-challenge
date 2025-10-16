@@ -1,6 +1,6 @@
+import { UnauthorizedError } from '@repo/errors/exceptions';
 import { UsersRepository } from '../domain/repositories/users.repository';
 import { UserOutput, UserOutputMapper } from '../dtos/user-output';
-import { UnauthorizedError } from '../errors/unauthorized.error';
 import { TokenProvider } from '../providers/token.provider';
 
 export interface ValidateTokenInput {

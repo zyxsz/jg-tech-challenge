@@ -1,7 +1,7 @@
+import { ConflictError } from '@repo/errors/exceptions';
 import { User } from '../domain/entities/user.entity';
 import { UsersRepository } from '../domain/repositories/users.repository';
 import { UserOutput, UserOutputMapper } from '../dtos/user-output';
-import { ConflictError } from '../errors/conflict.error';
 import { HashProvider } from '../providers/hash.provider';
 import { NotificationsService } from '../services/notifications.service';
 
@@ -26,7 +26,7 @@ export class RegisterUserUseCase {
       .catch(() => null);
 
     if (userAlreadyExists !== null)
-      throw new ConflictError('User already exists');
+      throw new ConflictError('Não foi possível criar o usuário');
 
     const passwordHash = await this.hashProvider.hash(input.password);
 

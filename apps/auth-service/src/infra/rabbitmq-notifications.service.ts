@@ -1,7 +1,8 @@
 import { NotificationsService } from '@/app/services/notifications.service';
 import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
-import { AuthServiceTypes, Services, TasksService } from '@repo/microservices';
+import { Services, TasksService } from '@repo/constants/services';
+import { AuthServiceTypes } from '@repo/dtos/types';
 
 @Injectable()
 export class RabbitMQNotificationsService implements NotificationsService {

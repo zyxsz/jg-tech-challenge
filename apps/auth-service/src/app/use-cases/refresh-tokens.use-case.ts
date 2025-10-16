@@ -1,6 +1,6 @@
 import { TokenProvider } from '../providers/token.provider';
-import { UnauthorizedError } from '../errors/unauthorized.error';
 import { UsersRepository } from '../domain/repositories/users.repository';
+import { UnauthorizedError } from '@repo/errors/exceptions';
 
 export interface RefreshTokensInput {
   refreshToken: string;
@@ -22,9 +22,9 @@ export class RefreshTokensUseCase {
       userId: string;
     }>(input.refreshToken);
 
-    if (!tokenPayload) throw new UnauthorizedError('Invalid refreshToken');
+    if (!tokenPayload) throw new UnauthorizedError('Refresh token invalido');
     if (!tokenPayload.userId)
-      throw new UnauthorizedError('Invalid refreshToken payload');
+      throw new UnauthorizedError('Conteúdo do refresh token é invalido');
 
     const user = await this.usersRepository.findById(tokenPayload.userId);
 

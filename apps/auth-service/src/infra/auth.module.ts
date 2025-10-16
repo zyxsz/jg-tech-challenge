@@ -13,8 +13,8 @@ import { TokenProvider } from '@/app/providers/token.provider';
 import { NotificationsService } from '@/app/services/notifications.service';
 import { RabbitMQNotificationsService } from './rabbitmq-notifications.service';
 import { ClientsModule, Transport } from '@nestjs/microservices';
-import { Services } from '@repo/microservices';
 import { ConfigService } from '@nestjs/config';
+import { Services } from '@repo/constants/services';
 
 @Module({
   imports: [

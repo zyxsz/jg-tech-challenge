@@ -1,6 +1,6 @@
+import { InvalidCredentialsError } from '@repo/errors/exceptions';
 import { UsersRepository } from '../domain/repositories/users.repository';
 import { UserOutput, UserOutputMapper } from '../dtos/user-output';
-import { InvalidCredentialsError } from '../errors/invalid-credentials.error';
 import { HashProvider } from '../providers/hash.provider';
 
 export interface LoginUseCaseInput {

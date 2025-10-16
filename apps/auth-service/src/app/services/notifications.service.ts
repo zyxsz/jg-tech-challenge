@@ -1,4 +1,4 @@
-import { AuthServiceTypes } from '@repo/microservices';
+import { AuthServiceTypes } from '@repo/dtos/types';
 
 export abstract class NotificationsService {
   abstract emitCreateUser(
