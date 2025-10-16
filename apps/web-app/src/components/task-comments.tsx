@@ -25,6 +25,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "./ui/pagination";
+import { TaskCommentButton } from "./task-comment-button";
 
 interface Props {
   taskId: string;
@@ -34,7 +35,11 @@ export const TaskComments = ({ taskId }: Props) => {
   const [page, setPage] = useQueryState("page", parseAsInteger.withDefault(1));
   const [limit] = useQueryState("limit", parseAsInteger.withDefault(5));
 
-  const { data: comments, isLoading } = useQuery({
+  const {
+    data: comments,
+    isLoading,
+    refetch,
+  } = useQuery({
     queryKey: ["tasks", taskId, "comments"],
     queryFn: () =>
       TasksService.getTaskCommentsWithPagination(taskId, page, limit),
@@ -65,17 +70,33 @@ export const TaskComments = ({ taskId }: Props) => {
     setPage((state) => state - 1);
   };
 
+  const handleRefetch = async () => {
+    await refetch();
+  };
+
   if (!comments.data.length) {
     if (page !== 1) {
       setPage(1);
     }
 
-    return <p>Sem comentarios</p>;
+    return (
+      <div>
+        <h2 className="text-xl font-bold">Nenhum comentário encontrado</h2>
+        <p className="text-sm text-muted-foreground">
+          Clique no botão abaixo para deixar o primeiro comentário nessa tarefa!
+        </p>
+        <TaskCommentButton
+          refetch={handleRefetch}
+          className="mt-2"
+          taskId={taskId}
+        />
+      </div>
+    );
   }
 
   return (
     <div>
-      <div>
+      <div className="space-y-2">
         {comments.data.map((comment) => (
           <div key={comment.id}>
             <div className="bg-card p-2 rounded-md border">
@@ -107,9 +128,7 @@ export const TaskComments = ({ taskId }: Props) => {
         ))}
       </div>
       <footer className="mt-4 flex items-center justify-between gap-2 select-none">
-        <Button variant="secondary">
-          Comentar <MessageCirclePlusIcon />
-        </Button>
+        <TaskCommentButton refetch={handleRefetch} taskId={taskId} />
         <Pagination className="w-auto mx-0">
           <PaginationContent>
             <PaginationItem>

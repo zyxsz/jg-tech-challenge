@@ -33,7 +33,7 @@ export const UpdateTaskPage = () => {
           Atualizar tarefa
         </h1>
         <p className="text-muted-foreground text-sm">
-          Preencha todos os campos abaixo para criar uma nova tarefa.
+          Preencha todos os campos abaixo para atualizar a tarefa.
         </p>
       </header>
 

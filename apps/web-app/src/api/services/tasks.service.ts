@@ -1,4 +1,5 @@
 import { api } from ".";
+import type { CreateCommentBody } from "../interfaces/http/tasks/comments/create-comment.interface";
 import type { GetCommentsWithPaginationResponse } from "../interfaces/http/tasks/comments/get-comments-with-pagination.interface";
 import type { CreateTaskBody } from "../interfaces/http/tasks/create-task.interface";
 import type { GetTaskResponse } from "../interfaces/http/tasks/get-task.interface";
@@ -45,6 +46,12 @@ export class TasksService {
       .get<GetCommentsWithPaginationResponse>(`/tasks/${id}/comments`, {
         params: { page, limitPerPage: limit },
       })
+      .then((response) => response.data);
+  }
+
+  static async createComment(id: string, body: CreateCommentBody) {
+    return api
+      .post<void>(`/tasks/${id}/comments`, body)
       .then((response) => response.data);
   }
 }
