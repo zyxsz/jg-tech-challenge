@@ -1,3 +1,4 @@
+import { AssignmentEntity } from '../../../../../assignments/infra/database/typeorm/entities/assignment.typeorm.entity';
 import { AuditLogEntity } from '../../../../../audit-logs/infra/database/typeorm/entities/audit-log.typeorm.entity';
 import { CommentEntity } from '../../../../../comments/infra/database/typeorm/entities/comment.typeorm.entity';
 import { TaskEntity } from '../../../../../tasks/infra/database/typeorm/entities/task.typeorm.entity';
@@ -22,4 +23,7 @@ export class UserEntity {
 
   @OneToMany(() => AuditLogEntity, (log) => log.author)
   auditLogs: AuditLogEntity[];
+
+  @OneToMany(() => AssignmentEntity, (log) => log.user)
+  assignments: AssignmentEntity[];
 }

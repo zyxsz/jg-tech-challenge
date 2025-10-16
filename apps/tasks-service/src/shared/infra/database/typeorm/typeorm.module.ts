@@ -6,6 +6,7 @@ import { TaskEntity } from '@/tasks/infra/database/typeorm/entities/task.typeorm
 import { CommentEntity } from '@/comments/infra/database/typeorm/entities/comment.typeorm.entity';
 import { AuditLogEntity } from '@/audit-logs/infra/database/typeorm/entities/audit-log.typeorm.entity';
 import { UserEntity } from '@/users/infra/database/typeorm/entities/users.typeorm.entity';
+import { AssignmentEntity } from '@/assignments/infra/database/typeorm/entities/assignment.typeorm.entity';
 
 @Module({
   imports: [],
@@ -53,6 +54,12 @@ import { UserEntity } from '@/users/infra/database/typeorm/entities/users.typeor
         dataSource.getRepository(UserEntity),
       inject: ['TYPEORM_DATA_SOURCE'],
     },
+    {
+      provide: 'ASSIGNMENTS_REPOSITORY',
+      useFactory: (dataSource: DataSource) =>
+        dataSource.getRepository(AssignmentEntity),
+      inject: ['TYPEORM_DATA_SOURCE'],
+    },
   ],
   exports: [
     'TYPEORM_DATA_SOURCE',
@@ -60,6 +67,7 @@ import { UserEntity } from '@/users/infra/database/typeorm/entities/users.typeor
     'COMMENTS_REPOSITORY',
     'AUDIT_LOGS_REPOSITORY',
     'USERS_REPOSITORY',
+    'ASSIGNMENTS_REPOSITORY',
   ],
 })
 export class TypeORMModule {}

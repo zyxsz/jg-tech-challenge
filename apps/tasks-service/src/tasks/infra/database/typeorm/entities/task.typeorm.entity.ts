@@ -11,6 +11,7 @@ import {
   ManyToOne,
   JoinColumn,
 } from 'typeorm';
+import { AssignmentEntity } from '../../../../../assignments/infra/database/typeorm/entities/assignment.typeorm.entity';
 
 @Entity({ name: 'tasks' })
 export class TaskEntity {
@@ -49,6 +50,9 @@ export class TaskEntity {
 
   @OneToMany(() => AuditLogEntity, (log) => log.task)
   auditLogs: AuditLogEntity[];
+
+  @OneToMany(() => AssignmentEntity, (log) => log.task)
+  assignments: AssignmentEntity[];
 
   @ManyToOne(() => UserEntity, { onUpdate: 'CASCADE', onDelete: 'CASCADE' })
   @JoinColumn({ name: 'authorId' })
