@@ -6,7 +6,6 @@ import {
   createRoute,
   createRouter,
 } from "@tanstack/react-router";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 import "./styles.css";
 import reportWebVitals from "./reportWebVitals.ts";
@@ -18,7 +17,7 @@ import { LoginPage } from "./routes/(publicRoutes)/login.page.tsx";
 import { Providers } from "./providers/index.tsx";
 import { RegisterPage } from "./routes/(publicRoutes)/register.page.tsx";
 import { TasksPage } from "./routes/(privateRoutes)/tasks/tasks.page.tsx";
-import { TaskDetails } from "./routes/(privateRoutes)/tasks/task-details.page.tsx";
+import { TaskDetailsPage } from "./routes/(privateRoutes)/tasks/task-details.page.tsx";
 import { CreateTaskPage } from "./routes/(privateRoutes)/tasks/create-task.page.tsx";
 import { UpdateTaskPage } from "./routes/(privateRoutes)/tasks/update-task.page.tsx";
 
@@ -71,7 +70,7 @@ const tasksPageRoute = createRoute({
 const taskDetailsRoute = createRoute({
   getParentRoute: () => privateRoutes,
   path: "/tasks/$taskId",
-  component: TaskDetails,
+  component: TaskDetailsPage,
 });
 
 const updateTaskRoute = createRoute({

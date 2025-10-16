@@ -29,6 +29,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Calendar } from "../ui/calendar";
 import { TasksService } from "@/api/services/tasks.service";
 import { queryClient } from "@/providers";
+import { Spinner } from "../ui/spinner";
 
 const formSchema = z.object({
   title: z.string().min(4).max(128),
@@ -60,28 +61,25 @@ export const UpdateTaskForm = ({ taskId, defaultValues }: Props) => {
 
   function onSubmit(data: z.infer<typeof formSchema>) {
     startSubmitTransition(async () => {
-      try {
-        await TasksService.update(taskId, data);
+      await TasksService.update(taskId, data)
+        .then(async () => {
+          await queryClient.invalidateQueries({
+            queryKey: ["tasks"],
+            exact: false,
+          });
 
-        await queryClient.invalidateQueries({
-          queryKey: ["tasks"],
-          exact: false,
-        });
+          toast.success("Tarefa atualizada com sucesso, redirecionando...");
 
-        toast.success("Tarefa atualizada com sucesso, redirecionando...");
-
-        navigate({ to: "/tasks/$taskId", params: { taskId } });
-      } catch (error: unknown | AxiosError) {
-        if (error instanceof AxiosError) {
+          navigate({ to: "/tasks/$taskId", params: { taskId } });
+        })
+        .catch((error) => {
           const message =
-            error.response?.data.message ||
+            error.response?.data?.message ||
+            error?.message ||
             "Não foi possível atualizar a tarefa.";
 
           toast.error(message);
-        } else {
-          toast.error("Não foi possível atualizar a tarefa.");
-        }
-      }
+        });
     });
   }
 
@@ -101,7 +99,6 @@ export const UpdateTaskForm = ({ taskId, defaultValues }: Props) => {
                 <FormControl>
                   <Input placeholder="Ex: my-task-01" {...field} />
                 </FormControl>
-
                 <FormMessage />
               </FormItem>
             )}
@@ -128,7 +125,6 @@ export const UpdateTaskForm = ({ taskId, defaultValues }: Props) => {
                     />
                   </div>
                 </FormControl>
-
                 <FormMessage />
               </FormItem>
             )}
@@ -240,7 +236,8 @@ export const UpdateTaskForm = ({ taskId, defaultValues }: Props) => {
             Cancelar
           </Button>
           <Button type="submit" disabled={isSubmitPending}>
-            Atualizar tarefa <ArrowRightIcon />
+            Atualizar tarefa{" "}
+            {isSubmitPending ? <Spinner /> : <ArrowRightIcon />}
           </Button>
         </div>
       </form>

@@ -29,6 +29,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Calendar } from "../ui/calendar";
 import { TasksService } from "@/api/services/tasks.service";
 import { queryClient } from "@/providers";
+import { Spinner } from "../ui/spinner";
 
 const formSchema = z.object({
   title: z.string().min(4).max(128),
@@ -55,27 +56,25 @@ export const CreateTaskForm = () => {
 
   function onSubmit(data: z.infer<typeof formSchema>) {
     startSubmitTransition(async () => {
-      try {
-        await TasksService.create(data);
+      await TasksService.create(data)
+        .then(async () => {
+          await queryClient.invalidateQueries({
+            queryKey: ["tasks"],
+            exact: false,
+          });
 
-        await queryClient.invalidateQueries({
-          queryKey: ["tasks"],
-          exact: false,
-        });
+          toast.success("Tarefa criada com sucesso, redirecionando...");
 
-        toast.success("Tarefa criada com sucesso, redirecionando...");
-
-        navigate({ to: "/tasks" });
-      } catch (error: unknown | AxiosError) {
-        if (error instanceof AxiosError) {
+          navigate({ to: "/tasks" });
+        })
+        .catch((error) => {
           const message =
-            error.response?.data.message || "Não foi possível criar a tarefa.";
+            error.response?.data?.message ||
+            error?.message ||
+            "Não foi possível criar a tarefa.";
 
           toast.error(message);
-        } else {
-          toast.error("Não foi possível criar a tarefa.");
-        }
-      }
+        });
     });
   }
 
@@ -234,7 +233,7 @@ export const CreateTaskForm = () => {
             Cancelar
           </Button>
           <Button type="submit" disabled={isSubmitPending}>
-            Criar task <ArrowRightIcon />
+            Criar task {isSubmitPending ? <Spinner /> : <ArrowRightIcon />}
           </Button>
         </div>
       </form>

@@ -1,3 +1,5 @@
+import { Navigate } from "@tanstack/react-router";
+
 export const HomePage = () => {
-  return <p>home</p>;
+  return <Navigate to="/tasks" />;
 };

@@ -1,10 +1,13 @@
-import { userStore } from "@/stores/user.store";
+import { authStore } from "@/stores/auth.store";
 import { Navigate, Outlet } from "@tanstack/react-router";
+import { toast } from "sonner";
 
 export const PublicLayout = () => {
-  const isAuthenticated = userStore((state) => state.isAuthenticated);
+  const isAuthenticated = authStore((state) => state.isAuthenticated);
 
   if (isAuthenticated) {
+    toast.error("Você já está autenticado, redirecionando...");
+
     return <Navigate to="/" />;
   }
 

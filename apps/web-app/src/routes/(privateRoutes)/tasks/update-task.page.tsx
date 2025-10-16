@@ -1,5 +1,7 @@
 import { TasksService } from "@/api/services/tasks.service";
+import { ErrorContainer } from "@/components/error-container";
 import { UpdateTaskForm } from "@/components/forms/update-task.form";
+import { LoadingContainer } from "@/components/loading-container";
 import { Button } from "@/components/ui/button";
 import { useQuery } from "@tanstack/react-query";
 import { Link, useParams } from "@tanstack/react-router";
@@ -8,13 +10,18 @@ import { ArrowLeftIcon } from "lucide-react";
 
 export const UpdateTaskPage = () => {
   const { taskId } = useParams({ from: "/privateRoutes/tasks/$taskId/update" });
-  const { data: task, isLoading } = useQuery({
+  const {
+    data: task,
+    isLoading,
+    error,
+  } = useQuery({
     queryKey: ["tasks", taskId],
     queryFn: () => TasksService.getTask(taskId),
   });
 
-  if (isLoading) return <p>Loading</p>;
-  if (!task) return <p>Task not found</p>;
+  if (isLoading) return <LoadingContainer />;
+  if (error) return <ErrorContainer message={error.message} />;
+  if (!task) return <ErrorContainer message={"Unable to fetch for task"} />;
 
   return (
     <div className="space-y-4 pb-12">

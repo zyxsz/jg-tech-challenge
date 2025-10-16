@@ -1,5 +1,5 @@
 import { ArrowRightIcon, MessageCirclePlusIcon } from "lucide-react";
-import { Button } from "./ui/button";
+import { Button } from "../../ui/button";
 import {
   Dialog,
   DialogContent,
@@ -7,7 +7,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "./ui/dialog";
+} from "../../ui/dialog";
 import { useState, useTransition, type ComponentProps } from "react";
 import {
   Form,
@@ -16,15 +16,14 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "./ui/form";
+} from "../../ui/form";
 import { useForm } from "react-hook-form";
 import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
-import { AxiosError } from "axios";
-import { Textarea } from "./ui/textarea";
+import { Textarea } from "../../ui/textarea";
 import { TasksService } from "@/api/services/tasks.service";
-import { Spinner } from "./ui/spinner";
+import { Spinner } from "../../ui/spinner";
 
 interface Props extends ComponentProps<typeof Button> {
   taskId: string;
@@ -44,25 +43,23 @@ export const TaskCommentButton = ({ taskId, refetch, ...rest }: Props) => {
 
   function onSubmit(data: z.infer<typeof formSchema>) {
     startSubmitTransition(async () => {
-      try {
-        await TasksService.createComment(taskId, data);
-        toast.success("Comentário publicado com sucesso.");
+      await TasksService.createComment(taskId, data)
+        .then(async () => {
+          toast.success("Comentário publicado com sucesso.");
 
-        if (refetch) await refetch();
+          if (refetch) await refetch();
 
-        form.reset();
-        setIsOpen(false);
-      } catch (error: unknown | AxiosError) {
-        if (error instanceof AxiosError) {
+          form.reset();
+          setIsOpen(false);
+        })
+        .catch((error) => {
           const message =
-            error.response?.data.message ||
+            error.response?.data?.message ||
+            error?.message ||
             "Não foi possível publicar o seu comentário.";
 
           toast.error(message);
-        } else {
-          toast.error("Não foi possível publicar o seu comentário.");
-        }
-      }
+        });
     });
   }
 
@@ -102,7 +99,6 @@ export const TaskCommentButton = ({ taskId, refetch, ...rest }: Props) => {
                         {...field}
                       />
                     </FormControl>
-
                     <FormMessage />
                   </FormItem>
                 )}

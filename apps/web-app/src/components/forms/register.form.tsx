@@ -4,7 +4,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -16,7 +15,8 @@ import { useTransition } from "react";
 import { AuthService } from "@/api/services/auth.service";
 import { useNavigate } from "@tanstack/react-router";
 import { toast } from "sonner";
-import { AxiosError } from "axios";
+import { Spinner } from "../ui/spinner";
+import { ArrowRightIcon } from "lucide-react";
 
 const formSchema = z
   .object({
@@ -46,26 +46,23 @@ export const RegisterForm = () => {
 
   function onSubmit(data: z.infer<typeof formSchema>) {
     startSubmitTransition(async () => {
-      try {
-        const response = await AuthService.registerUser(data);
+      await AuthService.registerUser(data)
+        .then((response) => {
+          localStorage.setItem("accessToken", response.accessToken);
+          localStorage.setItem("refreshToken", response.refreshToken);
 
-        localStorage.setItem("accessToken", response.accessToken);
-        localStorage.setItem("refreshToken", response.refreshToken);
+          toast.success("Cadastro realizado com sucesso, redirecionando...");
 
-        toast.success("Cadastro realizado com sucesso, redirecionando...");
-
-        navigate({ to: "/", reloadDocument: true });
-      } catch (error: unknown | AxiosError) {
-        if (error instanceof AxiosError) {
+          navigate({ to: "/", reloadDocument: true });
+        })
+        .catch((error) => {
           const message =
-            error.response?.data.message ||
-            "Não foi possível realizar o seu login.";
+            error.response?.data?.message ||
+            error?.message ||
+            "Não foi possível realizar o seu cadastro.";
 
           toast.error(message);
-        } else {
-          toast.error("Não foi possível realizar o seu login.");
-        }
-      }
+        });
     });
   }
 
@@ -85,7 +82,6 @@ export const RegisterForm = () => {
                 <FormControl>
                   <Input placeholder="Ex: example" {...field} />
                 </FormControl>
-
                 <FormMessage />
               </FormItem>
             )}
@@ -99,7 +95,6 @@ export const RegisterForm = () => {
                 <FormControl>
                   <Input placeholder="Ex: example@tasks.com" {...field} />
                 </FormControl>
-
                 <FormMessage />
               </FormItem>
             )}
@@ -127,7 +122,6 @@ export const RegisterForm = () => {
                 <FormControl>
                   <Input placeholder="Ex: *******" {...field} />
                 </FormControl>
-
                 <FormMessage />
               </FormItem>
             )}
@@ -135,7 +129,7 @@ export const RegisterForm = () => {
         </div>
         <div className="w-full flex items-center justify-end gap-4">
           <Button className="w-full" type="submit" disabled={isSubmitPending}>
-            Cadastrar
+            Cadastrar {isSubmitPending ? <Spinner /> : <ArrowRightIcon />}
           </Button>
         </div>
       </form>

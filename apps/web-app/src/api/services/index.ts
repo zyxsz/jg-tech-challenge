@@ -1,6 +1,7 @@
-import axios from "axios";
+import axios, { AxiosError, type AxiosInstance } from "axios";
 import { AuthService } from "./auth.service";
-import { userStore } from "@/stores/user.store";
+import { authStore } from "@/stores/auth.store";
+import { toast } from "sonner";
 
 export const api = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL,
@@ -24,11 +25,11 @@ async function refreshToken() {
   const refreshToken = localStorage.getItem("refreshToken");
   if (!refreshToken) return;
 
-  if (userStore.getState().isRefreshingToken) {
+  if (authStore.getState().isRefreshingToken) {
     return new Promise((resolve) => setTimeout(() => resolve, 600));
   }
 
-  userStore.setState({ isRefreshingToken: true });
+  authStore.setState({ isRefreshingToken: true });
 
   const newTokens = await AuthService.refreshToken({ refreshToken });
 
@@ -37,25 +38,39 @@ async function refreshToken() {
 
   api.defaults.headers["Authorization"] = `Bearer ${newTokens.accessToken}`;
 
-  userStore.setState({ isRefreshingToken: false });
+  authStore.setState({ isRefreshingToken: false });
 
   return newTokens.accessToken;
 }
 
 api.interceptors.response.use(
   (response) => response,
-  async (error) => {
-    if (error.status === 401) {
-      const newToken = await refreshToken();
-      if (!newToken) return error;
+  async (originalRequest) => {
+    if (
+      originalRequest.response.status === 401 &&
+      !originalRequest.request.responseURL.endsWith("refresh")
+    ) {
+      try {
+        await refreshToken();
 
-      const config = error.config;
+        const config = originalRequest.config;
+        config.headers["Authorization"] = api.defaults.headers["Authorization"];
 
-      config.headers["Authorization"] = api.defaults.headers["Authorization"];
+        return api(config);
+      } catch (error: AxiosError | unknown) {
+        if (error instanceof AxiosError) {
+          const message =
+            error.response?.data?.message ||
+            error?.message ||
+            "Não foi possível atualizar seu token de acesso.";
 
-      return api(config);
+          toast.error(message);
+        }
+
+        return Promise.reject(originalRequest);
+      }
     }
 
-    return error;
+    return Promise.reject(originalRequest);
   }
 );

@@ -4,7 +4,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -15,8 +14,9 @@ import { Input } from "../ui/input";
 import { useTransition } from "react";
 import { AuthService } from "@/api/services/auth.service";
 import { useNavigate } from "@tanstack/react-router";
-import { AxiosError } from "axios";
 import { toast } from "sonner";
+import { Spinner } from "../ui/spinner";
+import { ArrowRightIcon } from "lucide-react";
 
 const formSchema = z.object({
   email: z.email(),
@@ -37,26 +37,23 @@ export const LoginForm = () => {
 
   function onSubmit(data: z.infer<typeof formSchema>) {
     startSubmitTransition(async () => {
-      try {
-        const response = await AuthService.loginUser(data);
+      await AuthService.loginUser(data)
+        .then((response) => {
+          localStorage.setItem("accessToken", response.accessToken);
+          localStorage.setItem("refreshToken", response.refreshToken);
 
-        localStorage.setItem("accessToken", response.accessToken);
-        localStorage.setItem("refreshToken", response.refreshToken);
+          toast.success("Login realizado com sucesso, redirecionando...");
 
-        toast.success("Login realizado com sucesso, redirecionando...");
-
-        navigate({ to: "/", reloadDocument: true });
-      } catch (error: unknown | AxiosError) {
-        if (error instanceof AxiosError) {
+          navigate({ to: "/", reloadDocument: true });
+        })
+        .catch((error) => {
           const message =
-            error.response?.data.message ||
+            error.response?.data?.message ||
+            error?.message ||
             "Não foi possível realizar o seu login.";
 
           toast.error(message);
-        } else {
-          toast.error("Não foi possível realizar o seu login.");
-        }
-      }
+        });
     });
   }
 
@@ -76,9 +73,7 @@ export const LoginForm = () => {
                 <FormControl>
                   <Input placeholder="Ex: example@tasks.com" {...field} />
                 </FormControl>
-                {/* <FormDescription>
-                This is your public display name.
-              </FormDescription> */}
+
                 <FormMessage />
               </FormItem>
             )}
@@ -92,9 +87,6 @@ export const LoginForm = () => {
                 <FormControl>
                   <Input placeholder="Ex: *******" {...field} />
                 </FormControl>
-                {/* <FormDescription>
-                This is your public display name.
-              </FormDescription> */}
                 <FormMessage />
               </FormItem>
             )}
@@ -102,7 +94,7 @@ export const LoginForm = () => {
         </div>
         <div className="w-full flex items-center justify-end gap-4">
           <Button className="w-full" type="submit" disabled={isSubmitPending}>
-            Entrar
+            Entrar {isSubmitPending ? <Spinner /> : <ArrowRightIcon />}
           </Button>
         </div>
       </form>
