@@ -1,3 +1,4 @@
+import { User } from '@/users/domain/entities/user.entity';
 import { Entity } from '@repo/shared/domain';
 import { Optional } from '@repo/shared/types';
 import { randomUUID } from 'node:crypto';
@@ -8,7 +9,11 @@ export interface AssignmentProps {
   assignedAt: Date;
 }
 
-export class Assignment extends Entity<AssignmentProps, {}> {
+export interface AssignmentRelations {
+  user?: User;
+}
+
+export class Assignment extends Entity<AssignmentProps, AssignmentRelations> {
   public get userId() {
     return this.props.userId;
   }
@@ -19,10 +24,15 @@ export class Assignment extends Entity<AssignmentProps, {}> {
     return this.props.assignedAt;
   }
 
-  static create(props: Optional<AssignmentProps, 'assignedAt'>, id?: string) {
+  static create(
+    props: Optional<AssignmentProps, 'assignedAt'>,
+    id?: string,
+    relations?: AssignmentRelations,
+  ) {
     return new Assignment(
       { ...props, assignedAt: props.assignedAt ?? new Date() },
       id ?? randomUUID(),
+      relations,
     );
   }
 }

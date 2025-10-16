@@ -16,6 +16,7 @@ export class AssignmentsTypeORMRepository implements AssignmentsRepository {
     const assignments = await this.assignmentsRepository.find({
       where: { taskId },
       order: { assignedAt: 'desc' },
+      relations: { user: true },
     });
 
     return assignments.map((assignment) =>

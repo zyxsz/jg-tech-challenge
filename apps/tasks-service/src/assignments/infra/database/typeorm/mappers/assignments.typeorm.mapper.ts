@@ -1,5 +1,6 @@
 import { Assignment } from '@/assignments/domain/entities/assignment.entity';
 import { AssignmentEntity } from '../entities/assignment.typeorm.entity';
+import { UsersTypeORMMapper } from '@/users/infra/database/typeorm/mappers/users.typeorm.mapper';
 
 export class AssignmentsTypeORMMapper {
   static toEntity(entity: AssignmentEntity) {
@@ -10,6 +11,11 @@ export class AssignmentsTypeORMMapper {
         assignedAt: entity.assignedAt,
       },
       entity.id,
+      {
+        user: entity.user
+          ? UsersTypeORMMapper.toEntity(entity.user)
+          : undefined,
+      },
     );
   }
 
