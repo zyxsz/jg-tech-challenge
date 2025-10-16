@@ -7,16 +7,15 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
-import {
-  CreateCommentBodyDto,
-  CreateCommentParamsDto,
-  GetCommentsWithPaginationQueryDto,
-  GetTaskDto,
-} from '@repo/shared/dtos';
 import { CommentsService } from './comments.service';
 import { AuthenticatedUser } from '@/auth/decorators/authenticated-user.decorator';
 import { type UserType } from '@/shared/types/user';
 import { AuthenticatedRoute } from '@/auth/decorators/authenticated-route.decorator';
+import {
+  CreateCommentDTO,
+  GetCommentsWithPaginationDTO,
+  GetTaskDTO,
+} from '@repo/dtos';
 
 @Controller('/tasks/:taskId/comments')
 @AuthenticatedRoute()
@@ -26,8 +25,8 @@ export class CommentsController {
 
   @Get('/')
   async getCommentsWithPagination(
-    @Param() params: GetTaskDto,
-    @Query() query: GetCommentsWithPaginationQueryDto,
+    @Param() params: GetTaskDTO.Http.Params,
+    @Query() query: GetCommentsWithPaginationDTO.Http.Params,
   ) {
     return this.commentsService.getCommentsWithPagination({
       taskId: params.taskId,
@@ -38,9 +37,9 @@ export class CommentsController {
 
   @Post('/')
   async createComment(
-    @Param() params: CreateCommentParamsDto,
+    @Param() params: CreateCommentDTO.Http.Params,
+    @Body() body: CreateCommentDTO.Http.Body,
     @AuthenticatedUser() user: UserType,
-    @Body() body: CreateCommentBodyDto,
   ) {
     return this.commentsService.createComment({
       authorId: user.id,

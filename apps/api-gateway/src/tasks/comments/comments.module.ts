@@ -3,8 +3,8 @@ import { CommentsController } from './comments.controller';
 import { CommentsService } from './comments.service';
 import { AuthModule } from '@/auth/auth.module';
 import { ClientsModule, Transport } from '@nestjs/microservices';
-import { Services } from '@repo/microservices';
 import { ConfigService } from '@nestjs/config';
+import { Services } from '@repo/constants/services';
 
 @Module({
   imports: [

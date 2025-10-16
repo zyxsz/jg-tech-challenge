@@ -1,11 +1,11 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { ClientProxy } from '@nestjs/microservices';
+import { ClientProxy, RpcException } from '@nestjs/microservices';
 import {
   Services,
-  TasksServiceTypes,
   TasksService as TasksServiceMC,
-} from '@repo/microservices';
-import { lastValueFrom } from 'rxjs';
+} from '@repo/constants/services';
+import { TasksServiceTypes } from '@repo/dtos/types';
+import { firstValueFrom } from 'rxjs';
 
 @Injectable()
 export class AssignmentsService {
@@ -16,16 +16,16 @@ export class AssignmentsService {
     input: TasksServiceTypes.Assignments.CreateAssignmentInput,
   ): Promise<TasksServiceTypes.Assignments.CreateAssignmentOutput> {
     try {
-      return await lastValueFrom(
+      const response = await firstValueFrom(
         this.tasksClient.send(
           TasksServiceMC.Assignments.Messages.CREATE_ASSIGNMENT,
           input,
         ),
       );
-    } catch (err) {
-      console.log(err);
 
-      throw err;
+      return response;
+    } catch (err) {
+      throw new RpcException(err);
     }
   }
 
@@ -33,16 +33,16 @@ export class AssignmentsService {
     input: TasksServiceTypes.Assignments.GetAssignmentsInput,
   ): Promise<TasksServiceTypes.Assignments.GetAssignmentsOutput> {
     try {
-      return await lastValueFrom(
+      const response = await firstValueFrom(
         this.tasksClient.send(
           TasksServiceMC.Assignments.Messages.GET_ASSIGNMENTS,
           input,
         ),
       );
-    } catch (err) {
-      console.log(err);
 
-      throw err;
+      return response;
+    } catch (err) {
+      throw new RpcException(err);
     }
   }
 }

@@ -10,17 +10,17 @@ import {
   Query,
 } from '@nestjs/common';
 import { TasksService } from './tasks.service';
-import {
-  CreateTaskBodyDto,
-  DeleteTaskDto,
-  GetTaskDto,
-  GetTasksWithPaginationDto,
-  UpdateTaskBodyDto,
-  UpdateTaskParamsDto,
-} from '@repo/shared/dtos';
+
 import { AuthenticatedRoute } from '@/auth/decorators/authenticated-route.decorator';
 import { AuthenticatedUser } from '@/auth/decorators/authenticated-user.decorator';
 import type { UserType } from '@/shared/types/user';
+import {
+  CreateTaskDTO,
+  DeleteTaskDTO,
+  GetTaskDTO,
+  GetTasksWithPaginationDTO,
+  UpdateTaskDTO,
+} from '@repo/dtos';
 
 @Controller('/tasks')
 @AuthenticatedRoute()
@@ -29,21 +29,23 @@ export class TasksController {
   private tasksService: TasksService;
 
   @Get('/')
-  async getTasksWithPagination(@Query() query: GetTasksWithPaginationDto) {
+  async getTasksWithPagination(
+    @Query() query: GetTasksWithPaginationDTO.Http.QueryParams,
+  ) {
     console.log(query);
 
     return await this.tasksService.getTasksWithPagination(query);
   }
 
   @Get('/:taskId')
-  async getTask(@Param() params: GetTaskDto) {
+  async getTask(@Param() params: GetTaskDTO.Http.Params) {
     return await this.tasksService.getTask(params);
   }
 
   @Post('/')
   async createTask(
     @AuthenticatedUser() user: UserType,
-    @Body() body: CreateTaskBodyDto,
+    @Body() body: CreateTaskDTO.Http.Body,
   ) {
     return await this.tasksService.createTask({
       authorId: user.id,
@@ -53,8 +55,8 @@ export class TasksController {
 
   @Put('/:taskId')
   async updateTask(
-    @Param() params: UpdateTaskParamsDto,
-    @Body() body: UpdateTaskBodyDto,
+    @Param() params: UpdateTaskDTO.Http.Params,
+    @Body() body: UpdateTaskDTO.Http.Body,
     @AuthenticatedUser() user: UserType,
   ) {
     return await this.tasksService.updateTask({
@@ -65,7 +67,7 @@ export class TasksController {
   }
 
   @Delete('/:taskId')
-  async deleteTask(@Param() params: DeleteTaskDto) {
+  async deleteTask(@Param() params: DeleteTaskDTO.Http.Params) {
     await this.tasksService.deleteTask(params);
 
     return;

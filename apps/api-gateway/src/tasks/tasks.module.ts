@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { ClientsModule, Transport } from '@nestjs/microservices';
-import { Services } from '@repo/microservices';
 import { TasksService } from './tasks.service';
 import { TasksController } from './tasks.controller';
 import { AuthModule } from '@/auth/auth.module';
+import { Services } from '@repo/constants/services';
 
 @Module({
   imports: [

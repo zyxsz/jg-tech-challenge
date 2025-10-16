@@ -2,9 +2,9 @@ import { Module } from '@nestjs/common';
 import { AssignmentsController } from './assignments.controller';
 import { AuthModule } from '@/auth/auth.module';
 import { ClientsModule, Transport } from '@nestjs/microservices';
-import { Services } from '@repo/microservices';
 import { ConfigService } from '@nestjs/config';
 import { AssignmentsService } from './assignments.service';
+import { Services } from '@repo/constants/services';
 
 @Module({
   imports: [

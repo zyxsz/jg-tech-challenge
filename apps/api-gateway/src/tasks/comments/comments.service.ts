@@ -1,11 +1,11 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { ClientProxy } from '@nestjs/microservices';
+import { ClientProxy, RpcException } from '@nestjs/microservices';
 import {
   Services,
-  TasksServiceTypes,
   TasksService as TasksServiceMC,
-} from '@repo/microservices';
-import { lastValueFrom } from 'rxjs';
+} from '@repo/constants/services';
+import { TasksServiceTypes } from '@repo/dtos/types';
+import { firstValueFrom } from 'rxjs';
 
 @Injectable()
 export class CommentsService {
@@ -16,16 +16,16 @@ export class CommentsService {
     input: TasksServiceTypes.Comments.CreateCommentInput,
   ): Promise<TasksServiceTypes.Comments.CreateCommentOutput> {
     try {
-      return await lastValueFrom(
+      const response = await firstValueFrom(
         this.tasksClient.send(
           TasksServiceMC.Comments.Messages.CREATE_COMMENT,
           input,
         ),
       );
-    } catch (err) {
-      console.log(err);
 
-      throw err;
+      return response;
+    } catch (err) {
+      throw new RpcException(err);
     }
   }
 
@@ -33,16 +33,16 @@ export class CommentsService {
     input: TasksServiceTypes.Comments.GetCommentWithPaginationInput,
   ): Promise<TasksServiceTypes.Comments.GetCommentWithPaginationOutput> {
     try {
-      return await lastValueFrom(
+      const response = await firstValueFrom(
         this.tasksClient.send(
           TasksServiceMC.Comments.Messages.GET_COMMENTS_WITH_PAGINATION,
           input,
         ),
       );
-    } catch (err) {
-      console.log(err);
 
-      throw err;
+      return response;
+    } catch (err) {
+      throw new RpcException(err);
     }
   }
 }

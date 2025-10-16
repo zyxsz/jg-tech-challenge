@@ -1,11 +1,11 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { ClientProxy } from '@nestjs/microservices';
+import { ClientProxy, RpcException } from '@nestjs/microservices';
 import {
   Services,
-  TasksServiceTypes,
   TasksService as TasksServiceMC,
-} from '@repo/microservices';
-import { lastValueFrom } from 'rxjs';
+} from '@repo/constants/services';
+import { TasksServiceTypes } from '@repo/dtos/types';
+import { firstValueFrom } from 'rxjs';
 
 @Injectable()
 export class TasksService {
@@ -16,13 +16,13 @@ export class TasksService {
     input: TasksServiceTypes.GetTaskInput,
   ): Promise<TasksServiceTypes.GetTaskOutput> {
     try {
-      return await lastValueFrom(
+      const response = await firstValueFrom(
         this.tasksClient.send(TasksServiceMC.Messages.GET_TASK, input),
       );
-    } catch (err) {
-      console.log(err);
 
-      throw err;
+      return response;
+    } catch (err) {
+      throw new RpcException(err);
     }
   }
 
@@ -30,16 +30,16 @@ export class TasksService {
     input: TasksServiceTypes.GetTasksWithPaginationInput,
   ): Promise<TasksServiceTypes.GetTasksWithPaginationOutput> {
     try {
-      return await lastValueFrom(
+      const response = await firstValueFrom(
         this.tasksClient.send(
           TasksServiceMC.Messages.GET_TASKS_WITH_PAGINATIOn,
           input,
         ),
       );
-    } catch (err) {
-      console.log(err);
 
-      throw err;
+      return response;
+    } catch (err) {
+      throw new RpcException(err);
     }
   }
 
@@ -47,13 +47,13 @@ export class TasksService {
     input: TasksServiceTypes.CreateTaskInput,
   ): Promise<TasksServiceTypes.CreateTaskOutput> {
     try {
-      return await lastValueFrom(
+      const response = await firstValueFrom(
         this.tasksClient.send(TasksServiceMC.Messages.CREATE_TASK, input),
       );
-    } catch (err) {
-      console.log(err);
 
-      throw err;
+      return response;
+    } catch (err) {
+      throw new RpcException(err);
     }
   }
 
@@ -61,13 +61,13 @@ export class TasksService {
     input: TasksServiceTypes.UpdateTaskInput,
   ): Promise<TasksServiceTypes.UpdateTaskOutput> {
     try {
-      return await lastValueFrom(
+      const response = await firstValueFrom(
         this.tasksClient.send(TasksServiceMC.Messages.UPDATE_TASK, input),
       );
-    } catch (err) {
-      console.log(err);
 
-      throw err;
+      return response;
+    } catch (err) {
+      throw new RpcException(err);
     }
   }
 
@@ -75,13 +75,13 @@ export class TasksService {
     input: TasksServiceTypes.DeleteTaskInput,
   ): Promise<TasksServiceTypes.DeleteTaskOutput> {
     try {
-      return await lastValueFrom(
+      const response = await firstValueFrom(
         this.tasksClient.send(TasksServiceMC.Messages.DELETE_TASK, input),
       );
-    } catch (err) {
-      console.log(err);
 
-      throw err;
+      return response;
+    } catch (err) {
+      throw new RpcException(err);
     }
   }
 }

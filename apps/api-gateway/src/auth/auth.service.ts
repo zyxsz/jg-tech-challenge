@@ -1,11 +1,11 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { ClientProxy } from '@nestjs/microservices';
+import { ClientProxy, RpcException } from '@nestjs/microservices';
 import {
-  AuthServiceTypes,
-  Services,
   AuthService as AuthServiceMS,
-} from '@repo/microservices';
-import { lastValueFrom } from 'rxjs';
+  Services,
+} from '@repo/constants/services';
+import { AuthServiceTypes } from '@repo/dtos/types';
+import { firstValueFrom } from 'rxjs';
 
 @Injectable()
 export class AuthService {
@@ -16,13 +16,13 @@ export class AuthService {
     data: AuthServiceTypes.RegisterUserInput,
   ): Promise<AuthServiceTypes.RegisterUserOutput> {
     try {
-      return lastValueFrom(
+      const response = await firstValueFrom(
         this.authClient.send(AuthServiceMS.Messages.REGISTER_USER, data),
       );
-    } catch (err) {
-      console.log(err, JSON.stringify(err));
 
-      throw err;
+      return response;
+    } catch (err) {
+      throw new RpcException(err);
     }
   }
 
@@ -30,13 +30,14 @@ export class AuthService {
     data: AuthServiceTypes.LoginUserInput,
   ): Promise<AuthServiceTypes.LoginUserOutput> {
     try {
-      return lastValueFrom(
+      const response = await firstValueFrom(
         this.authClient.send(AuthServiceMS.Messages.LOGIN_USER, data),
       );
-    } catch (err) {
-      console.log(err, JSON.stringify(err));
 
-      throw err;
+      return response;
+    } catch (err) {
+      console.log('BLA', err);
+      throw new RpcException(err);
     }
   }
 
@@ -44,13 +45,13 @@ export class AuthService {
     data: AuthServiceTypes.ValidateTokenInput,
   ): Promise<AuthServiceTypes.ValidateTokenOutput> {
     try {
-      return lastValueFrom(
+      const response = await firstValueFrom(
         this.authClient.send(AuthServiceMS.Messages.VALIDATE_TOKEN, data),
       );
-    } catch (err) {
-      console.log(err, JSON.stringify(err));
 
-      throw err;
+      return response;
+    } catch (err) {
+      throw new RpcException(err);
     }
   }
 
@@ -58,13 +59,13 @@ export class AuthService {
     data: AuthServiceTypes.RefreshTokenInput,
   ): Promise<AuthServiceTypes.RefreshTokenOutput> {
     try {
-      return lastValueFrom(
+      const response = await firstValueFrom(
         this.authClient.send(AuthServiceMS.Messages.REFRESH_TOKEN, data),
       );
-    } catch (err) {
-      console.log(err, JSON.stringify(err));
 
-      throw err;
+      return response;
+    } catch (err) {
+      throw new RpcException(err);
     }
   }
 }
