@@ -224,3 +224,11 @@ erDiagram
 #### Implementações & Decisões
 
 - ...
+
+A fazer:
+
+- [x] Filtro e busca nas tarefas (web-app)
+- [ ] Responsividade
+- [ ] Notificações
+- [x] Tratamento de erros
+- [x] Refatoração (packages)
