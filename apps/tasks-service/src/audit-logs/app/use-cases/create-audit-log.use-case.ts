@@ -1,12 +1,12 @@
-import {
-  AuditLog,
-  AuditLogActionType,
-} from '../domain/entities/audit-log.entity';
-import { AuditLogsRepository } from '../domain/repositories/audit-logs.repository';
+import { AuditLogsRepository } from '@/audit-logs/domain/repositories/audit-logs.repository';
 import {
   AuditLogOutput,
   AuditLogOutputMapper,
 } from './dtos/audit-log-output.dto';
+import {
+  AuditLog,
+  AuditLogActionType,
+} from '@/audit-logs/domain/entities/audit-log.entity';
 
 export interface CreateAuditLogUseCaseInput {
   taskId: string;

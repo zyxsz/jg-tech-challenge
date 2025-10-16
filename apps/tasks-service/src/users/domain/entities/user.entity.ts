@@ -1,11 +1,11 @@
-import { Entity } from '@repo/microservices';
+import { Entity } from '@repo/shared/domain';
 
 export interface UserProps {
   username: string;
   email: string;
 }
 
-export class User extends Entity<UserProps> {
+export class User extends Entity<UserProps, {}> {
   public get username() {
     return this.props.username;
   }

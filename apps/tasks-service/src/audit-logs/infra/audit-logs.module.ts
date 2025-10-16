@@ -2,8 +2,8 @@ import { LocalAuditLogsService } from '@/audit-logs/infra/local-audit-logs.servi
 import { AuditLogsService } from '@/shared/services/audit-logs.service';
 import { Module } from '@nestjs/common';
 import { DatabaseModule } from './database/database.module';
-import { CreateAuditLogUseCase } from '../use-cases/create-audit-log.use-case';
 import { AuditLogsRepository } from '../domain/repositories/audit-logs.repository';
+import { CreateAuditLogUseCase } from '../app/use-cases/create-audit-log.use-case';
 
 @Module({
   imports: [DatabaseModule],

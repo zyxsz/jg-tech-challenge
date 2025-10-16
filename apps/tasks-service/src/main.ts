@@ -7,6 +7,7 @@ import {
   Transport,
 } from '@nestjs/microservices';
 import 'reflect-metadata';
+import { BaseExceptionFilter } from '@repo/errors/filters';
 
 async function bootstrap() {
   const app = await NestFactory.createMicroservice<
@@ -23,6 +24,8 @@ async function bootstrap() {
     },
     inject: [ConfigService],
   });
+
+  app.useGlobalFilters(new BaseExceptionFilter());
 
   await app.listen();
 }

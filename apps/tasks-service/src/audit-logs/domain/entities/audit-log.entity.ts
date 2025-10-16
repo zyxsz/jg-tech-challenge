@@ -1,4 +1,4 @@
-import { Entity } from '@repo/microservices';
+import { Entity } from '@repo/shared/domain';
 import { Optional } from '@repo/shared/types';
 import { randomUUID } from 'node:crypto';
 
@@ -12,7 +12,7 @@ export interface AuditLogProps {
   createdAt: Date;
 }
 
-export class AuditLog extends Entity<AuditLogProps> {
+export class AuditLog extends Entity<AuditLogProps, {}> {
   public get taskId() {
     return this.props.taskId;
   }

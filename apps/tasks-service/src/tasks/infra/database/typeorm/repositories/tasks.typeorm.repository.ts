@@ -5,6 +5,7 @@ import { TaskEntity } from '../entities/task.typeorm.entity';
 import { Task } from '@/tasks/domain/entities/task.entity';
 import { TasksTypeORMMapper } from '../mappers/tasks.typeorm.mapper';
 import { PaginationInput, PaginationOutput } from '@repo/shared/domain';
+import { NotFoundError } from '@repo/errors/exceptions';
 
 export class TasksTypeORMRepository implements TasksRepository {
   constructor(
@@ -15,7 +16,7 @@ export class TasksTypeORMRepository implements TasksRepository {
   async findById(id: string): Promise<Task> {
     const task = await this.usersRepository.findOne({ where: { id } });
 
-    if (!task) throw new Error('Task not found');
+    if (!task) throw new NotFoundError('Tarefa não encontrada');
 
     return TasksTypeORMMapper.toEntity(task);
   }
