@@ -11,10 +11,15 @@ import { Services } from '@repo/constants/services';
       {
         name: Services.AUTH_SERVICE,
         useFactory: async (configService: ConfigService) => ({
-          transport: Transport.TCP,
+          transport: Transport.RMQ,
           options: {
-            url: configService.get('AUTH_SERVICE_URL'),
-            port: parseInt(configService.getOrThrow('AUTH_SERVICE_PORT')),
+            urls: [
+              `amqp://${configService.getOrThrow('RMQ_USER')}:${configService.getOrThrow('RMQ_PASS')}@${configService.getOrThrow('RMQ_HOST')}:${configService.getOrThrow('RMQ_PORT')}`,
+            ],
+            queue: Services.AUTH_SERVICE,
+            queueOptions: {
+              durable: false,
+            },
           },
         }),
         inject: [ConfigService],

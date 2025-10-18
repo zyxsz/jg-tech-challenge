@@ -9,14 +9,20 @@ import { Services } from '@repo/constants/services';
 @Module({
   imports: [
     AuthModule,
+
     ClientsModule.registerAsync([
       {
         name: Services.TASKS_SERVICE,
         useFactory: async (configService: ConfigService) => ({
-          transport: Transport.TCP,
+          transport: Transport.RMQ,
           options: {
-            url: configService.get('TASKS_SERVICE_URL'),
-            port: parseInt(configService.getOrThrow('TASKS_SERVICE_PORT')),
+            urls: [
+              `amqp://${configService.getOrThrow('RMQ_USER')}:${configService.getOrThrow('RMQ_PASS')}@${configService.getOrThrow('RMQ_HOST')}:${configService.getOrThrow('RMQ_PORT')}`,
+            ],
+            queue: Services.TASKS_SERVICE,
+            queueOptions: {
+              durable: false,
+            },
           },
         }),
         inject: [ConfigService],

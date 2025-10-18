@@ -1,0 +1,6 @@
+./.turbo
+./dist
+
+.env.*
+.env.example
+.env

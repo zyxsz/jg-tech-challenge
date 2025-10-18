@@ -14,19 +14,23 @@ export class AuthGuard implements CanActivate {
     const request = context.switchToHttp().getRequest();
     const token = this.extractTokenFromHeader(request);
     if (!token) {
-      throw new UnauthorizedException();
+      throw new UnauthorizedException('Token de acesso invalido');
     }
     try {
       const tokenResponse = await this.authService.validateToken({
         accessToken: token,
       });
 
+      console.log(tokenResponse.isValid);
+
       if (!tokenResponse.isValid) throw new UnauthorizedException();
 
       request['userId'] = tokenResponse.user.id;
       request['user'] = tokenResponse.user;
     } catch (err) {
-      throw new UnauthorizedException('Token de acesso invalido.');
+      console.log(err);
+
+      throw new UnauthorizedException('Token de acesso invalido');
     }
 
     return true;
