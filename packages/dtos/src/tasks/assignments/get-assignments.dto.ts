@@ -1,4 +1,6 @@
-import { TasksServiceTypes } from "@repo/microservices";
+import { ApiProperty, ApiSchema } from "@nestjs/swagger";
+import { type TasksServiceTypes } from "../../types/tasks-service.types";
+
 import { IsNotEmpty } from "class-validator";
 
 export class GetAssignmentsPayloadDto
@@ -16,10 +18,14 @@ export class GetAssignmentsParamsDto
 
 export namespace GetAssignmentsDTO {
   export namespace Http {
+    @ApiSchema({ name: "GetAssignmentsParamsDTO" })
     export class Params
       implements TasksServiceTypes.Assignments.GetAssignmentsInput
     {
       @IsNotEmpty()
+      @ApiProperty({
+        description: "Id da tarefa",
+      })
       taskId: string;
     }
   }

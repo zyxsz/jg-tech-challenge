@@ -10,7 +10,7 @@
     }
   },
   "scripts": {
-    "dev": "bun run build --watch",
+    "dev": "npm run build --watch",
     "build": "tsc -b -v",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\"",
     "generate:component": "turbo gen react-component",

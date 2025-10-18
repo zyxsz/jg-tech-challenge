@@ -11,9 +11,11 @@ import { AuditLogsModule } from '@/audit-logs/infra/audit-logs.module';
 import { AuditLogsService } from '@/shared/services/audit-logs.service';
 import { ObjectDiffProvider } from '@/shared/providers/object-diff.provider';
 import { LibObjectDiffProvider } from '@/shared/infra/providers/lib-object-diff.provider';
+import { ServicesModule } from '@/shared/infra/services/services.module';
+import { NotificationsService } from '@/shared/services/notifications.service';
 
 @Module({
-  imports: [DatabaseModule, AuditLogsModule],
+  imports: [DatabaseModule, AuditLogsModule, ServicesModule],
   controllers: [TasksController],
   providers: [
     { provide: ObjectDiffProvider, useClass: LibObjectDiffProvider },
@@ -36,10 +38,15 @@ import { LibObjectDiffProvider } from '@/shared/infra/providers/lib-object-diff.
       useFactory: (
         tasksRepository: TasksRepository,
         auditLogsService: AuditLogsService,
+        notificationsService: NotificationsService,
       ) => {
-        return new CreateTaskUseCase(tasksRepository, auditLogsService);
+        return new CreateTaskUseCase(
+          tasksRepository,
+          auditLogsService,
+          notificationsService,
+        );
       },
-      inject: [TasksRepository, AuditLogsService],
+      inject: [TasksRepository, AuditLogsService, NotificationsService],
     },
     {
       provide: UpdateTaskUseCase,
@@ -47,14 +54,21 @@ import { LibObjectDiffProvider } from '@/shared/infra/providers/lib-object-diff.
         tasksRepository: TasksRepository,
         auditLogsService: AuditLogsService,
         objectDiffProvider: ObjectDiffProvider,
+        notificationsService: NotificationsService,
       ) => {
         return new UpdateTaskUseCase(
           tasksRepository,
           auditLogsService,
           objectDiffProvider,
+          notificationsService,
         );
       },
-      inject: [TasksRepository, AuditLogsService, ObjectDiffProvider],
+      inject: [
+        TasksRepository,
+        AuditLogsService,
+        ObjectDiffProvider,
+        NotificationsService,
+      ],
     },
     {
       provide: DeleteTaskUseCase,

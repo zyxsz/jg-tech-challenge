@@ -22,7 +22,9 @@ import { AssignmentEntity } from '@/assignments/infra/database/typeorm/entities/
           password: configService.get('DATABASE_PASSWORD'),
           database: configService.get('DATABASE_DB'),
           entities: TypeOrmEntities,
-          ssl: true,
+          ssl: configService.get('DATABASE_SSL')
+            ? configService.get('DATABASE_SSL') === 'true'
+            : false,
           synchronize: false,
         });
 

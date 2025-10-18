@@ -4,6 +4,7 @@ import {
   AssignmentOutput,
   AssignmentOutputMapper,
 } from '../dtos/assignment-output.dto';
+import { ConflictError } from '@repo/errors/exceptions';
 
 export interface CreateAssignmentUseCaseInput {
   userId: string;
@@ -18,6 +19,13 @@ export class CreateAssignmentUseCase {
   async execute(
     input: CreateAssignmentUseCaseInput,
   ): Promise<CreateAssignmentUseCaseOutput> {
+    const alreadyExistsAssignment = await this.assignmentsRepository
+      .findByUserIdAndTaskId(input.userId, input.taskId)
+      .catch(() => null);
+
+    if (alreadyExistsAssignment !== null)
+      throw new ConflictError('Associação já existe');
+
     const assignment = Assignment.create({
       taskId: input.taskId,
       userId: input.userId,

@@ -1,10 +1,10 @@
 export abstract class ObjectDiffProvider {
-  abstract detailedDiff(
-    object1: object,
-    object2: object,
+  abstract detailedDiff<T>(
+    object1: T,
+    object2: T,
   ): {
-    added: object;
-    deleted: object;
-    updated: object;
+    added: Partial<T>;
+    deleted: Partial<T>;
+    updated: Partial<T>;
   };
 }

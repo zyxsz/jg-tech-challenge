@@ -1,4 +1,6 @@
-import type { TasksServiceTypes } from "@repo/microservices";
+import { ApiProperty, ApiSchema } from "@nestjs/swagger";
+import { type TasksServiceTypes } from "../types/tasks-service.types";
+
 import {
   IsEnum,
   IsNotEmpty,
@@ -27,31 +29,64 @@ type Data = TasksServiceTypes.UpdateTaskInput["data"];
 class UpdateTaskBodyDataInput implements Data {
   @IsOptional()
   @Length(4, 128)
+  @ApiProperty({
+    description: "Título da tarefa",
+    minLength: 4,
+    maxLength: 128,
+    required: false,
+  })
   title: string;
 
   @IsOptional()
   @MinLength(2)
+  @ApiProperty({
+    description: "Descrição da tarefa",
+    minLength: 2,
+    required: false,
+  })
   description?: string;
 
   @IsOptional()
   @IsEnum(TaskPriority)
+  @ApiProperty({
+    description: "Prioridade da tarefa",
+
+    enum: ["LOW", "MEDIUM", "HIGH", "URGENT"],
+    required: false,
+  })
   priority?: TasksServiceTypes.TaskPriority;
 
   @IsOptional()
   @IsEnum(TaskStatus)
+  @ApiProperty({
+    description: "Status da tarefa",
+
+    enum: ["TODO", "IN_PROGRESS", "REVIEW", "DONE"],
+    required: false,
+  })
   status?: TasksServiceTypes.TaskStatus;
 
   @IsOptional()
+  @ApiProperty({
+    description: "Prazo para entrega da tarefa",
+    type: "string",
+    required: false,
+  })
   term?: Date;
 }
 
 export namespace UpdateTaskDTO {
   export namespace Http {
+    @ApiSchema({ name: "UpdateTaskParamsDTO" })
     export class Params {
       @IsNotEmpty()
+      @ApiProperty({
+        description: "Id da tarefa",
+      })
       taskId: string;
     }
 
+    @ApiSchema({ name: "UpdateTaskBodyDTO" })
     export class Body extends UpdateTaskBodyDataInput {}
   }
 

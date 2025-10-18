@@ -16,7 +16,7 @@
     }
   },
   "scripts": {
-    "dev": "bun run build --watch",
+    "dev": "npm run build --watch",
     "build": "tsc -b -v",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\"",
     "generate:component": "turbo gen react-component",
@@ -26,7 +26,6 @@
     "@nestjs/common": "^11.1.6",
     "@nestjs/jwt": "^11.0.1",
     "@nestjs/microservices": "^11.1.6",
-    "@repo/microservices": "*",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.2",
     "express": "^5.1.0"

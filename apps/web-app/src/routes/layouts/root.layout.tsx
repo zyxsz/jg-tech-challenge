@@ -1,6 +1,7 @@
 import { AuthService } from "@/api/services/auth.service";
 import { Spinner } from "@/components/ui/spinner";
 import { authStore } from "@/stores/auth.store";
+import { webSocketStore } from "@/stores/websocket.store";
 import { Outlet } from "@tanstack/react-router";
 import { Fragment, useEffect } from "react";
 
@@ -16,6 +17,8 @@ export const RootLayout = () => {
         isAuthenticated: !!user,
         user,
       });
+
+      webSocketStore.getState().init();
     }
 
     loadAuthenticatedUser();

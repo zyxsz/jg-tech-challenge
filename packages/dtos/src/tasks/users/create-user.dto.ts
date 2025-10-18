@@ -1,4 +1,5 @@
-import { TasksServiceTypes } from "@repo/microservices";
+import { type TasksServiceTypes } from "../../types/tasks-service.types";
+
 import { IsNotEmpty } from "class-validator";
 
 class CreateUserPayloadInput

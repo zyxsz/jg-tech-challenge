@@ -3,7 +3,7 @@
   "mode": "code-router",
   "typescript": true,
   "tailwind": true,
-  "packageManager": "bun",
+  "packageManager": "npm",
   "git": true,
   "addOnOptions": {},
   "version": 1,
