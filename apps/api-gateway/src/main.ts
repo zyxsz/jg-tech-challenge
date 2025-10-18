@@ -10,6 +10,7 @@ import { AuthModule } from './auth/auth.module';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+  app.setGlobalPrefix('api');
   app.useGlobalFilters(new CustomRpcExceptionFilter());
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
   app.enableCors();
@@ -20,8 +21,8 @@ async function bootstrap() {
     .setTitle('Tarefas')
     .setDescription('Um sistema de tarefas colaborativo')
     .setVersion('1.0')
-    .addTag('tasks')
     .addBearerAuth()
+    .setBasePath('/api')
     .addGlobalResponse({
       status: 500,
       description: 'Internal server error',
@@ -36,5 +37,9 @@ async function bootstrap() {
   SwaggerModule.setup('api/docs', app, documentFactory);
 
   await app.listen(configService.get('PORT') ?? 3333);
+
+  console.log(
+    `Docs running at http://localhost:${configService.get('PORT') ?? 3333}/api/docs`,
+  );
 }
 bootstrap();
