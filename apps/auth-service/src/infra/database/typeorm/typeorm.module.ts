@@ -20,7 +20,9 @@ import { UsersTypeORMRepository } from './repositories/users.typeorm.repository'
           password: configService.get('DATABASE_PASSWORD'),
           database: configService.get('DATABASE_DB'),
           entities: TypeORMEntities,
-          ssl: true,
+          ssl: configService.get('DATABASE_SSL')
+            ? configService.get('DATABASE_SSL') === 'true'
+            : false,
           synchronize: false,
         });
 
