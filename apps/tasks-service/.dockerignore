@@ -1,2 +1,7 @@
 ./.turbo
+./dist./.turbo
 ./dist
+
+.env.*
+.env.example
+.env

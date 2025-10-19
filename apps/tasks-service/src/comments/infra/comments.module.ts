@@ -5,24 +5,19 @@ import { CreateCommentUseCase } from '../app/use-cases/create-comment.use-case';
 import { CommentsRepository } from '../domain/repositories/comment.repository';
 import { GetCommentsWithPaginationUseCase } from '../app/use-cases/get-comments-with-pagination.use-case';
 import { ServicesModule } from '@/shared/infra/services/services.module';
-import { NotificationsService } from '@/shared/services/notifications.service';
+import { TasksModule } from '@/tasks/infra/tasks.module';
+import { AssignmentsModule } from '@/assignments/infra/assignments.module';
 
 @Module({
-  imports: [DatabaseModule, ServicesModule],
+  imports: [DatabaseModule, ServicesModule, TasksModule, AssignmentsModule],
   controllers: [CommentsController],
   providers: [
     {
       provide: CreateCommentUseCase,
-      useFactory: (
-        commentsRepository: CommentsRepository,
-        notificationsService: NotificationsService,
-      ) => {
-        return new CreateCommentUseCase(
-          commentsRepository,
-          notificationsService,
-        );
+      useFactory: (commentsRepository: CommentsRepository) => {
+        return new CreateCommentUseCase(commentsRepository);
       },
-      inject: [CommentsRepository, NotificationsService],
+      inject: [CommentsRepository],
     },
     {
       provide: GetCommentsWithPaginationUseCase,

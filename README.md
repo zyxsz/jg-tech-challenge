@@ -227,8 +227,6 @@ erDiagram
 
 A fazer:
 
-- [x] Filtro e busca nas tarefas (web-app)
+- [ ] Refazer notificações
 - [ ] Responsividade
-- [ ] Notificações
-- [x] Tratamento de erros
-- [x] Refatoração (packages)
+- [ ] Diferenciais: Health checks, Logs (pinno)

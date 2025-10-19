@@ -13,6 +13,11 @@
       "import": "./dist/types/index.js",
       "require": "./dist/types/index.js",
       "types": "./dist/types/index.d.ts"
+    },
+    "./types/tasks": {
+      "import": "./dist/types/tasks/index.js",
+      "require": "./dist/types/tasks/index.js",
+      "types": "./dist/types/tasks/index.d.ts"
     }
   },
   "scripts": {

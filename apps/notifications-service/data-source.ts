@@ -6,7 +6,7 @@ const ds = new DataSource({
   username: process.env.DATABASE_USERNAME,
   password: process.env.DATABASE_PASSWORD,
   database: process.env.DATABASE_DB,
-  entities: ['src/entities/*.entity{.ts,.js}'],
+  entities: ['src/**/*.entity{.ts,.js}'],
   migrations: ['migrations/*{.ts,.js}'],
   ssl: process.env.DATABASE_SSL ? process.env.DATABASE_SSL === 'true' : false,
 });

@@ -1,58 +1,84 @@
 version: "3"
 
 services:
-  # auth-service:
-  #   container_name: auth-service
-  #   build:
-  #     context: .
-  #     dockerfile: ./apps/auth-service/Dockerfile
-  #   restart: always
-  #   networks:
-  #     - challenge-network
-  #   environment:
-  #     - NODE_ENV=production
-  #     - JWT_SECRET=secret
+  auth-service:
+    container_name: auth-service
+    build:
+      context: .
+      dockerfile: ./apps/auth-service/Dockerfile
+    restart: always
+    environment:
+      - NODE_ENV=production
+      - JWT_SECRET=secret
 
-  #     - DATABASE_HOST=db
-  #     - DATABASE_PORT=5432
-  #     - DATABASE_USERNAME=postgres
-  #     - DATABASE_PASSWORD=password
-  #     - DATABASE_DB=challenge_db
+      - DATABASE_HOST=db
+      - DATABASE_PORT=5432
+      - DATABASE_USERNAME=postgres
+      - DATABASE_PASSWORD=password
+      - DATABASE_DB=challenge_db
 
-  #     - RMQ_HOST=rabbitmq
-  #     - RMQ_PORT=5672
-  #     - RMQ_USER=admin
-  #     - RMQ_PASS=admin
-  #   depends_on:
-  #     db:
-  #       condition: service_started
-  #     rabbitmq:
-  #       condition: service_healthy
+      - RMQ_HOST=rabbitmq
+      - RMQ_PORT=5672
+      - RMQ_USER=admin
+      - RMQ_PASS=admin
+    depends_on:
+      db:
+        condition: service_started
+      rabbitmq:
+        condition: service_healthy
 
-  # api-gateway:
-  #   container_name: api-gateway
-  #   build:
-  #     context: .
-  #     dockerfile: ./apps/api-gateway/Dockerfile
-  #   restart: always
-  #   ports:
-  #     - 3334:3334
-  #   networks:
-  #     - challenge-network
-  #   environment:
-  #     - NODE_ENV=production
-  #     - PORT=3333
-  #     - RMQ_HOST=rabbitmq
-  #     - RMQ_PORT=5672
-  #     - RMQ_USER=admin
-  #     - RMQ_PASS=admin
-  #   depends_on:
-  #     auth-service:
-  #       condition: service_started
-  #     db:
-  #       condition: service_started
-  #     rabbitmq:
-  #       condition: service_healthy
+  tasks-service:
+    container_name: tasks-service
+    build:
+      context: .
+      dockerfile: ./apps/tasks-service/Dockerfile
+    restart: always
+    environment:
+      - NODE_ENV=production
+      - JWT_SECRET=secret
+
+      - DATABASE_HOST=db
+      - DATABASE_PORT=5432
+      - DATABASE_USERNAME=postgres
+      - DATABASE_PASSWORD=password
+      - DATABASE_DB=challenge_db
+
+      - RMQ_HOST=rabbitmq
+      - RMQ_PORT=5672
+      - RMQ_USER=admin
+      - RMQ_PASS=admin
+    depends_on:
+      db:
+        condition: service_started
+      rabbitmq:
+        condition: service_healthy
+
+  api-gateway:
+    container_name: api-gateway
+    build:
+      context: .
+      dockerfile: ./apps/api-gateway/Dockerfile
+      network: host
+    restart: always
+    network_mode: host
+    ports:
+      - 3334:3334
+    environment:
+      - NODE_ENV=production
+      - PORT=3333
+      - RMQ_HOST=rabbitmq
+      - RMQ_PORT=5672
+      - RMQ_USER=admin
+      - RMQ_PASS=admin
+    depends_on:
+      auth-service:
+        condition: service_started
+      tasks-service:
+        condition: service_started
+      db:
+        condition: service_started
+      rabbitmq:
+        condition: service_healthy
 
   # Postgres Database
   db:
@@ -61,8 +87,6 @@ services:
     attach: false
     ports:
       - "5432:5432"
-    networks:
-      - challenge-network
     restart: always
     volumes:
       - postgres_data:/var/lib/postgresql/data
@@ -80,8 +104,6 @@ services:
     ports:
       - "5672:5672"
       - "15672:15672"
-    networks:
-      - challenge-network
     environment:
       RABBITMQ_DEFAULT_USER: admin
       RABBITMQ_DEFAULT_PASS: admin
@@ -97,7 +119,3 @@ volumes:
     driver: local
   rabbitmq_data:
     driver: local
-
-networks:
-  challenge-network:
-    driver: bridge

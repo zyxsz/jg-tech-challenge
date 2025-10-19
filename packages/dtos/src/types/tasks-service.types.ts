@@ -18,7 +18,7 @@ export namespace TasksServiceTypes {
   export interface GetTaskInput {
     taskId: string;
   }
-  export interface GetTaskOutput extends Task {}
+  export type GetTaskOutput = Task;
 
   // Get tasks with pagination
 

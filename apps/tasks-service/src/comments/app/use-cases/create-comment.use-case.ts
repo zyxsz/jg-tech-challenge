@@ -9,13 +9,10 @@ export interface CreateCommentUseCaseInput {
   content: string;
 }
 
-export interface CreateCommentUseCaseOutput extends CommentOutput {}
+export type CreateCommentUseCaseOutput = CommentOutput;
 
 export class CreateCommentUseCase {
-  constructor(
-    private commentsRepository: CommentsRepository,
-    private notificationsService: NotificationsService,
-  ) {}
+  constructor(private commentsRepository: CommentsRepository) {}
 
   async execute(
     input: CreateCommentUseCaseInput,
@@ -27,15 +24,6 @@ export class CreateCommentUseCase {
     });
 
     await this.commentsRepository.insert(comment);
-
-    if (this.notificationsService) {
-      await this.notificationsService.sendTaskCommentCreated({
-        commentAuthorId: input.authorId,
-        commentContent: input.content,
-        taskAuthorId: input.authorId,
-        taskId: input.taskId,
-      });
-    }
 
     return CommentOutputMapper.toOutput(comment);
   }

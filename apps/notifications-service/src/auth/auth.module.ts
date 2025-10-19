@@ -9,7 +9,7 @@ import { Services } from '@repo/constants/services';
     ClientsModule.registerAsync([
       {
         name: Services.AUTH_SERVICE,
-        useFactory: async (configService: ConfigService) => ({
+        useFactory: (configService: ConfigService) => ({
           transport: Transport.RMQ,
           options: {
             urls: [

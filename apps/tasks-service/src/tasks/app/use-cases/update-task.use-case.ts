@@ -1,9 +1,8 @@
 import { TasksRepository } from '@/tasks/domain/repositories/tasks.repository';
-import { TaskOutput, TaskOutputMapper } from '../dtos/task-output';
+import { TaskOutput } from '../dtos/task-output';
 import { TaskProps } from '@/tasks/domain/entities/task.entity';
 import { AuditLogsService } from '@/shared/services/audit-logs.service';
 import { ObjectDiffProvider } from '@/shared/providers/object-diff.provider';
-import { NotificationsService } from '@/shared/services/notifications.service';
 
 export interface UpdateTaskUseCaseInput {
   authorId: string;
@@ -14,15 +13,13 @@ export interface UpdateTaskUseCaseInput {
   >;
 }
 
-export interface UpdateTaskUseCaseOutput extends TaskOutput {}
+export interface UpdateTaskUseCaseOutput {
+  updatedTask: TaskOutput;
+  outdatedTask: TaskOutput;
+}
 
 export class UpdateTaskUseCase {
-  constructor(
-    private tasksRepository: TasksRepository,
-    private auditLogsService: AuditLogsService,
-    private objectDiffProvider: ObjectDiffProvider,
-    private notificationsService: NotificationsService,
-  ) {}
+  constructor(private tasksRepository: TasksRepository) {}
 
   async execute(
     input: UpdateTaskUseCaseInput,
@@ -58,29 +55,9 @@ export class UpdateTaskUseCase {
       createdAt: task.createdAt,
     } satisfies TaskOutput;
 
-    const diff = this.objectDiffProvider.detailedDiff(
-      firstOutput,
-      updatedOutput,
-    );
-
-    if (this.auditLogsService) {
-      await this.auditLogsService.log(
-        input.taskId,
-        input.authorId,
-        'UPDATE',
-        diff,
-      );
-    }
-
-    if (this.notificationsService && diff.updated.status) {
-      await this.notificationsService.sendTaskStatusUpdated({
-        authorId: input.authorId,
-        status: diff.updated.status,
-        taskId: input.taskId,
-        title: task.title,
-      });
-    }
-
-    return updatedOutput;
+    return {
+      updatedTask: updatedOutput,
+      outdatedTask: firstOutput,
+    };
   }
 }

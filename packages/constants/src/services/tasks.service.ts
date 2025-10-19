@@ -1,6 +1,10 @@
 export namespace TasksService {
   export enum Events {
     CREATE_USER = "create-user",
+    TASK_CREATED = "task.created",
+    TASK_ASSIGNMENT_CREATED = "task.assignment.created",
+    TASK_UPDATED = "task.updated",
+    TASK_COMMENT_CREATED = "task.comment.created",
   }
 
   export enum Messages {

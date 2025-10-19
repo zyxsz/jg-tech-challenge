@@ -38,37 +38,17 @@ import { NotificationsService } from '@/shared/services/notifications.service';
       useFactory: (
         tasksRepository: TasksRepository,
         auditLogsService: AuditLogsService,
-        notificationsService: NotificationsService,
       ) => {
-        return new CreateTaskUseCase(
-          tasksRepository,
-          auditLogsService,
-          notificationsService,
-        );
+        return new CreateTaskUseCase(tasksRepository, auditLogsService);
       },
-      inject: [TasksRepository, AuditLogsService, NotificationsService],
+      inject: [TasksRepository, AuditLogsService],
     },
     {
       provide: UpdateTaskUseCase,
-      useFactory: (
-        tasksRepository: TasksRepository,
-        auditLogsService: AuditLogsService,
-        objectDiffProvider: ObjectDiffProvider,
-        notificationsService: NotificationsService,
-      ) => {
-        return new UpdateTaskUseCase(
-          tasksRepository,
-          auditLogsService,
-          objectDiffProvider,
-          notificationsService,
-        );
+      useFactory: (tasksRepository: TasksRepository) => {
+        return new UpdateTaskUseCase(tasksRepository);
       },
-      inject: [
-        TasksRepository,
-        AuditLogsService,
-        ObjectDiffProvider,
-        NotificationsService,
-      ],
+      inject: [TasksRepository, AuditLogsService, ObjectDiffProvider],
     },
     {
       provide: DeleteTaskUseCase,
@@ -78,5 +58,6 @@ import { NotificationsService } from '@/shared/services/notifications.service';
       inject: [TasksRepository],
     },
   ],
+  exports: [GetTaskUseCase],
 })
 export class TasksModule {}

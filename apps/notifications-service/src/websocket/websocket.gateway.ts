@@ -1,18 +1,20 @@
-import { Inject } from '@nestjs/common';
+import { Inject, Logger } from '@nestjs/common';
 import {
   ConnectedSocket,
   MessageBody,
   SubscribeMessage,
-  WebSocketGateway,
+  WebSocketGateway as NestWebSocketGateway,
   WebSocketServer,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
-import { AuthService } from './auth/auth.service';
 import { OnEvent } from '@nestjs/event-emitter';
-import { NotificationCreatedEventDTO } from './events/dtos/notification-created-event.dto';
+import { AuthService } from '@/auth/auth.service';
+import { NotificationCreatedEvent } from '@/events/notification-created.event';
 
-@WebSocketGateway(3335, { cors: true })
-export class NotificationsGateway {
+@NestWebSocketGateway(3335, { cors: true })
+export class WebSocketGateway {
+  private readonly logger = new Logger('WebSocketGateway');
+
   @Inject()
   private authService: AuthService;
 
@@ -29,10 +31,11 @@ export class NotificationsGateway {
     const response = await this.authService.validateToken({
       accessToken: body.accessToken,
     });
-    console.log(response);
 
     if (!response.isValid) {
-      client.emit('error', {
+      this.logger.log(`Failed to authenticate user`);
+
+      client.emit('authenticated', {
         success: false,
         message: 'Unable to authenticate user',
       });
@@ -40,16 +43,22 @@ export class NotificationsGateway {
       return;
     }
 
+    this.logger.log(
+      `User "${response.user.username}" autenticated successfully`,
+    );
+
     client.emit('authenticated', {
       success: true,
       message: 'User authenticated successfully',
     });
 
-    client.join(`users:${response.user.id}`);
+    await client.join(`users:${response.user.id}`);
   }
 
   @OnEvent('notification:created')
-  async handleNotificationCreated(payload: NotificationCreatedEventDTO) {
+  handleNotificationCreated(payload: NotificationCreatedEvent) {
+    this.logger.log(`Emitting event "notification:created"`);
+
     if (payload.targetId) {
       this.server.to(payload.targetId).emit('notification:created', {
         title: payload.title,

@@ -11,7 +11,7 @@ export interface CreateAssignmentUseCaseInput {
   taskId: string;
 }
 
-export interface CreateAssignmentUseCaseOutput extends AssignmentOutput {}
+export type CreateAssignmentUseCaseOutput = AssignmentOutput;
 
 export class CreateAssignmentUseCase {
   constructor(private assignmentsRepository: AssignmentsRepository) {}

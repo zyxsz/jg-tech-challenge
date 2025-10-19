@@ -15,9 +15,24 @@ import {
 } from '@repo/dtos';
 import { TasksService } from '@repo/constants/services';
 import { TasksServiceTypes } from '@repo/dtos/types';
+import { NotificationsService } from '@/shared/services/notifications.service';
+import { AuditLogsService } from '@/shared/services/audit-logs.service';
+import { TaskCreatedEvent, TaskUpdatedEvent } from '@repo/dtos/types/tasks';
+import { ObjectDiffProvider } from '@/shared/providers/object-diff.provider';
 
 @Controller()
 export class TasksController {
+  // Services
+  @Inject()
+  private notificationsService: NotificationsService;
+
+  @Inject()
+  private auditLogsService: AuditLogsService;
+
+  @Inject()
+  private objectDiffProvider: ObjectDiffProvider;
+
+  // Use cases
   @Inject()
   private getTaskUseCase: GetTaskUseCase;
   @Inject()
@@ -53,6 +68,8 @@ export class TasksController {
   ): Promise<TasksServiceTypes.CreateTaskOutput> {
     const task = await this.createTaskUseCase.execute(payload);
 
+    this.notificationsService.emitTaskCreated(new TaskCreatedEvent(task));
+
     return task;
   }
 
@@ -60,9 +77,29 @@ export class TasksController {
   async updateTask(
     @Payload() payload: UpdateTaskDTO.Microservice.Payload,
   ): Promise<TasksServiceTypes.UpdateTaskOutput> {
-    const task = await this.updateTaskUseCase.execute(payload);
+    const output = await this.updateTaskUseCase.execute(payload);
 
-    return task;
+    const diff = this.objectDiffProvider.detailedDiff(
+      output.outdatedTask,
+      output.updatedTask,
+    );
+
+    if (this.auditLogsService) {
+      await this.auditLogsService.log(
+        payload.taskId,
+        payload.authorId,
+        'UPDATE',
+        diff,
+      );
+    }
+
+    console.log(output);
+
+    this.notificationsService.emitTaskUpdated(
+      new TaskUpdatedEvent(output.updatedTask, output.outdatedTask),
+    );
+
+    return output.updatedTask;
   }
 
   @MessagePattern(TasksService.Messages.DELETE_TASK)

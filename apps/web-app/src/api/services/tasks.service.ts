@@ -42,7 +42,7 @@ export class TasksService {
   static async getTaskCommentsWithPagination(
     id: string,
     page: number,
-    limit: number
+    limit: number,
   ) {
     return api
       .get<GetCommentsWithPaginationResponse>(`/tasks/${id}/comments`, {
@@ -67,7 +67,7 @@ export class TasksService {
 
   static async createAssignment(id: string) {
     return api
-      .post<CreateAssignmentResponse>(`/tasks/${id}/assignments`)
+      .post<CreateAssignmentResponse>(`/tasks/${id}/assignments/me`)
       .then((response) => response.data);
   }
 }

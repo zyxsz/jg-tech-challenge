@@ -6,7 +6,6 @@ import {
 import { TasksRepository } from '@/tasks/domain/repositories/tasks.repository';
 import { TaskOutput, TaskOutputMapper } from '../dtos/task-output';
 import { AuditLogsService } from '@/shared/services/audit-logs.service';
-import { NotificationsService } from '@/shared/services/notifications.service';
 
 export interface CreateTaskUseCaseInput {
   authorId: string;
@@ -17,13 +16,12 @@ export interface CreateTaskUseCaseInput {
   term: Date;
 }
 
-export interface CreateTaskUseCaseOutput extends TaskOutput {}
+export type CreateTaskUseCaseOutput = TaskOutput;
 
 export class CreateTaskUseCase {
   constructor(
     private tasksRepository: TasksRepository,
     private auditLogsService: AuditLogsService,
-    private notificationsService: NotificationsService,
   ) {}
 
   async execute(
@@ -47,14 +45,6 @@ export class CreateTaskUseCase {
         priority: input.priority,
         status: input.status,
         term: input.term,
-      });
-    }
-
-    if (this.notificationsService) {
-      await this.notificationsService.sendCreateTask({
-        authorId: input.authorId,
-        title: input.title,
-        taskId: task.id,
       });
     }
 

@@ -7,8 +7,7 @@ export interface GetTasksWithPaginationUseCaseInput {
   limitPerPage?: number;
 }
 
-export interface GetTasksWithPaginationUseCaseOutput
-  extends PaginationOutput<TaskOutput> {}
+export type GetTasksWithPaginationUseCaseOutput = PaginationOutput<TaskOutput>;
 
 export class GetTasksWithPaginationUseCase {
   constructor(private tasksRepository: TasksRepository) {}

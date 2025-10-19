@@ -1,38 +1,37 @@
 import { NotificationsService } from '@/shared/services/notifications.service';
 import { Inject } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
-import { Services } from '@repo/constants/services';
-import { NotificationsServiceTypes } from '@repo/dtos/types';
-import { NotificationsService as NotificationsServiceMC } from '@repo/constants/services';
+import { Services, TasksService } from '@repo/constants/services';
+import {
+  TaskAssignmentCreatedEvent,
+  TaskCommentCreatedEvent,
+  TaskCreatedEvent,
+  TaskUpdatedEvent,
+} from '@repo/dtos/types/tasks';
 
 export class RabbitMQNotificationsService implements NotificationsService {
   @Inject(Services.NOTIFICATIONS_SERVICE)
   private notificationsClient: ClientProxy;
 
-  async sendCreateTask(
-    input: NotificationsServiceTypes.CreateTaskInput,
-  ): Promise<NotificationsServiceTypes.CreateTaskOutput> {
+  emitTaskCreated(event: TaskCreatedEvent): void {
+    this.notificationsClient.emit(TasksService.Events.TASK_CREATED, event);
+  }
+
+  emitTaskAssignmentCreated(event: TaskAssignmentCreatedEvent): void {
     this.notificationsClient.emit(
-      NotificationsServiceMC.Events.TASK_CREATED,
-      input,
+      TasksService.Events.TASK_ASSIGNMENT_CREATED,
+      event,
     );
   }
 
-  async sendTaskCommentCreated(
-    input: NotificationsServiceTypes.TaskCommentCreatedInput,
-  ): Promise<NotificationsServiceTypes.TaskCommentCreatedOutput> {
-    this.notificationsClient.emit(
-      NotificationsServiceMC.Events.TASK_COMMENT_CREATED,
-      input,
-    );
+  emitTaskUpdated(event: TaskUpdatedEvent): void {
+    this.notificationsClient.emit(TasksService.Events.TASK_UPDATED, event);
   }
 
-  async sendTaskStatusUpdated(
-    input: NotificationsServiceTypes.UpdateTaskStatusInput,
-  ): Promise<NotificationsServiceTypes.UpdateTaskStatusOutput> {
+  emitTaskCommentCreated(event: TaskCommentCreatedEvent): void {
     this.notificationsClient.emit(
-      NotificationsServiceMC.Events.TASK_STATUS_UPDATED,
-      input,
+      TasksService.Events.TASK_COMMENT_CREATED,
+      event,
     );
   }
 }
