@@ -1,7 +1,5 @@
-import { AuthServiceTypes } from '@repo/dtos/types';
+import { UserCreatedEvent } from '@repo/dtos/auth';
 
 export abstract class NotificationsService {
-  abstract emitCreateUser(
-    payload: AuthServiceTypes.CreateUserEventPayload,
-  ): Promise<void>;
+  abstract emitCreateUser(payload: UserCreatedEvent): void;
 }

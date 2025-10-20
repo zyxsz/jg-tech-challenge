@@ -6,19 +6,23 @@ import { GetTasksWithPaginationUseCase } from '../app/use-cases/get-tasks-with-p
 import { CreateTaskUseCase } from '../app/use-cases/create-task.use-case';
 import { UpdateTaskUseCase } from '../app/use-cases/update-task.use-case';
 import { DeleteTaskUseCase } from '../app/use-cases/delete-task.use-case';
-import {
-  CreateTaskDTO,
-  DeleteTaskDTO,
-  GetTaskDTO,
-  GetTasksWithPaginationDTO,
-  UpdateTaskDTO,
-} from '@repo/dtos';
 import { TasksService } from '@repo/constants/services';
-import { TasksServiceTypes } from '@repo/dtos/types';
 import { NotificationsService } from '@/shared/services/notifications.service';
 import { AuditLogsService } from '@/shared/services/audit-logs.service';
-import { TaskCreatedEvent, TaskUpdatedEvent } from '@repo/dtos/types/tasks';
+import { TaskCreatedEvent, TaskUpdatedEvent } from '@repo/dtos/tasks';
 import { ObjectDiffProvider } from '@/shared/providers/object-diff.provider';
+import {
+  CreateTaskMessageInput,
+  CreateTaskMessageOutput,
+  DeleteTaskMessageInput,
+  DeleteTaskMessageOutput,
+  GetTaskMessageInput,
+  GetTaskMessageOutput,
+  GetTasksWithPaginationMessageInput,
+  GetTasksWithPaginationMessageOutput,
+  UpdateTaskMessageInput,
+  UpdateTaskMessageOutput,
+} from '@repo/dtos/tasks';
 
 @Controller()
 export class TasksController {
@@ -46,17 +50,17 @@ export class TasksController {
 
   @MessagePattern(TasksService.Messages.GET_TASK)
   async getTask(
-    @Payload() payload: GetTaskDTO.Microservice.Payload,
-  ): Promise<TasksServiceTypes.GetTaskOutput> {
-    const task = await this.getTaskUseCase.execute(payload);
+    @Payload() payload: GetTaskMessageInput,
+  ): Promise<GetTaskMessageOutput> {
+    const task = await this.getTaskUseCase.execute({ taskId: payload.taskId });
 
-    return task;
+    return { task };
   }
 
   @MessagePattern(TasksService.Messages.GET_TASKS_WITH_PAGINATIOn)
   async getTasksWithPagination(
-    @Payload() payload: GetTasksWithPaginationDTO.Microservice.Payload,
-  ): Promise<TasksServiceTypes.GetTasksWithPaginationOutput> {
+    @Payload() payload: GetTasksWithPaginationMessageInput,
+  ): Promise<GetTasksWithPaginationMessageOutput> {
     const response = await this.getTasksWithPaginationUseCase.execute(payload);
 
     return response;
@@ -64,19 +68,19 @@ export class TasksController {
 
   @MessagePattern(TasksService.Messages.CREATE_TASK)
   async createTask(
-    @Payload() payload: CreateTaskDTO.Microservice.Payload,
-  ): Promise<TasksServiceTypes.CreateTaskOutput> {
+    @Payload() payload: CreateTaskMessageInput,
+  ): Promise<CreateTaskMessageOutput> {
     const task = await this.createTaskUseCase.execute(payload);
 
     this.notificationsService.emitTaskCreated(new TaskCreatedEvent(task));
 
-    return task;
+    return { task };
   }
 
   @MessagePattern(TasksService.Messages.UPDATE_TASK)
   async updateTask(
-    @Payload() payload: UpdateTaskDTO.Microservice.Payload,
-  ): Promise<TasksServiceTypes.UpdateTaskOutput> {
+    @Payload() payload: UpdateTaskMessageInput,
+  ): Promise<UpdateTaskMessageOutput> {
     const output = await this.updateTaskUseCase.execute(payload);
 
     const diff = this.objectDiffProvider.detailedDiff(
@@ -93,20 +97,20 @@ export class TasksController {
       );
     }
 
-    console.log(output);
-
     this.notificationsService.emitTaskUpdated(
       new TaskUpdatedEvent(output.updatedTask, output.outdatedTask),
     );
 
-    return output.updatedTask;
+    return {
+      task: output.updatedTask,
+    };
   }
 
   @MessagePattern(TasksService.Messages.DELETE_TASK)
   async deleteTask(
-    @Payload() payload: DeleteTaskDTO.Microservice.Payload,
-  ): Promise<TasksServiceTypes.DeleteTaskOutput> {
-    await this.deleteTaskUseCase.execute(payload);
+    @Payload() payload: DeleteTaskMessageInput,
+  ): Promise<DeleteTaskMessageOutput> {
+    await this.deleteTaskUseCase.execute({ taskId: payload.taskId });
 
     return { success: true };
   }

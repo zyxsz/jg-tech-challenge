@@ -20,6 +20,7 @@ export const config = [
     rules: {
       "turbo/no-undeclared-env-vars": "warn",
       "@typescript-eslint/no-namespace": "off",
+      "@typescript-eslint/no-unsafe-assignment": "off",
     },
   },
   {

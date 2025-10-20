@@ -11,7 +11,6 @@ import { AuthenticatedUser } from '@/auth/decorators/authenticated-user.decorato
 import { type UserType } from '@/shared/types/user';
 import { AuthenticatedRoute } from '@/auth/decorators/authenticated-route.decorator';
 import { AssignmentsService } from './assignments.service';
-import { GetAssignmentsDTO } from '@repo/dtos';
 import {
   ApiBearerAuth,
   ApiOperation,
@@ -20,9 +19,9 @@ import {
 } from '@nestjs/swagger';
 import {
   CreateAssignmentResponseSchema,
-  CreateTaskCommentResponseSchema,
   GetTaskAssignmentsResponseSchema,
 } from '@/docs/examples/tasks-example';
+import { GetAssignmentParamsDTO } from '@repo/dtos/tasks/assignments';
 
 @Controller('/tasks/:taskId/assignments')
 @AuthenticatedRoute()
@@ -52,7 +51,7 @@ export class AssignmentsController {
     status: 404,
     description: 'Tarefa não encontrada',
   })
-  async getAssignments(@Param() params: GetAssignmentsDTO.Http.Params) {
+  async getAssignments(@Param() params: GetAssignmentParamsDTO) {
     return this.assignmentsService.getAssignments({
       taskId: params.taskId,
     });
@@ -83,7 +82,7 @@ export class AssignmentsController {
     description: 'Você já está associado a essa tarefa',
   })
   async createAssignment(
-    @Param() params: GetAssignmentsDTO.Http.Params,
+    @Param() params: GetAssignmentParamsDTO,
     @AuthenticatedUser() user: UserType,
   ) {
     return this.assignmentsService.createAssignment({

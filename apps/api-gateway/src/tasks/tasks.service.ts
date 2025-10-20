@@ -4,7 +4,18 @@ import {
   Services,
   TasksService as TasksServiceMC,
 } from '@repo/constants/services';
-import { TasksServiceTypes } from '@repo/dtos/types';
+import {
+  CreateTaskMessageInput,
+  CreateTaskMessageOutput,
+  DeleteTaskMessageInput,
+  DeleteTaskMessageOutput,
+  GetTaskMessageInput,
+  GetTaskMessageOutput,
+  GetTasksWithPaginationMessageInput,
+  GetTasksWithPaginationMessageOutput,
+  UpdateTaskMessageInput,
+  UpdateTaskMessageOutput,
+} from '@repo/dtos/tasks';
 import { firstValueFrom } from 'rxjs';
 
 @Injectable()
@@ -12,9 +23,7 @@ export class TasksService {
   @Inject(Services.TASKS_SERVICE)
   private tasksClient: ClientProxy;
 
-  async getTask(
-    input: TasksServiceTypes.GetTaskInput,
-  ): Promise<TasksServiceTypes.GetTaskOutput> {
+  async getTask(input: GetTaskMessageInput): Promise<GetTaskMessageOutput> {
     try {
       const response = await firstValueFrom(
         this.tasksClient.send(TasksServiceMC.Messages.GET_TASK, input),
@@ -27,8 +36,8 @@ export class TasksService {
   }
 
   async getTasksWithPagination(
-    input: TasksServiceTypes.GetTasksWithPaginationInput,
-  ): Promise<TasksServiceTypes.GetTasksWithPaginationOutput> {
+    input: GetTasksWithPaginationMessageInput,
+  ): Promise<GetTasksWithPaginationMessageOutput> {
     try {
       const response = await firstValueFrom(
         this.tasksClient.send(
@@ -44,8 +53,8 @@ export class TasksService {
   }
 
   async createTask(
-    input: TasksServiceTypes.CreateTaskInput,
-  ): Promise<TasksServiceTypes.CreateTaskOutput> {
+    input: CreateTaskMessageInput,
+  ): Promise<CreateTaskMessageOutput> {
     try {
       const response = await firstValueFrom(
         this.tasksClient.send(TasksServiceMC.Messages.CREATE_TASK, input),
@@ -58,8 +67,8 @@ export class TasksService {
   }
 
   async updateTask(
-    input: TasksServiceTypes.UpdateTaskInput,
-  ): Promise<TasksServiceTypes.UpdateTaskOutput> {
+    input: UpdateTaskMessageInput,
+  ): Promise<UpdateTaskMessageOutput> {
     try {
       const response = await firstValueFrom(
         this.tasksClient.send(TasksServiceMC.Messages.UPDATE_TASK, input),
@@ -72,8 +81,8 @@ export class TasksService {
   }
 
   async deleteTask(
-    input: TasksServiceTypes.DeleteTaskInput,
-  ): Promise<TasksServiceTypes.DeleteTaskOutput> {
+    input: DeleteTaskMessageInput,
+  ): Promise<DeleteTaskMessageOutput> {
     try {
       const response = await firstValueFrom(
         this.tasksClient.send(TasksServiceMC.Messages.DELETE_TASK, input),

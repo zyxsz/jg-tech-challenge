@@ -3,19 +3,30 @@ import { MessagePattern, Payload } from '@nestjs/microservices';
 import { AuthService } from '@repo/constants/services';
 import { RegisterUserUseCase } from '@/app/use-cases/register-user.use-case';
 import { LoginUseCase } from '@/app/use-cases/login.use-case';
-import { AuthServiceTypes } from '@repo/dtos/types';
 import { GenerateTokensUseCase } from '@/app/use-cases/generate-tokens.use-case';
 import { RefreshTokensUseCase } from '@/app/use-cases/refresh-tokens.use-case';
 import { ValidateTokenUseCase } from '@/app/use-cases/validate-token.use-case';
 import {
-  LoginUserDTO,
-  RefreshTokenDTO,
-  RegisterUserDTO,
-  ValidateTokenDTO,
-} from '@repo/dtos';
+  LoginUserMessageInput,
+  LoginUserMessageOutput,
+  RefreshTokenMessageInput,
+  RefreshTokenMessageOutput,
+  RegisterUserMessageInput,
+  RegisterUserMessageOutput,
+  ValidateTokenMessageInput,
+  ValidateTokenMessageOutput,
+} from '@repo/dtos/auth';
+import { NotificationsService } from '@/app/services/notifications.service';
 
 @Controller()
 export class AuthController {
+  // Services
+
+  @Inject()
+  private notificationsService: NotificationsService;
+
+  // Use cases
+
   @Inject()
   private registerUserUseCase: RegisterUserUseCase;
 
@@ -33,20 +44,28 @@ export class AuthController {
 
   @MessagePattern(AuthService.Messages.REGISTER_USER)
   async registerUser(
-    @Payload() data: RegisterUserDTO.Microservice.Payload,
-  ): Promise<AuthServiceTypes.RegisterUserOutput> {
+    @Payload() data: RegisterUserMessageInput,
+  ): Promise<RegisterUserMessageOutput> {
     const user = await this.registerUserUseCase.execute(data);
     const tokens = await this.generateTokensUseCase.execute({
       userId: user.id,
     });
+
+    if (this.notificationsService) {
+      this.notificationsService.emitCreateUser({
+        user,
+      });
+    }
 
     return tokens;
   }
 
   @MessagePattern(AuthService.Messages.LOGIN_USER)
   async loginUser(
-    @Payload() data: LoginUserDTO.Microservice.Payload,
-  ): Promise<AuthServiceTypes.LoginUserOutput> {
+    @Payload() data: LoginUserMessageInput,
+  ): Promise<LoginUserMessageOutput> {
+    console.log(data);
+
     const user = await this.loginUseCase.execute(data);
     const tokens = await this.generateTokensUseCase.execute({
       userId: user.id,
@@ -57,8 +76,8 @@ export class AuthController {
 
   @MessagePattern(AuthService.Messages.REFRESH_TOKEN)
   async refreshToken(
-    @Payload() data: RefreshTokenDTO.Microservice.Payload,
-  ): Promise<AuthServiceTypes.RefreshTokenOutput> {
+    @Payload() data: RefreshTokenMessageInput,
+  ): Promise<RefreshTokenMessageOutput> {
     const tokens = await this.refreshTokensUseCase.execute(data);
 
     return tokens;
@@ -66,8 +85,8 @@ export class AuthController {
 
   @MessagePattern(AuthService.Messages.VALIDATE_TOKEN)
   async validateToken(
-    @Payload() data: ValidateTokenDTO.Microservice.Payload,
-  ): Promise<AuthServiceTypes.ValidateTokenOutput> {
+    @Payload() data: ValidateTokenMessageInput,
+  ): Promise<ValidateTokenMessageOutput> {
     try {
       const user = await this.validateTokenUseCase.execute(data);
 
@@ -75,7 +94,7 @@ export class AuthController {
         isValid: true,
         user,
       };
-    } catch (err) {
+    } catch {
       return { isValid: false, user: null };
     }
   }

@@ -24,6 +24,7 @@ export class AuthGuard implements CanActivate {
       console.log(tokenResponse.isValid);
 
       if (!tokenResponse.isValid) throw new UnauthorizedException();
+      if (!tokenResponse.user) throw new UnauthorizedException();
 
       request['userId'] = tokenResponse.user.id;
       request['user'] = tokenResponse.user;

@@ -14,10 +14,25 @@
       "require": "./dist/types/index.js",
       "types": "./dist/types/index.d.ts"
     },
-    "./types/tasks": {
+    "./tasks": {
       "import": "./dist/types/tasks/index.js",
       "require": "./dist/types/tasks/index.js",
       "types": "./dist/types/tasks/index.d.ts"
+    },
+    "./auth": {
+      "import": "./dist/types/auth/index.js",
+      "require": "./dist/types/auth/index.js",
+      "types": "./dist/types/auth/index.d.ts"
+    },
+    "./tasks/comments": {
+      "import": "./dist/types/comments/index.js",
+      "require": "./dist/types/comments/index.js",
+      "types": "./dist/types/comments/index.d.ts"
+    },
+    "./tasks/assignments": {
+      "import": "./dist/types/assignments/index.js",
+      "require": "./dist/types/assignments/index.js",
+      "types": "./dist/types/assignments/index.d.ts"
     }
   },
   "scripts": {

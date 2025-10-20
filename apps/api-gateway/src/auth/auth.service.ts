@@ -4,7 +4,16 @@ import {
   AuthService as AuthServiceMS,
   Services,
 } from '@repo/constants/services';
-import { AuthServiceTypes } from '@repo/dtos/types';
+import {
+  LoginUserMessageInput,
+  LoginUserMessageOutput,
+  RefreshTokenMessageInput,
+  RefreshTokenMessageOutput,
+  RegisterUserMessageInput,
+  RegisterUserMessageOutput,
+  ValidateTokenMessageInput,
+  ValidateTokenMessageOutput,
+} from '@repo/dtos/auth';
 import { firstValueFrom } from 'rxjs';
 
 @Injectable()
@@ -13,8 +22,8 @@ export class AuthService {
   private authClient: ClientProxy;
 
   async registerUser(
-    data: AuthServiceTypes.RegisterUserInput,
-  ): Promise<AuthServiceTypes.RegisterUserOutput> {
+    data: RegisterUserMessageInput,
+  ): Promise<RegisterUserMessageOutput> {
     try {
       const response = await firstValueFrom(
         this.authClient.send(AuthServiceMS.Messages.REGISTER_USER, data),
@@ -27,8 +36,8 @@ export class AuthService {
   }
 
   async loginUser(
-    data: AuthServiceTypes.LoginUserInput,
-  ): Promise<AuthServiceTypes.LoginUserOutput> {
+    data: LoginUserMessageInput,
+  ): Promise<LoginUserMessageOutput> {
     try {
       const response = await firstValueFrom(
         this.authClient.send(AuthServiceMS.Messages.LOGIN_USER, data),
@@ -42,8 +51,8 @@ export class AuthService {
   }
 
   async validateToken(
-    data: AuthServiceTypes.ValidateTokenInput,
-  ): Promise<AuthServiceTypes.ValidateTokenOutput> {
+    data: ValidateTokenMessageInput,
+  ): Promise<ValidateTokenMessageOutput> {
     try {
       const response = await firstValueFrom(
         this.authClient.send(AuthServiceMS.Messages.VALIDATE_TOKEN, data),
@@ -56,8 +65,8 @@ export class AuthService {
   }
 
   async refreshToken(
-    data: AuthServiceTypes.RefreshTokenInput,
-  ): Promise<AuthServiceTypes.RefreshTokenOutput> {
+    data: RefreshTokenMessageInput,
+  ): Promise<RefreshTokenMessageOutput> {
     try {
       const response = await firstValueFrom(
         this.authClient.send(AuthServiceMS.Messages.REFRESH_TOKEN, data),

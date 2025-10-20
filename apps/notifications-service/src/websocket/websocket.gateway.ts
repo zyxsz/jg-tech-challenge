@@ -32,7 +32,7 @@ export class WebSocketGateway {
       accessToken: body.accessToken,
     });
 
-    if (!response.isValid) {
+    if (!response.isValid || !response.user) {
       this.logger.log(`Failed to authenticate user`);
 
       client.emit('authenticated', {

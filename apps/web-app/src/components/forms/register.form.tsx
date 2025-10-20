@@ -106,7 +106,7 @@ export const RegisterForm = () => {
               <FormItem>
                 <FormLabel>Senha</FormLabel>
                 <FormControl>
-                  <Input placeholder="Ex: *******" {...field} />
+                  <Input type="password" placeholder="Ex: *******" {...field} />
                 </FormControl>
 
                 <FormMessage />
@@ -120,7 +120,7 @@ export const RegisterForm = () => {
               <FormItem>
                 <FormLabel>Confirmar senha</FormLabel>
                 <FormControl>
-                  <Input placeholder="Ex: *******" {...field} />
+                  <Input type="password" placeholder="Ex: *******" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>

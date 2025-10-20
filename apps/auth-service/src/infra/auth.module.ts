@@ -23,7 +23,7 @@ import { Services } from '@repo/constants/services';
     ClientsModule.registerAsync([
       {
         name: Services.TASKS_SERVICE,
-        useFactory: async (configService: ConfigService) => ({
+        useFactory: (configService: ConfigService) => ({
           transport: Transport.RMQ,
           options: {
             urls: [
@@ -47,15 +47,10 @@ import { Services } from '@repo/constants/services';
       useFactory: (
         usersRepository: UsersRepository,
         hashProvider: HashProvider,
-        notificationsService: NotificationsService,
       ) => {
-        return new RegisterUserUseCase(
-          usersRepository,
-          hashProvider,
-          notificationsService,
-        );
+        return new RegisterUserUseCase(usersRepository, hashProvider);
       },
-      inject: [UsersRepository, HashProvider, NotificationsService],
+      inject: [UsersRepository, HashProvider],
     },
     {
       provide: LoginUseCase,

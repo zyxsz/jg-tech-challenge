@@ -18,12 +18,12 @@ api.interceptors.request.use(
   },
   (error) => {
     return Promise.reject(error);
-  }
+  },
 );
 
 async function refreshToken() {
   const refreshToken = localStorage.getItem("refreshToken");
-  if (!refreshToken) return;
+  if (!refreshToken) throw new Error("Refresh token not found");
 
   if (authStore.getState().isRefreshingToken) {
     return new Promise((resolve) => setTimeout(() => resolve, 600));
@@ -58,6 +58,9 @@ api.interceptors.response.use(
 
         return api(config);
       } catch (error: AxiosError | unknown) {
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("refreshToken");
+
         if (error instanceof AxiosError) {
           const message =
             error.response?.data?.message ||
@@ -72,5 +75,5 @@ api.interceptors.response.use(
     }
 
     return Promise.reject(originalRequest);
-  }
+  },
 );

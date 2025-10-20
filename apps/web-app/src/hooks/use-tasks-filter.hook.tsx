@@ -70,19 +70,19 @@ export const useTasksFilterHook = ({ data }: Props) => {
       "IN_PROGRESS",
       "REVIEW",
       "DONE",
-    ] as const)
+    ] as const),
   );
   const [sortOrder, setSortOrder] = useQueryState(
     "sortOrder",
     parseAsStringEnum<TaskSortOrder>(Object.values(TaskSortOrder)).withDefault(
-      TaskSortOrder.desc
-    )
+      TaskSortOrder.desc,
+    ),
   );
   const [sortBy, setSortBy] = useQueryState(
     "sortBy",
     parseAsStringEnum<TaskSortBy>(Object.values(TaskSortBy)).withDefault(
-      TaskSortBy.priority
-    )
+      TaskSortBy.priority,
+    ),
   );
   const [search, setSearch] = useQueryState("search");
 
@@ -148,6 +148,7 @@ export const useTasksFilterHook = ({ data }: Props) => {
 
     return (
       <Input
+        className="dark:bg-card"
         placeholder="Buscar"
         defaultValue={search || ""}
         onChange={(e) => handleSearch(e.target.value)}
@@ -235,7 +236,7 @@ export const useTasksFilterHook = ({ data }: Props) => {
             }}
             className={cn(
               "gap-6 justify-between cursor-pointer",
-              sortOrder === TaskSortOrder.asc && "opacity-20"
+              sortOrder === TaskSortOrder.asc && "opacity-20",
             )}
           >
             Ascendente <SortAscIcon />
@@ -248,7 +249,7 @@ export const useTasksFilterHook = ({ data }: Props) => {
             }}
             className={cn(
               "gap-6 justify-between cursor-pointer",
-              sortOrder === TaskSortOrder.desc && "opacity-20"
+              sortOrder === TaskSortOrder.desc && "opacity-20",
             )}
           >
             Descendente <SortDescIcon />

@@ -4,7 +4,7 @@ import {
   TaskCommentCreatedEvent,
   TaskCreatedEvent,
   TaskUpdatedEvent,
-} from '@repo/dtos/types/tasks';
+} from '@repo/dtos/tasks';
 import { NotificationsService } from './notifications.service';
 import { TasksService } from '@repo/constants/services';
 

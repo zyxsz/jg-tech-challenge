@@ -11,10 +11,8 @@ import { AuthService } from './auth.service';
 import { AuthenticatedRoute } from './decorators/authenticated-route.decorator';
 import { AuthenticatedUser } from './decorators/authenticated-user.decorator';
 import type { UserType } from '@/shared/types/user';
-import { LoginUserDTO, RefreshTokenDTO, RegisterUserDTO } from '@repo/dtos';
 import {
   ApiBearerAuth,
-  ApiBody,
   ApiOperation,
   ApiResponse,
   ApiTags,
@@ -23,6 +21,11 @@ import {
   AuthenticatedUserAuthSchema,
   AuthTokensExampleSchema,
 } from '@/docs/examples/auth-example';
+import {
+  LoginUserBodyDTO,
+  RefreshTokenBodyDTO,
+  RegisterUserBodyDTO,
+} from '@repo/dtos/auth';
 
 @Controller('/auth')
 @ApiTags('Auth')
@@ -30,14 +33,7 @@ export class AuthController {
   @Inject()
   private authService: AuthService;
 
-  constructor() {}
-
-  //a
-
   @Post('/register')
-  @ApiBody({
-    type: RegisterUserDTO.Http.Body,
-  })
   @HttpCode(HttpStatus.CREATED)
   @ApiResponse({
     status: 200,
@@ -53,16 +49,17 @@ export class AuthController {
     summary: 'Cadastro de usuário',
     description: 'Utilize esse endpoint para realizar o cadastro de um usuário',
   })
-  async registerUser(@Body() body: RegisterUserDTO.Http.Body) {
-    const response = await this.authService.registerUser(body);
+  async registerUser(@Body() body: RegisterUserBodyDTO) {
+    const response = await this.authService.registerUser({
+      email: body.email,
+      password: body.password,
+      username: body.username,
+    });
 
     return response;
   }
 
   @Post('/login')
-  @ApiBody({
-    type: LoginUserDTO.Http.Body,
-  })
   @HttpCode(HttpStatus.OK)
   @ApiResponse({
     status: 200,
@@ -75,8 +72,11 @@ export class AuthController {
     summary: 'Login de usuário',
     description: 'Utilize esse endpoint para realizar o login de um usuário',
   })
-  async loginUser(@Body() body: LoginUserDTO.Http.Body) {
-    const response = await this.authService.loginUser(body);
+  async loginUser(@Body() body: LoginUserBodyDTO) {
+    const response = await this.authService.loginUser({
+      email: body.email,
+      password: body.password,
+    });
 
     return response;
   }
@@ -100,8 +100,10 @@ export class AuthController {
     summary: 'Atualizar tokens',
     description: 'Utilize esse endpoint para a atualizar seus tokens',
   })
-  async refreshToken(@Body() body: RefreshTokenDTO.Http.Body) {
-    const response = await this.authService.refreshToken(body);
+  async refreshToken(@Body() body: RefreshTokenBodyDTO) {
+    const response = await this.authService.refreshToken({
+      refreshToken: body.refreshToken,
+    });
 
     return response;
   }
@@ -124,7 +126,7 @@ export class AuthController {
     description:
       'Utilize esse endpoint para buscar as informações do usuário logado no momento',
   })
-  async me(@AuthenticatedUser() user: UserType) {
+  me(@AuthenticatedUser() user: UserType) {
     return user;
   }
 }

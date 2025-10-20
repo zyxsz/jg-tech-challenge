@@ -4,7 +4,12 @@ import {
   Services,
   TasksService as TasksServiceMC,
 } from '@repo/constants/services';
-import { TasksServiceTypes } from '@repo/dtos/types';
+import {
+  CreateAssignmentMessageInput,
+  CreateAssignmentMessageOutput,
+  GetAssignmentsMessageInput,
+  GetAssignmentsMessageOutput,
+} from '@repo/dtos/tasks/assignments';
 import { firstValueFrom } from 'rxjs';
 
 @Injectable()
@@ -13,8 +18,8 @@ export class AssignmentsService {
   private tasksClient: ClientProxy;
 
   async createAssignment(
-    input: TasksServiceTypes.Assignments.CreateAssignmentInput,
-  ): Promise<TasksServiceTypes.Assignments.CreateAssignmentOutput> {
+    input: CreateAssignmentMessageInput,
+  ): Promise<CreateAssignmentMessageOutput> {
     try {
       const response = await firstValueFrom(
         this.tasksClient.send(
@@ -30,8 +35,8 @@ export class AssignmentsService {
   }
 
   async getAssignments(
-    input: TasksServiceTypes.Assignments.GetAssignmentsInput,
-  ): Promise<TasksServiceTypes.Assignments.GetAssignmentsOutput> {
+    input: GetAssignmentsMessageInput,
+  ): Promise<GetAssignmentsMessageOutput> {
     try {
       const response = await firstValueFrom(
         this.tasksClient.send(

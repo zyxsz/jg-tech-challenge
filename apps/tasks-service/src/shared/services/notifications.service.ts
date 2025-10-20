@@ -3,7 +3,7 @@ import {
   TaskCommentCreatedEvent,
   TaskCreatedEvent,
   TaskUpdatedEvent,
-} from '@repo/dtos/types/tasks';
+} from '@repo/dtos/tasks';
 
 export abstract class NotificationsService {
   abstract emitTaskCreated(event: TaskCreatedEvent): void;

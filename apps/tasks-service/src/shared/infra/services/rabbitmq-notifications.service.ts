@@ -7,7 +7,7 @@ import {
   TaskCommentCreatedEvent,
   TaskCreatedEvent,
   TaskUpdatedEvent,
-} from '@repo/dtos/types/tasks';
+} from '@repo/dtos/tasks';
 
 export class RabbitMQNotificationsService implements NotificationsService {
   @Inject(Services.NOTIFICATIONS_SERVICE)

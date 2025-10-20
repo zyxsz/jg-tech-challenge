@@ -4,8 +4,13 @@ import {
   Services,
   TasksService as TasksServiceMC,
 } from '@repo/constants/services';
-import { TasksServiceTypes } from '@repo/dtos/types';
 import { firstValueFrom } from 'rxjs';
+import {
+  CreateCommentMessageInput,
+  CreateCommentMessageOutput,
+  GetCommentsWithPaginationMessageInput,
+  GetCommentsWithPaginationMessageOutput,
+} from '@repo/dtos/tasks/comments';
 
 @Injectable()
 export class CommentsService {
@@ -13,8 +18,8 @@ export class CommentsService {
   private tasksClient: ClientProxy;
 
   async createComment(
-    input: TasksServiceTypes.Comments.CreateCommentInput,
-  ): Promise<TasksServiceTypes.Comments.CreateCommentOutput> {
+    input: CreateCommentMessageInput,
+  ): Promise<CreateCommentMessageOutput> {
     try {
       const response = await firstValueFrom(
         this.tasksClient.send(
@@ -30,8 +35,8 @@ export class CommentsService {
   }
 
   async getCommentsWithPagination(
-    input: TasksServiceTypes.Comments.GetCommentWithPaginationInput,
-  ): Promise<TasksServiceTypes.Comments.GetCommentWithPaginationOutput> {
+    input: GetCommentsWithPaginationMessageInput,
+  ): Promise<GetCommentsWithPaginationMessageOutput> {
     try {
       const response = await firstValueFrom(
         this.tasksClient.send(

@@ -4,8 +4,6 @@ import { ConfigService } from '@nestjs/config';
 import { ValidationPipe } from '@nestjs/common';
 import { CustomRpcExceptionFilter } from '@repo/errors/filters';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { LoginUserDTO, RegisterUserDTO } from '@repo/dtos';
-import { AuthModule } from './auth/auth.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -30,10 +28,7 @@ async function bootstrap() {
 
     .build();
 
-  const documentFactory = () =>
-    SwaggerModule.createDocument(app, config, {
-      extraModels: [LoginUserDTO.Http.Body, RegisterUserDTO.Http.Body],
-    });
+  const documentFactory = () => SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api/docs', app, documentFactory);
 
   await app.listen(configService.get('PORT') ?? 3333);

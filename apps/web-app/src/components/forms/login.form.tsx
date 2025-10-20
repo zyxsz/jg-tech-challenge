@@ -85,7 +85,7 @@ export const LoginForm = () => {
               <FormItem>
                 <FormLabel>Senha</FormLabel>
                 <FormControl>
-                  <Input placeholder="Ex: *******" {...field} />
+                  <Input type="password" placeholder="Ex: *******" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>

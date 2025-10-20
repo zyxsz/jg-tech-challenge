@@ -4,7 +4,10 @@ import {
   AuthService as AuthServiceMS,
   Services,
 } from '@repo/constants/services';
-import { AuthServiceTypes } from '@repo/dtos/types';
+import {
+  ValidateTokenMessageInput,
+  ValidateTokenMessageOutput,
+} from '@repo/dtos/types';
 import { firstValueFrom } from 'rxjs';
 
 @Injectable()
@@ -13,8 +16,8 @@ export class AuthService {
   private authClient: ClientProxy;
 
   async validateToken(
-    data: AuthServiceTypes.ValidateTokenInput,
-  ): Promise<AuthServiceTypes.ValidateTokenOutput> {
+    data: ValidateTokenMessageInput,
+  ): Promise<ValidateTokenMessageOutput> {
     try {
       const response = await firstValueFrom(
         this.authClient.send(AuthServiceMS.Messages.VALIDATE_TOKEN, data),

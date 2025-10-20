@@ -16,17 +16,10 @@ import { TasksService } from './tasks.service';
 import { AuthenticatedRoute } from '@/auth/decorators/authenticated-route.decorator';
 import { AuthenticatedUser } from '@/auth/decorators/authenticated-user.decorator';
 import type { UserType } from '@/shared/types/user';
-import {
-  CreateTaskDTO,
-  DeleteTaskDTO,
-  GetTaskDTO,
-  GetTasksWithPaginationDTO,
-  UpdateTaskDTO,
-} from '@repo/dtos';
+
 import {
   ApiBearerAuth,
   ApiOperation,
-  ApiQuery,
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
@@ -34,6 +27,14 @@ import {
   GetTaskResponseSchema,
   GetTasksWithPaginationResponseSchema,
 } from '@/docs/examples/tasks-example';
+import {
+  CreateTaskBodyDTO,
+  DeleteTaskParamsDTO,
+  GetTaskQueryParamsDTO,
+  GetTasksWithPaginationQueryDTO,
+  UpdateTaskBodyDTO,
+  UpdateTaskParamsDTO,
+} from '@repo/dtos/tasks';
 
 @Controller('/tasks')
 @AuthenticatedRoute()
@@ -59,10 +60,13 @@ export class TasksController {
     description:
       'Utilize esse endpoint para a listagem de tarefas com paginação',
   })
-  async getTasksWithPagination(
-    @Query() query: GetTasksWithPaginationDTO.Http.QueryParams,
-  ) {
-    return await this.tasksService.getTasksWithPagination(query);
+  async getTasksWithPagination(@Query() query: GetTasksWithPaginationQueryDTO) {
+    const response = await this.tasksService.getTasksWithPagination(query);
+
+    return {
+      data: response.data,
+      pagination: response.pagination,
+    };
   }
 
   @Get('/:taskId')
@@ -84,8 +88,10 @@ export class TasksController {
     summary: 'Buscar tarefa',
     description: 'Utilize esse endpoint para buscar uma tarefa especifica',
   })
-  async getTask(@Param() params: GetTaskDTO.Http.Params) {
-    return await this.tasksService.getTask(params);
+  async getTask(@Param() params: GetTaskQueryParamsDTO) {
+    const response = await this.tasksService.getTask(params);
+
+    return response.task;
   }
 
   @Post('/')
@@ -105,12 +111,14 @@ export class TasksController {
   })
   async createTask(
     @AuthenticatedUser() user: UserType,
-    @Body() body: CreateTaskDTO.Http.Body,
+    @Body() body: CreateTaskBodyDTO,
   ) {
-    return await this.tasksService.createTask({
+    const response = await this.tasksService.createTask({
       authorId: user.id,
       ...body,
     });
+
+    return response.task;
   }
 
   @Put('/:taskId')
@@ -133,15 +141,17 @@ export class TasksController {
     description: 'Utilize esse endpoint para atualizar uma tarefa especifica',
   })
   async updateTask(
-    @Param() params: UpdateTaskDTO.Http.Params,
-    @Body() body: UpdateTaskDTO.Http.Body,
+    @Param() params: UpdateTaskParamsDTO,
+    @Body() body: UpdateTaskBodyDTO,
     @AuthenticatedUser() user: UserType,
   ) {
-    return await this.tasksService.updateTask({
+    const response = await this.tasksService.updateTask({
       taskId: params.taskId,
       data: body,
       authorId: user.id,
     });
+
+    return response.task;
   }
 
   @Delete('/:taskId')
@@ -163,7 +173,7 @@ export class TasksController {
     summary: 'Deletar tarefa',
     description: 'Utilize esse endpoint para deletar uma tarefa especifica',
   })
-  async deleteTask(@Param() params: DeleteTaskDTO.Http.Params) {
+  async deleteTask(@Param() params: DeleteTaskParamsDTO) {
     await this.tasksService.deleteTask(params);
 
     return;
