@@ -1,4 +1,205 @@
-# Teste técnico JG
+# Desafio Full-stack Júnior
+Construir um Sistema de Gestão de Tarefas Colaborativo com autenticação simples, CRUD de tarefas, comentários, atribuição e notificações. O sistema deve rodar em monorepo e expor uma UI limpa, responsiva e usável. O back‑end deve ser composto por microsserviços Nest que se comunicam via RabbitMQ; o acesso HTTP externo passa por um API Gateway (Nest HTTP).
+
+
+## Conteúdo
+
+- [Pacotes](#01-pacotes)
+- [Estruturas](#02-estruturas)
+- [Decisões](#03-decisões)
+- [Diagramas](#04-diagramas)
+
+
+## 01 Pacotes
+A utilização de pacotes centralizados é um dos pontos fortes de se utilizar um monorepo, fazendo assim você conseguir escrever um código mais objetivo, sem tanta repetição, e mais confiável, utilizando os pacotes para manter a coerência na comunicação entre microserviços. Ou seja, seguindo assim princípios como SOLID e DRY, algo que valorizo muito. Com isso em mente, veja abaixo os pacotes criados nesse projeto.
+
+#### Constants
+Responsável por armazenar as principais constantes do projeto, sendo elas: nome de serviços, nome de mensagens (message-pattern) e nome de eventos (event-pattern).
+
+#### DTOs
+Responsável por alinhar todas as transferências de dados entre microserviços, contendo classes para eventos, mensagens e DTOs para as requisições HTTP.
+
+#### Shared
+Responsável por compartilhar classes que são utilizadas em mais de uma aplicação, como: Entity, Pagination e tipos.
+
+#### Errors
+Responsável por todas as classes de erros utilizados nas aplicações.
+
+#### TSConfig & Eslint
+Pacotes que compartilham arquivos de configuração.
+
+## 02 Estruturas
+
+O primeiro passo que tomei foi pensar em como eu estruturaria o projeto, tendo em mente que ele tem que ser um monorepo (Turborepo) e com uma arquitetura de microserviços. Pensando em todos os requisitos, decidi começar pelo serviço de autenticação, logo em seguida começar o gateway da API, serviços de tarefas, serviço de notificações e, por fim, o aplicativo web.
+
+#### Serviço de autenticação
+Nesse serviço, decidi seguir uma estrutura de arquivos mais simples, contendo:
+-   Domain (entities, repositories, use-cases, services, providers)
+	 -   Responsável por todo o core da nossa aplicação, contendo toda a regra de negócio. Utiliza abstrações para integrar serviços e provedores.
+-   Infra (NestJS, RabbitMQ)
+	 -   Responsável por integrar o nosso domínio com o mundo externo, nesse caso utilizando RabbitMQ & NestJS. Também responsável por dar vida aos serviços/provedores, sendo eles: JWT, BCrypt e o serviço de notificações.
+
+#### Serviço de tarefas
+Nessa aplicação, como ela é um pouco mais complexa, acabei optando por uma estrutura mais robusta, sendo dividida em "domínios" diferentes (tasks, audit-logs, comments e assignments).
+
+-   Tasks, Comments, Assignment e AuditLogs
+	-   app
+		-  Responsável pela lógica de negócio, contendo casos de uso e DTOs.
+	-   domain
+		- Responsável por entidades e repositórios.
+	 -   infra
+		 - Responsável por integrar o domínio e a lógica de negócio com microserviços e banco de dados.
+
+**Benefícios**: seguir uma estrutura assim a longo prazo é algo muito vantajoso, trazendo segurança, flexibilidade e escalabilidade.
+**Trade-off**: ela pode ser um pouco mais trabalhosa de se implementar.
+
+#### Serviços de notificações
+Essa aplicação acaba sendo mais simples se comparada com as outras, portanto decidi seguir uma estrutura mais simples sem a utilização de abstrações, um bom e velho projeto Nest.
+
+-   Events
+	-   Lida com classes de eventos locais.
+-   Auth
+	-   Contém um serviço de autenticação responsável por se comunicar com o serviço de autenticação para fazer a validação do usuário ao se conectar com WebSocket.
+-   Notifications
+	-   Entidades:
+		-   Entidades do TypeORM;
+	-   Controller, service e module (NestJS)
+		-   Responsáveis por receber os eventos pelo RabbitMQ, criar notificações, salvá-las no banco de dados e emitir eventos locais para o WebSocket gateway.
+-   WebSocket
+	-   Gateway
+		-   Responsável pelas conexões WebSocket, realizando autenticação, recebendo eventos locais e enviando novas mensagens.
+
+#### Api Gateway
+Nessa aplicação, também utilizei uma estrutura bem básica, apenas separando pastas para cada serviço, integrando-os e lidando com autenticação.
+
+#### Aplicativo Web
+No aplicativo web, acabei utilizando uma estrutura bem básica, comumente vista em projetos React. Alguns diferenciais foram: a organização da API e a utilização do Tanstack Router code-based.
+
+## 03 Decisões
+Algumas decisões que tomei mediante o projeto, o porquê delas e trade-offs.
+
+- A utilização de boas práticas
+	- Com toda a experiência que eu tenho em desenvolvimento fullstack, como você estrutura um projeto, desde arquivos, abstrações e integrações, quando falamos de manutenção e crescimento, faz total diferença no futuro do projeto. Com o tempo, acabei aprendendo que utilizar certas metodologias/boas práticas pode te trazer uma certa complexidade a mais na hora do desenvolvimento, mas, no final das contas, acaba sendo algo imprescindível.
+
+- A não utilização da lib **Passport**
+	- Sendo uma das exigências do projeto, pensei muito sobre isso e, no final, optei por não utilizá-la. Com a utilização de um serviço de autenticação centralizado, não faria sentido ter que lidar com a encriptação/decriptação dos tokens JWT no API Gateway, onde ela se sairia melhor. Ir para o serviço de autenticação também não faz sentido, já que o principal ponto em utilizar uma biblioteca dessas seria a facilidade de integração e a integração com outros serviços de OAuth. Integrando-a a um microserviço, perderíamos boa parte da facilidade que ela traz, como o parse de headers e cookies, e, com serviços de terceiros, precisaríamos de uma camada a mais para interligá-la
+
+- Duplicidade de dados (**Tasks-services**)
+	- Indo para o serviço de tarefas, uma das suas responsabilidades é a listagem de tarefas, porém, ao fazer o frontend, percebi que seria muito importante possuir alguns dados que não são responsabilidade do serviço de tarefas, sendo eles as informações de usuários, sendo o criador da tarefa ou um usuário associado. Para isso eu poderia fazer uma requisição para o serviço de autenticação para buscar os usuários, porém isso não seria nada escalável.
+	- Decidi optar por uma prática muito comum em arquitetura de microserviços, a duplicidade de dados, ou seja, no serviço de tarefas, eu manteria uma cópia de todos os usuários criados. Quando um usuário fosse criado, o serviço de autenticação mandaria uma mensagem para o RabbitMQ; depois, o serviço de tarefas consumiria isso e salvaria o usuário no seu banco de dados.
+	- Assim, tendo todos os dados necessários para enviar as informações dos usuários associados a uma tarefa, sem precisar fazer 1.000.000 de requisições desnecessárias.
+	- **Trade-offs**: A duplicidade de dados é algo que acaba ocupando mais espaço em banco de dados e mais tráfego na rede, porém é algo irrisório se comparado com grande parte das alternativas.
+	> No caso desse projeto, como utilizamos o mesmo banco de dados, poderia só fazer uma nova query, porém, pensando em um caso real de microserviços, acredito que essa seria a estratégia ideal.
+
+-   A utilização de **DTOs** com class-validator.
+	- Optei por utilizar DTOs em todas as comunicações entre os serviços.
+	- Também utilizei DTOs em todos os parâmetros/query/body recebidos pelo API Gateway.
+	- Com a utilização de DTOs conseguimos garantir à confiabilidade dos dados.
+	- **Trade-offs**: É uma camada a mais a cada requisição, oque acaba "piorando" o desempenho mesmo que seja um custo irrisório.
+
+Dentre todas as decisões, acredito que essas tenham sido as principais. Algumas, como a utilização de pacotes para seguir princípios como o DRY, já foram apresentadas acima.
+
+## 04 Diagramas
+
+#### Arquitetura básica
+```mermaid
+architecture-beta
+	group  api(cloud)[Application]
+	service  web(internet)[WebApp] in  api
+	service  gateway(server)[API  Gateway] in  api
+	service  services(server)[Services] in  api
+	service  db(database)[Database] in  api
+	web:R  --  L:gateway
+	gateway:B  --  T:services
+	services:R  --  L:db
+```
+
+#### Autenticação
+
+Como a autenticação deve ser integrada utilizando o ApiGateway e outros serviços:
+
+```mermaid
+sequenceDiagram
+    participant ApiGateway
+    participant AuthService
+    participant OtherService
+    ApiGateway->>AuthService: "Send token (validate-token)"
+    AuthService->>ApiGateway: Token validation response
+    ApiGateway->>OtherService: Send request
+    OtherService->>ApiGateway: Receive response
+```
+
+#### Serviço de autenticação
+Veja as entidades do serviço de tarefas:
+
+```mermaid
+erDiagram
+    direction LR
+    Users {
+        string id PK
+        string username
+        string email
+        string password
+        date updatedAt
+        date createdAt
+    }
+```
+
+#### Serviço de tarefas
+Veja as entidades do serviço de tarefas:
+
+```mermaid
+erDiagram
+	direction  LR
+
+	Users {
+		string  id  PK
+		string  username
+		string  email
+	}
+
+	Tasks {
+		string  id  PK
+		string  authorId  FK
+		string  title
+		string  description
+		enum  priority
+		enum  status
+		date  term
+		date  createdAt
+	}
+
+	AuditLogs {
+	string  id  PK
+	string  taskId  FK
+	string  authorId
+	enum  actionType
+	json  modifications
+	date  createdAt
+	}
+
+	Comments {
+		string  id  PK
+		string  taskId  FK
+		string  authorId  FK
+		string  content
+		date  createdAt
+	}
+
+	Assignments {
+		string  id  PK
+		string  taskId  FK
+		string  userId  FK
+		date  assignedAt
+	}
+	Users ||--o{ Tasks : "has  many"
+	Tasks ||--o{ Comments : "has  many"
+	Tasks ||--o{ AuditLogs : "has  many"
+	Tasks ||--o{ Assignments : "has  many"
+```
+
+
+<!--# Teste técnico JG
 
 Construir um Sistema de Gestão de Tarefas Colaborativo com autenticação simples, CRUD de tarefas, comentários, atribuição e notificações. O sistema deve rodar em monorepo e expor uma UI limpa, responsiva e usável. O back‑end deve ser composto por microsserviços Nest que se comunicam via RabbitMQ; o acesso HTTP externo passa por um API Gateway (Nest HTTP).
 
@@ -230,3 +431,98 @@ A fazer:
 - [ ] Refazer notificações
 - [ ] Responsividade
 - [ ] Diferenciais: Health checks, Logs (pinno)
+
+=-=-=-=-=
+# Desafio Full-stack Júnior
+Construir um Sistema de Gestão de Tarefas Colaborativo com autenticação simples, CRUD de tarefas, comentários, atribuição e notificações. O sistema deve rodar em monorepo e expor uma UI limpa, responsiva e usável. O back‑end deve ser composto por microsserviços Nest que se comunicam via RabbitMQ; o acesso HTTP externo passa por um API Gateway (Nest HTTP).
+
+# Trajetória
+
+## 01 Pacotes
+A utilização de pacotes centralizados é um dos pontos fortes de se utilizar um monorepo, fazendo assim você conseguir escrever um código mais objetivo, sem tanta repetição, e mais confiável, utilizando os pacotes para manter a coerência na comunicação entre microserviços. Ou seja, seguindo assim princípios como SOLID e DRY, algo que valorizo muito. Com isso em mente, veja abaixo os pacotes criados nesse projeto.
+
+#### Constants
+Responsável por armazenar as principais constantes do projeto, sendo elas: nome de serviços, nome de mensagens (message-pattern) e nome de eventos (event-pattern).
+
+#### DTOs
+Responsável por alinhar todas as transferências de dados entre microserviços, contendo classes para eventos, mensagens e DTOs para as requisições HTTP.
+
+#### Shared
+Responsável por compartilhar classes que são utilizadas em mais de uma aplicação, como: Entity, Pagination e tipos.
+
+#### Errors
+Responsável por todas as classes de erros utilizados nas aplicações.
+
+#### TSConfig & Eslint
+Pacotes que compartilham arquivos de configuração.
+
+## 02 Estruturas
+
+O primeiro passo que tomei foi pensar em como eu estruturaria o projeto, tendo em mente que ele tem que ser um monorepo (Turborepo) e com uma arquitetura de microserviços. Pensando em todos os requisitos, decidi começar pelo serviço de autenticação, logo em seguida começar o gateway da API, serviços de tarefas, serviço de notificações e, por fim, o aplicativo web.
+
+#### Serviço de autenticação
+Nesse serviço, decidi seguir uma estrutura de arquivos mais simples, contendo:
+-   Domain (entities, repositories, use-cases, services, providers)
+	 -   Responsável por todo o core da nossa aplicação, contendo toda a regra de negócio. Utiliza abstrações para integrar serviços e provedores.
+-   Infra (NestJS, RabbitMQ)
+	 -   Responsável por integrar o nosso domínio com o mundo externo, nesse caso utilizando RabbitMQ & NestJS. Também responsável por dar vida aos serviços/provedores, sendo eles: JWT, BCrypt e o serviço de notificações.
+
+#### Serviço de tarefas
+Nessa aplicação, como ela é um pouco mais complexa, acabei optando por uma estrutura mais robusta, sendo dividida em "domínios" diferentes (tasks, audit-logs, comments e assignments).
+
+-   Tasks, Comments, Assignment e AuditLogs
+	-   app
+		-  Responsável pela lógica de negócio, contendo casos de uso e DTOs.
+	-   domain
+		- Responsável por entidades e repositórios.
+	 -   infra
+		 - Responsável por integrar o domínio e a lógica de negócio com microserviços e banco de dados.
+
+**Benefícios**: seguir uma estrutura assim a longo prazo é algo muito vantajoso, trazendo segurança, flexibilidade e escalabilidade.
+**Trade-off**: ela pode ser um pouco mais trabalhosa de se implementar.
+
+#### Serviços de notificações
+Essa aplicação acaba sendo mais simples se comparada com as outras, portanto decidi seguir uma estrutura mais simples sem a utilização de abstrações, um bom e velho projeto Nest.
+
+-   Events
+	-   Lida com classes de eventos locais.
+-   Auth
+	-   Contém um serviço de autenticação responsável por se comunicar com o serviço de autenticação para fazer a validação do usuário ao se conectar com WebSocket.
+-   Notifications
+	-   Entidades:
+		-   Entidades do TypeORM;
+	-   Controller, service e module (NestJS)
+		-   Responsáveis por receber os eventos pelo RabbitMQ, criar notificações, salvá-las no banco de dados e emitir eventos locais para o WebSocket gateway.
+-   WebSocket
+	-   Gateway
+		-   Responsável pelas conexões WebSocket, realizando autenticação, recebendo eventos locais e enviando novas mensagens.
+
+#### Api Gateway
+Nessa aplicação, também utilizei uma estrutura bem básica, apenas separando pastas para cada serviço, integrando-os e lidando com autenticação.
+
+#### Aplicativo Web
+No aplicativo web, acabei utilizando uma estrutura bem básica, comumente vista em projetos React. Alguns diferenciais foram: a organização da API e a utilização do Tanstack Router code-based.
+
+## 03 Decisões
+Algumas decisões que tomei mediante o projeto, o porquê delas e trade-offs.
+
+- A utilização de boas práticas
+	- Com toda a experiência que eu tenho em desenvolvimento fullstack, como você estrutura um projeto, desde arquivos, abstrações e integrações, quando falamos de manutenção e crescimento, faz total diferença no futuro do projeto. Com o tempo, acabei aprendendo que utilizar certas metodologias/boas práticas pode te trazer uma certa complexidade a mais na hora do desenvolvimento, mas, no final das contas, acaba sendo algo imprescindível.
+
+- A não utilização da lib **Passport**
+	- Sendo uma das exigências do projeto, pensei muito sobre isso e, no final, optei por não utilizá-la. Com a utilização de um serviço de autenticação centralizado, não faria sentido ter que lidar com a encriptação/decriptação dos tokens JWT no API Gateway, onde ela se sairia melhor. Ir para o serviço de autenticação também não faz sentido, já que o principal ponto em utilizar uma biblioteca dessas seria a facilidade de integração e a integração com outros serviços de OAuth. Integrando-a a um microserviço, perderíamos boa parte da facilidade que ela traz, como o parse de headers e cookies, e, com serviços de terceiros, precisaríamos de uma camada a mais para interligá-la
+
+- Duplicidade de dados (**Tasks-services**)
+	- Indo para o serviço de tarefas, uma das suas responsabilidades é a listagem de tarefas, porém, ao fazer o frontend, percebi que seria muito importante possuir alguns dados que não são responsabilidade do serviço de tarefas, sendo eles as informações de usuários, sendo o criador da tarefa ou um usuário associado. Para isso eu poderia fazer uma requisição para o serviço de autenticação para buscar os usuários, porém isso não seria nada escalável.
+	- Decidi optar por uma prática muito comum em arquitetura de microserviços, a duplicidade de dados, ou seja, no serviço de tarefas, eu manteria uma cópia de todos os usuários criados. Quando um usuário fosse criado, o serviço de autenticação mandaria uma mensagem para o RabbitMQ; depois, o serviço de tarefas consumiria isso e salvaria o usuário no seu banco de dados.
+	- Assim, tendo todos os dados necessários para enviar as informações dos usuários associados a uma tarefa, sem precisar fazer 1.000.000 de requisições desnecessárias.
+	- **Trade-offs**: A duplicidade de dados é algo que acaba ocupando mais espaço em banco de dados e mais tráfego na rede, porém é algo irrisório se comparado com grande parte das alternativas.
+	> No caso desse projeto, como utilizamos o mesmo banco de dados, poderia só fazer uma nova query, porém, pensando em um caso real de microserviços, acredito que essa seria a estratégia ideal.
+
+-   A utilização de **DTOs** com class-validator.
+	- Optei por utilizar DTOs em todas as comunicações entre os serviços.
+	- Também utilizei DTOs em todos os parâmetros/query/body recebidos pelo API Gateway.
+	- Com a utilização de DTOs conseguimos garantir à confiabilidade dos dados.
+	- **Trade-offs**: É uma camada a mais a cada requisição, oque acaba "piorando" o desempenho mesmo que seja um custo irrisório.
+
+Dentre todas as decisões, acredito que essas tenham sido as principais. Algumas, como a utilização de pacotes para seguir princípios como o DRY, já foram apresentadas acima.-->
