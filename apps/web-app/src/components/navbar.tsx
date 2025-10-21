@@ -9,10 +9,17 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import { Button } from "./ui/button";
-import { Link } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 
 export const Navbar = () => {
+  const navigate = useNavigate();
   const user = authStore((state) => state.user);
+
+  const handleLogout = () => {
+    authStore.getState().logout();
+
+    navigate({ to: "/login", reloadDocument: true });
+  };
 
   return (
     <nav className="bg-background fixed top-0 left-0 right-0 border-b border-border z-20">
@@ -38,8 +45,9 @@ export const Navbar = () => {
               <DropdownMenuContent sideOffset={8} side="bottom" align="end">
                 <DropdownMenuLabel>{user.username}</DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem>Meus dados</DropdownMenuItem>
-                <DropdownMenuItem>Sair</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => handleLogout()}>
+                  Sair
+                </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           )}

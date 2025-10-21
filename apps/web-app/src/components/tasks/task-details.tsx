@@ -150,7 +150,7 @@ export const TaskDetails = ({ task }: Props) => {
     return (
       <Tooltip>
         <TooltipTrigger asChild>
-          <Tag className="ml-2">
+          <Tag className="ml-2 max-sm:ml-0">
             <TaskPriorityIcon priority={task.priority} />
             <TaskPriorityLabel priority={task.priority} />
           </Tag>
@@ -196,12 +196,16 @@ export const TaskDetails = ({ task }: Props) => {
             Voltar
           </Link>
         </Button>
-        <div className="flex items-center justify-between gap-6">
-          <div className="flex items-end gap-2">
-            <h1 className="text-4xl font-black">{task.title}</h1>
+        <div className="flex items-center justify-between gap-6 max-sm:flex-col max-sm:items-start max-sm:gap-2">
+          <div className="flex items-end gap-2 max-sm:flex-col max-sm:items-start">
+            <h1 className="text-4xl font-black max-sm:text-3xl">
+              {task.title}
+            </h1>
 
-            <PriorityTag />
-            <StatusTag />
+            <div className="flex items-end gap-2">
+              <PriorityTag />
+              <StatusTag />
+            </div>
           </div>
 
           <div className="flex items-center justify-end gap-2">

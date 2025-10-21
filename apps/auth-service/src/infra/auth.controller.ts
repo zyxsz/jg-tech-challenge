@@ -1,11 +1,11 @@
 import { Controller, Inject } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import { AuthService } from '@repo/constants/services';
-import { RegisterUserUseCase } from '@/app/use-cases/register-user.use-case';
-import { LoginUseCase } from '@/app/use-cases/login.use-case';
-import { GenerateTokensUseCase } from '@/app/use-cases/generate-tokens.use-case';
-import { RefreshTokensUseCase } from '@/app/use-cases/refresh-tokens.use-case';
-import { ValidateTokenUseCase } from '@/app/use-cases/validate-token.use-case';
+import { RegisterUserUseCase } from '@/app/domain/use-cases/register-user.use-case';
+import { LoginUseCase } from '@/app/domain/use-cases/login.use-case';
+import { GenerateTokensUseCase } from '@/app/domain/use-cases/generate-tokens.use-case';
+import { RefreshTokensUseCase } from '@/app/domain/use-cases/refresh-tokens.use-case';
+import { ValidateTokenUseCase } from '@/app/domain/use-cases/validate-token.use-case';
 import {
   LoginUserMessageInput,
   LoginUserMessageOutput,
@@ -16,7 +16,7 @@ import {
   ValidateTokenMessageInput,
   ValidateTokenMessageOutput,
 } from '@repo/dtos/auth';
-import { NotificationsService } from '@/app/services/notifications.service';
+import { NotificationsService } from '@/app/domain/services/notifications.service';
 
 @Controller()
 export class AuthController {

@@ -52,9 +52,11 @@ export class AssignmentsController {
     description: 'Tarefa não encontrada',
   })
   async getAssignments(@Param() params: GetAssignmentParamsDTO) {
-    return this.assignmentsService.getAssignments({
+    const response = await this.assignmentsService.getAssignments({
       taskId: params.taskId,
     });
+
+    return response.assignments;
   }
 
   @Post('/me')
@@ -85,9 +87,11 @@ export class AssignmentsController {
     @Param() params: GetAssignmentParamsDTO,
     @AuthenticatedUser() user: UserType,
   ) {
-    return this.assignmentsService.createAssignment({
+    const response = await this.assignmentsService.createAssignment({
       userId: user.id,
       taskId: params.taskId,
     });
+
+    return response.assignment;
   }
 }

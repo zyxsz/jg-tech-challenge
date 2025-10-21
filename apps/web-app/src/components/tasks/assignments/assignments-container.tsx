@@ -36,10 +36,12 @@ export const TaskAssignmentsContainer = ({ task }: Props) => {
       </div>
     );
 
+  console.log(data);
+
   return (
     <div className="space-y-2">
       {data
-        .filter((assignment) => !!assignment.relations?.user)
+        ?.filter((assignment) => !!assignment.relations?.user)
         .map((assignment) => (
           <div
             key={assignment.id}

@@ -1,8 +1,8 @@
+import { UserOutput, UserOutputMapper } from '@/app/dtos/user-output';
 import { ConflictError } from '@repo/errors/exceptions';
-import { User } from '../domain/entities/user.entity';
-import { UsersRepository } from '../domain/repositories/users.repository';
-import { UserOutput, UserOutputMapper } from '../dtos/user-output';
-import { HashProvider } from '../providers/hash.provider';
+import { UsersRepository } from '../repositories/users.repository';
+import { HashProvider } from '@/app/domain/providers/hash.provider';
+import { User } from '../entities/user.entity';
 
 export interface RegisterUserInput {
   username: string;

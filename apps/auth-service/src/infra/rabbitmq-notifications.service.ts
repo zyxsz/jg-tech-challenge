@@ -1,4 +1,4 @@
-import { NotificationsService } from '@/app/services/notifications.service';
+import { NotificationsService } from '@/app/domain/services/notifications.service';
 import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { Services, TasksService } from '@repo/constants/services';

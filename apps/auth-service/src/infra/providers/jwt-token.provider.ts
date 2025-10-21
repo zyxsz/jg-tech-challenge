@@ -1,4 +1,4 @@
-import { TokenProvider } from '@/app/providers/token.provider';
+import { TokenProvider } from '@/app/domain/providers/token.provider';
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InvalidCredentialsError } from '@repo/errors/exceptions';

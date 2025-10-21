@@ -4,7 +4,7 @@ import { Link } from "@tanstack/react-router";
 
 export const RegisterPage = () => {
   return (
-    <section className="w-full min-h-screen flex flex-col items-center justify-center">
+    <section className="w-full min-h-screen flex flex-col items-center justify-center p-4">
       <div className="w-full max-w-md space-y-4">
         <header className="w-full text-start">
           <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight text-balance">

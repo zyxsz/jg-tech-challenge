@@ -14,10 +14,10 @@ export class GenerateTokensUseCase {
 
   async execute(input: GenerateTokensInput): Promise<GenerateTokensOutput> {
     const accessTokenPayload = {
-      userId: input.userId,
+      accessTokenUserId: input.userId,
     };
     const refreshTokenPayload = {
-      userId: input.userId,
+      refreshTokenUserId: input.userId,
     };
 
     const accessToken = await this.tokenProvider.generateToken(

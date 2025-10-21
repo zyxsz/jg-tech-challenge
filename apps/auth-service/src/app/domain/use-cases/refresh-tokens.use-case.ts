@@ -1,6 +1,6 @@
-import { TokenProvider } from '../providers/token.provider';
-import { UsersRepository } from '../domain/repositories/users.repository';
+import { TokenProvider } from '@/app/domain/providers/token.provider';
 import { UnauthorizedError } from '@repo/errors/exceptions';
+import { UsersRepository } from '../repositories/users.repository';
 
 export interface RefreshTokensInput {
   refreshToken: string;
@@ -19,20 +19,22 @@ export class RefreshTokensUseCase {
 
   async execute(input: RefreshTokensInput): Promise<RefreshTokensOutput> {
     const tokenPayload = await this.tokenProvider.validateToken<{
-      userId: string;
+      refreshTokenUserId: string;
     }>(input.refreshToken);
 
     if (!tokenPayload) throw new UnauthorizedError('Refresh token invalido');
-    if (!tokenPayload.userId)
+    if (!tokenPayload.refreshTokenUserId)
       throw new UnauthorizedError('Conteúdo do refresh token é invalido');
 
-    const user = await this.usersRepository.findById(tokenPayload.userId);
+    const user = await this.usersRepository.findById(
+      tokenPayload.refreshTokenUserId,
+    );
 
     const accessTokenPayload = {
-      userId: user.id,
+      accessTokenUserId: user.id,
     };
     const refreshTokenPayload = {
-      userId: user.id,
+      refreshTokenUserId: user.id,
     };
 
     const accessToken = await this.tokenProvider.generateToken(

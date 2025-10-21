@@ -19,11 +19,13 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "typeorm": "typeorm-ts-node-commonjs",
-    "typeorm:run:migrations": "npx dotenv-cli -e .env -- typeorm-ts-node-commonjs migration:run -d ./data-source.ts",
     "migrations:run": "npx dotenv-cli -e .env -- typeorm-ts-node-commonjs migration:run -d ./data-source.ts",
     "migrations:generate": "npx dotenv-cli -e .env -- typeorm-ts-node-commonjs migration:generate -d ./data-source.ts",
-    "migrations:revert": "npx dotenv-cli -e .env -- typeorm-ts-node-commonjs migration:revert -d ./data-source.ts"
+    "migrations:revert": "npx dotenv-cli -e .env -- typeorm-ts-node-commonjs migration:revert -d ./data-source.ts",
+    "typeorm": "typeorm-ts-node-commonjs",
+    "typeorm:generate:migrations": "npx dotenv-cli -e .env -- typeorm-ts-node-commonjs migration:generate -d ./data-source.ts",
+    "typeorm:run:migrations": "npx dotenv-cli -e .env -- typeorm-ts-node-commonjs migration:run -d ./data-source.ts",
+    "run:migrations": "npx dotenv-cli -e .env -- typeorm-ts-node-commonjs migration:run -d ./data-source.ts"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.1",

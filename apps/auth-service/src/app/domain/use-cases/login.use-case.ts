@@ -1,6 +1,6 @@
+import { UserOutput, UserOutputMapper } from '@/app/dtos/user-output';
 import { InvalidCredentialsError } from '@repo/errors/exceptions';
-import { UsersRepository } from '../domain/repositories/users.repository';
-import { UserOutput, UserOutputMapper } from '../dtos/user-output';
+import { UsersRepository } from '../repositories/users.repository';
 import { HashProvider } from '../providers/hash.provider';
 
 export interface LoginUseCaseInput {
@@ -8,7 +8,7 @@ export interface LoginUseCaseInput {
   password: string;
 }
 
-export interface LoginUseCaseOutput extends UserOutput {}
+export type LoginUseCaseOutput = UserOutput;
 
 export class LoginUseCase {
   constructor(

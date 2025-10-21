@@ -5,6 +5,7 @@ import { TasksSkeleton } from "@/components/tasks/tasks-skeleton";
 import { Button } from "@/components/ui/button";
 import { usePaginationHook } from "@/hooks/use-pagination.hook";
 import { useTasksFilterHook } from "@/hooks/use-tasks-filter.hook";
+import { cn } from "@/lib/utils";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
 import { ArrowRightIcon } from "lucide-react";
@@ -30,7 +31,7 @@ export const TasksPage = () => {
   if (!tasks) return <ErrorContainer message={"Unable to fetch for tasks"} />;
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 ">
       <header className="flex items-center justify-between gap-6">
         <div>
           <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight text-balance">
@@ -64,7 +65,7 @@ export const TasksPage = () => {
           <Task task={task} key={task.id} />
         ))}
 
-        <footer className="flex items-center justify-between gap-2 select-none">
+        <footer className="flex items-center justify-between gap-2 select-none max-sm:flex-col max-sm:items-center">
           <Components.PerPageLimit paginationData={tasks.pagination} />
 
           <div className="mt-4 flex items-center justify-end gap-2">

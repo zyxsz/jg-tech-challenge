@@ -2,19 +2,19 @@ import { Module } from '@nestjs/common';
 import { ProvidersModule } from './providers/providers.module';
 import { DatabaseModule } from './database/database.module';
 import { AuthController } from './auth.controller';
-import { RegisterUserUseCase } from '@/app/use-cases/register-user.use-case';
-import { LoginUseCase } from '@/app/use-cases/login.use-case';
-import { RefreshTokensUseCase } from '@/app/use-cases/refresh-tokens.use-case';
-import { GenerateTokensUseCase } from '@/app/use-cases/generate-tokens.use-case';
-import { ValidateTokenUseCase } from '@/app/use-cases/validate-token.use-case';
 import { UsersRepository } from '@/app/domain/repositories/users.repository';
-import { HashProvider } from '@/app/providers/hash.provider';
-import { TokenProvider } from '@/app/providers/token.provider';
-import { NotificationsService } from '@/app/services/notifications.service';
 import { RabbitMQNotificationsService } from './rabbitmq-notifications.service';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { ConfigService } from '@nestjs/config';
 import { Services } from '@repo/constants/services';
+import { NotificationsService } from '@/app/domain/services/notifications.service';
+import { RegisterUserUseCase } from '@/app/domain/use-cases/register-user.use-case';
+import { HashProvider } from '@/app/domain/providers/hash.provider';
+import { LoginUseCase } from '@/app/domain/use-cases/login.use-case';
+import { RefreshTokensUseCase } from '@/app/domain/use-cases/refresh-tokens.use-case';
+import { TokenProvider } from '@/app/domain/providers/token.provider';
+import { GenerateTokensUseCase } from '@/app/domain/use-cases/generate-tokens.use-case';
+import { ValidateTokenUseCase } from '@/app/domain/use-cases/validate-token.use-case';
 
 @Module({
   imports: [

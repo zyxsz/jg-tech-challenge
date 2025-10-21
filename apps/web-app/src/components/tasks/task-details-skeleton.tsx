@@ -18,12 +18,18 @@ export const TaskDetailsSkeleton = () => {
             Voltar
           </Link>
         </Button>
-        <div className="flex items-center justify-between gap-6">
+        <div className="flex items-center justify-between gap-6 max-sm:gap-2 max-sm:flex-col max-sm:items-start">
           <div className="flex items-end gap-2">
             <Skeleton style={{ width: 260, height: 40 }} />
 
-            <Skeleton className="ml-2" style={{ width: 130, height: 34 }} />
-            <Skeleton style={{ width: 100, height: 34 }} />
+            <Skeleton
+              className="ml-2 max-sm:hidden"
+              style={{ width: 130, height: 34 }}
+            />
+            <Skeleton
+              className="max-sm:hidden"
+              style={{ width: 100, height: 34 }}
+            />
           </div>
 
           <div className="flex items-center justify-end gap-2">

@@ -18,7 +18,7 @@ export const PrivateLayout = () => {
   return (
     <Fragment>
       <Navbar />
-      <div className="mt-20 max-w-screen-lg mx-auto px-2 py-4 pb-20">
+      <div className="mt-20 max-w-screen-lg mx-auto px-4 py-4 pb-20">
         <Outlet />
       </div>
     </Fragment>

@@ -1,4 +1,7 @@
 import { DataSource } from 'typeorm';
+import 'reflect-metadata';
+
+console.log(process.env);
 
 const ds = new DataSource({
   type: 'postgres',
@@ -11,4 +14,5 @@ const ds = new DataSource({
   ssl: process.env.DATABASE_SSL ? process.env.DATABASE_SSL === 'true' : false,
 });
 
-module.exports = ds;
+export default ds;
+// module.exports = ds;

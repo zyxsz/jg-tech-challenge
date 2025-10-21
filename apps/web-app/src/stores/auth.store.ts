@@ -6,6 +6,7 @@ export interface AuthStore {
   isLoading: boolean;
   isAuthenticated: boolean | null;
   isRefreshingToken: boolean;
+  logout: () => void;
 }
 
 export const authStore = create<AuthStore>(() => ({
@@ -13,4 +14,8 @@ export const authStore = create<AuthStore>(() => ({
   isLoading: true,
   isAuthenticated: null,
   user: null,
+  logout: () => {
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
+  },
 }));
