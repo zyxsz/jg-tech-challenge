@@ -7,8 +7,7 @@ services:
       context: .
       dockerfile: ./apps/auth-service/Dockerfile
     restart: always
-    networks:
-      - challenge-network
+    network_mode: host
     environment:
       - JWT_SECRET=${JWT_SECRET}
 
@@ -34,8 +33,7 @@ services:
       context: .
       dockerfile: ./apps/tasks-service/Dockerfile
     restart: always
-    networks:
-      - challenge-network
+    network_mode: host
     environment:
       - DATABASE_HOST=${DATABASE_HOST}
       - DATABASE_PORT=${DATABASE_PORT}
@@ -59,8 +57,7 @@ services:
       context: .
       dockerfile: ./apps/notifications-service/Dockerfile
     restart: always
-    networks:
-      - challenge-network
+    network_mode: host
     environment:
       - DATABASE_HOST=${DATABASE_HOST}
       - DATABASE_PORT=${DATABASE_PORT}
@@ -85,8 +82,7 @@ services:
       dockerfile: ./apps/api-gateway/Dockerfile
       network: host
     restart: always
-    networks:
-      - challenge-network
+    network_mode: host
     environment:
       - PORT=${API_PORT}
       - RMQ_HOST=${RMQ_HOST}
@@ -112,8 +108,7 @@ services:
       dockerfile: ./apps/web-app/Dockerfile
       network: host
     restart: always
-    networks:
-      - challenge-network
+    network_mode: host
     ports:
       - 3000:3000
     environment:
@@ -128,8 +123,7 @@ services:
     image: postgres:17.5-alpine3.21
     container_name: db
     attach: false
-    networks:
-      - challenge-network
+    network_mode: host
     ports:
       - "5432:5432"
     restart: always
@@ -146,8 +140,7 @@ services:
     container_name: rabbitmq
     attach: false
     restart: always
-    networks:
-      - challenge-network
+    network_mode: host
     ports:
       - "5672:5672"
       - "15672:15672"
@@ -166,7 +159,3 @@ volumes:
     driver: local
   rabbitmq_data:
     driver: local
-
-networks:
-  challenge-network:
-    driver: bridge

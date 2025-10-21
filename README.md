@@ -330,11 +330,11 @@ npm run dev
 
 #### Iniciar projeto utilizando o docker
 
-1. Primeiro passo, configure o arquivo **.env** seguindo o arquivo **.env.example** no diretório principal do projeto.
+1. Primeiro passo, instale as dependências.
 2. Segundo passo, execute o seguinte comando:
 
 ```sh
-docker compose -f docker-compose.yml --env-file .env up
+docker compose -f docker-compose.yml --env-file .env.example up
 ```
 
 > Obs: acabei tendo que utilizar o modo de rede dos containers como **HOST** por conta de um bug no WSL.
