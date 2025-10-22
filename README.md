@@ -12,6 +12,7 @@ Construir um Sistema de Gestão de Tarefas Colaborativo com autenticação simpl
 - [Possíveis melhorias](#06-possíveis-melhorias)
 - [Rodar projeto](#07-rodar-projeto)
 - [Imagens](#08-imagens)
+- [Outros](#10-outros)
 
 ## 01 Pacotes
 
@@ -353,6 +354,8 @@ npm run dev
 docker compose -f docker-compose.host.yml --env-file .env.example up
 ```
 
+> OBS: em alguns casos, utilizando o WSL, pode ocorrer alguns problemas para acessar os serviços. Caso aconteça com você, tente utilizar o modo de rede dos containers como HOST, seguindo o passo a passo acima.
+
 ## 08 Imagens
 
 ![Login](https://i.imgur.com/pyU1gNO.png)
@@ -363,7 +366,7 @@ docker compose -f docker-compose.host.yml --env-file .env.example up
 
 ## 09 Contato
 
-**Email\***: [lucasjsilva2006bg@gmail.com](mailto:lucasjsilva2006bg@gmail.com)
+**Email**: [lucasjsilva2006bg@gmail.com](mailto:lucasjsilva2006bg@gmail.com)
 
 <!--# Teste técnico JG
 
@@ -692,3 +695,11 @@ Algumas decisões que tomei mediante o projeto, o porquê delas e trade-offs.
 	- **Trade-offs**: É uma camada a mais a cada requisição, oque acaba "piorando" o desempenho mesmo que seja um custo irrisório.
 
 Dentre todas as decisões, acredito que essas tenham sido as principais. Algumas, como a utilização de pacotes para seguir princípios como o DRY, já foram apresentadas acima.-->
+
+## 10 Outros
+
+- Utilização do Logger do próprio NestJS para realizar logs de eventos (event-pattern).
+- Rate limit aplicado de 10 rotas por segundo.
+- Documentação da API disponível em /api/docs (api-gateway).
+- Utilização do React Query & axios na aplicação web.
+- Aplicação web disponível em temas claro e escura, a depender do padrão do seu navegador.
