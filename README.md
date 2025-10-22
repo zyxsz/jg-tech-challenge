@@ -311,6 +311,15 @@ Revisando toda a minha trajetória criando esse sistema, notei algumas melhorias
 npm install
 ```
 
+#### Iniciar projeto utilizando o docker
+
+1. Primeiro passo, (instale as dependências)[#instalação].
+2. Segundo passo, execute o seguinte comando:
+
+```sh
+docker compose -f docker-compose.yml --env-file .env.example up
+```
+
 #### Iniciar em modo de desenvolvimento
 
 1. Primeiro passo, configure todas as **.env** seguindo o arquivo **.env.example** de exemplo.
@@ -330,15 +339,6 @@ npm run run:migrations
 
 ```sh
 npm run dev
-```
-
-#### Iniciar projeto utilizando o docker
-
-1. Primeiro passo, instale as dependências.
-2. Segundo passo, execute o seguinte comando:
-
-```sh
-docker compose -f docker-compose.yml --env-file .env.example up
 ```
 
 #### Iniciar projeto utilizando o docker com modo de rede HOST
