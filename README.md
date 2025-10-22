@@ -11,6 +11,7 @@ Construir um Sistema de Gestão de Tarefas Colaborativo com autenticação simpl
 - [Tempo gasto](#05-tempo-gasto)
 - [Possíveis melhorias](#06-possíveis-melhorias)
 - [Rodar projeto](#07-rodar-projeto)
+- [Imagens](#08-imagens)
 
 ## 01 Pacotes
 
@@ -349,6 +350,14 @@ docker compose -f docker-compose.yml --env-file .env.example up
 ```sh
 docker compose -f docker-compose.host.yml --env-file .env.example up
 ```
+
+## 08 Imagens
+
+![Login](https://i.imgur.com/pyU1gNO.png)
+![Tarefas](https://i.imgur.com/hcUXUSj.png)
+![Conteúdo](https://i.imgur.com/XW0ulGf.png)
+![Comentários](https://i.imgur.com/TaFgwSt.png)
+![Tarefas white](https://i.imgur.com/YyQkMbI.png)
 
 <!--# Teste técnico JG
 
