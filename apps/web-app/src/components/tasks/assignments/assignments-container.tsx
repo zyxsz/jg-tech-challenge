@@ -8,12 +8,15 @@ import { TaskMeAssignmentButton } from "./me-assignment-button";
 import { AssignmentsSkeleton } from "./assignments-skeleton";
 import { ErrorContainer } from "@/components/error-container";
 import { TaskAssignmentButton } from "./assignment-button";
+import { cn } from "@/lib/utils";
+import { authStore } from "@/stores/auth.store";
 
 interface Props {
   task: Task;
 }
 
 export const TaskAssignmentsContainer = ({ task }: Props) => {
+  const user = authStore((state) => state.user);
   const { data, isLoading, error, refetch } = useQuery({
     queryKey: ["tasks", task.id, "assignments"],
     queryFn: () => TasksService.getTaskAssignments(task.id),
@@ -29,6 +32,8 @@ export const TaskAssignmentsContainer = ({ task }: Props) => {
   if (!data)
     return <ErrorContainer message={"Unable to fetch for assignments"} />;
 
+  const isMeAssigned = !!data.find((a) => a.userId === user?.id);
+
   if (data.length <= 0)
     return (
       <div>
@@ -37,8 +42,12 @@ export const TaskAssignmentsContainer = ({ task }: Props) => {
           Clique no botão abaixo para se associar a esta tarefa!
         </p>
         <div className="mt-2 flex items-center gap-2">
-          <TaskMeAssignmentButton taskId={task.id} refetch={handleRefetch} />
           <TaskAssignmentButton taskId={task.id} refetch={handleRefetch} />
+          <TaskMeAssignmentButton
+            disabled={isMeAssigned}
+            taskId={task.id}
+            refetch={handleRefetch}
+          />
         </div>
       </div>
     );
@@ -75,8 +84,12 @@ export const TaskAssignmentsContainer = ({ task }: Props) => {
         ))}
 
       <div className="mt-2 flex items-center gap-2">
-        <TaskMeAssignmentButton taskId={task.id} refetch={handleRefetch} />
         <TaskAssignmentButton taskId={task.id} refetch={handleRefetch} />
+        <TaskMeAssignmentButton
+          disabled={isMeAssigned}
+          taskId={task.id}
+          refetch={handleRefetch}
+        />
       </div>
     </div>
   );

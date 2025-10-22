@@ -3,20 +3,22 @@ import { ErrorContainer } from "@/components/error-container";
 import { Task } from "@/components/tasks/task";
 import { TasksSkeleton } from "@/components/tasks/tasks-skeleton";
 import { Button } from "@/components/ui/button";
+import { Spinner } from "@/components/ui/spinner";
 import { usePaginationHook } from "@/hooks/use-pagination.hook";
 import { useTasksFilterHook } from "@/hooks/use-tasks-filter.hook";
 import { cn } from "@/lib/utils";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
-import { ArrowRightIcon } from "lucide-react";
+import { ArrowRightIcon, RefreshCcw } from "lucide-react";
 
 export const TasksPage = () => {
-  const { page, limit, Components } = usePaginationHook();
+  const { page, limit, Components, setPage } = usePaginationHook();
 
   const {
     data: tasks,
     isLoading,
     error,
+    refetch,
   } = useQuery({
     queryKey: ["tasks", page, limit],
     queryFn: () => TasksService.getTasksWithPagination(page, limit),
@@ -29,6 +31,29 @@ export const TasksPage = () => {
   if (isLoading) return <TasksSkeleton />;
   if (error) return <ErrorContainer message={error.message} />;
   if (!tasks) return <ErrorContainer message={"Unable to fetch for tasks"} />;
+
+  if (tasks.data.length < 1) {
+    setPage(1);
+
+    return (
+      <div>
+        <h2 className="text-xl font-bold">Nenhuma tarefa encontrada</h2>
+        <p className="text-sm text-muted-foreground">
+          Aparentemente, nenhuma tarefa foi registrada ainda.
+        </p>
+        <div className="mt-2 flex items-center gap-2">
+          <Button onClick={() => refetch()}>
+            Atualizar <RefreshCcw />
+          </Button>
+          <Button variant="secondary" asChild>
+            <Link to="/tasks/create">
+              Criar nova tarefa <ArrowRightIcon />
+            </Link>
+          </Button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-4 ">
