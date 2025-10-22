@@ -1,4 +1,5 @@
 import {
+  Body,
   Controller,
   Get,
   HttpCode,
@@ -21,7 +22,10 @@ import {
   CreateAssignmentResponseSchema,
   GetTaskAssignmentsResponseSchema,
 } from '@/docs/examples/tasks-example';
-import { GetAssignmentParamsDTO } from '@repo/dtos/tasks/assignments';
+import {
+  CreateAssignmentByEmailBodyDTO,
+  GetAssignmentParamsDTO,
+} from '@repo/dtos/tasks/assignments';
 
 @Controller('/tasks/:taskId/assignments')
 @AuthenticatedRoute()
@@ -83,12 +87,48 @@ export class AssignmentsController {
     status: 409,
     description: 'Você já está associado a essa tarefa',
   })
-  async createAssignment(
+  async createMeAssignment(
     @Param() params: GetAssignmentParamsDTO,
     @AuthenticatedUser() user: UserType,
   ) {
     const response = await this.assignmentsService.createAssignment({
       userId: user.id,
+      taskId: params.taskId,
+    });
+
+    return response.assignment;
+  }
+
+  @Post('/')
+  @HttpCode(HttpStatus.CREATED)
+  @ApiOperation({
+    summary: 'Associe um usuário a uma tarefa',
+    description:
+      'Utilize esse endpoint para associar um usuário diretamente a uma tarefa utilizando o email',
+  })
+  @ApiResponse({
+    status: 201,
+    description: 'Associação criada com sucesso',
+    schema: CreateAssignmentResponseSchema,
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Token de acesso invalido',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Tarefa não encontrada',
+  })
+  @ApiResponse({
+    status: 409,
+    description: 'Você já está associado a essa tarefa',
+  })
+  async createAssignment(
+    @Param() params: GetAssignmentParamsDTO,
+    @Body() body: CreateAssignmentByEmailBodyDTO,
+  ) {
+    const response = await this.assignmentsService.createAssignmentByEmail({
+      userEmail: body.email,
       taskId: params.taskId,
     });
 

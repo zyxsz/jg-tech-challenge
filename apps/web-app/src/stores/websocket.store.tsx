@@ -18,7 +18,9 @@ export const webSocketStore = create<WebSocketStore>((set, get) => ({
     if (get().isConnecting) return;
     set({ isConnecting: true });
 
-    const socket = io(import.meta.env.VITE_WEBSOCKET_URL);
+    const socket = io(import.meta.env.VITE_WEBSOCKET_URL, {
+      transports: ["websocket"],
+    });
 
     function onConnect() {
       console.log("Websocket connected, emitting authenticate");

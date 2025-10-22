@@ -5,6 +5,8 @@ import {
   TasksService as TasksServiceMC,
 } from '@repo/constants/services';
 import {
+  CreateAssignmentByEmailMessageInput,
+  CreateAssignmentByEmailMessageOutput,
   CreateAssignmentMessageInput,
   CreateAssignmentMessageOutput,
   GetAssignmentsMessageInput,
@@ -24,6 +26,23 @@ export class AssignmentsService {
       const response = await firstValueFrom(
         this.tasksClient.send(
           TasksServiceMC.Assignments.Messages.CREATE_ASSIGNMENT,
+          input,
+        ),
+      );
+
+      return response;
+    } catch (err) {
+      throw new RpcException(err);
+    }
+  }
+
+  async createAssignmentByEmail(
+    input: CreateAssignmentByEmailMessageInput,
+  ): Promise<CreateAssignmentByEmailMessageOutput> {
+    try {
+      const response = await firstValueFrom(
+        this.tasksClient.send(
+          TasksServiceMC.Assignments.Messages.CREATE_ASSIGNMENT_BY_EMAIL,
           input,
         ),
       );

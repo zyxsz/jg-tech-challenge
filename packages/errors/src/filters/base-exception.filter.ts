@@ -12,8 +12,6 @@ import { throwError } from "rxjs";
 @Catch(BaseError, JsonWebTokenError)
 export class BaseExceptionFilter implements ExceptionFilter {
   catch(exception: BaseError | JsonWebTokenError, host: ArgumentsHost) {
-    console.log("EX:", exception);
-
     if (exception instanceof JsonWebTokenError) {
       return throwError(
         () =>

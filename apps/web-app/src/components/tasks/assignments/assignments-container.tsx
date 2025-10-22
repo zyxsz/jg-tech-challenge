@@ -1,23 +1,27 @@
 import type { Task } from "@/api/interfaces/task.entity";
 import { TasksService } from "@/api/services/tasks.service";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
 import { distanceToNow } from "@/lib/date";
 import { useQuery } from "@tanstack/react-query";
 import { parseISO } from "date-fns";
-import { TaskAssignmentButton } from "./assignment-button";
+import { TaskMeAssignmentButton } from "./me-assignment-button";
 import { AssignmentsSkeleton } from "./assignments-skeleton";
 import { ErrorContainer } from "@/components/error-container";
+import { TaskAssignmentButton } from "./assignment-button";
 
 interface Props {
   task: Task;
 }
 
 export const TaskAssignmentsContainer = ({ task }: Props) => {
-  const { data, isLoading, error } = useQuery({
+  const { data, isLoading, error, refetch } = useQuery({
     queryKey: ["tasks", task.id, "assignments"],
     queryFn: () => TasksService.getTaskAssignments(task.id),
   });
+
+  const handleRefetch = async () => {
+    await refetch();
+  };
 
   if (isLoading) return <AssignmentsSkeleton />;
 
@@ -32,11 +36,12 @@ export const TaskAssignmentsContainer = ({ task }: Props) => {
         <p className="text-sm text-muted-foreground">
           Clique no botão abaixo para se associar a esta tarefa!
         </p>
-        <TaskAssignmentButton className="mt-2" taskId={task.id} />
+        <div className="mt-2 flex items-center gap-2">
+          <TaskMeAssignmentButton taskId={task.id} refetch={handleRefetch} />
+          <TaskAssignmentButton taskId={task.id} refetch={handleRefetch} />
+        </div>
       </div>
     );
-
-  console.log(data);
 
   return (
     <div className="space-y-2">
@@ -69,7 +74,10 @@ export const TaskAssignmentsContainer = ({ task }: Props) => {
           </div>
         ))}
 
-      <TaskAssignmentButton taskId={task.id} />
+      <div className="mt-2 flex items-center gap-2">
+        <TaskMeAssignmentButton taskId={task.id} refetch={handleRefetch} />
+        <TaskAssignmentButton taskId={task.id} refetch={handleRefetch} />
+      </div>
     </div>
   );
 };

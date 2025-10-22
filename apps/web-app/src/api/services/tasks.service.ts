@@ -42,7 +42,7 @@ export class TasksService {
   static async getTaskCommentsWithPagination(
     id: string,
     page: number,
-    limit: number,
+    limit: number
   ) {
     return api
       .get<GetCommentsWithPaginationResponse>(`/tasks/${id}/comments`, {
@@ -65,9 +65,15 @@ export class TasksService {
       .then((response) => response.data);
   }
 
-  static async createAssignment(id: string) {
+  static async createMeAssignment(id: string) {
     return api
       .post<CreateAssignmentResponse>(`/tasks/${id}/assignments/me`)
+      .then((response) => response.data);
+  }
+
+  static async createAssignment(id: string, email: string) {
+    return api
+      .post<CreateAssignmentResponse>(`/tasks/${id}/assignments`, { email })
       .then((response) => response.data);
   }
 }

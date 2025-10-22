@@ -21,6 +21,15 @@ export class UsersTypeORMRepository implements UsersRepository {
     return UsersTypeORMMapper.toEntity(user);
   }
 
+  async findByEmail(email: string): Promise<User> {
+    const user = await this.usersRepository.findOne({ where: { email } });
+
+    if (!user)
+      throw new NotFoundError('Usuário não encontrado no serviço de tarefas');
+
+    return UsersTypeORMMapper.toEntity(user);
+  }
+
   async insert(entity: User): Promise<void> {
     await this.usersRepository.save(UsersTypeORMMapper.toORM(entity));
   }

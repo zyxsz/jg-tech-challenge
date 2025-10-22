@@ -4,13 +4,20 @@ import { Navigate, Outlet } from "@tanstack/react-router";
 import { Fragment } from "react/jsx-runtime";
 import { toast } from "sonner";
 
+let isToastSended = false;
+const sendToastMessage = () => {
+  if (isToastSended) return;
+  isToastSended = true;
+  toast.error(
+    "Você deve se autenticar primeiro para acessar essa página, redirecionando..."
+  );
+};
+
 export const PrivateLayout = () => {
   const isAuthenticated = authStore((state) => state.isAuthenticated);
 
   if (!isAuthenticated) {
-    toast.error(
-      "Você deve se autenticar primeiro para acessar essa página, redirecionando..."
-    );
+    sendToastMessage();
 
     return <Navigate to="/login" />;
   }

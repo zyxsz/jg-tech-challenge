@@ -6,11 +6,14 @@ import { TasksService } from '@repo/constants/services';
 import { NotificationsService } from '@/shared/services/notifications.service';
 import { GetTaskUseCase } from '@/tasks/app/use-cases/get-task.use-case';
 import {
+  CreateAssignmentByEmailMessageInput,
+  CreateAssignmentByEmailMessageOutput,
   CreateAssignmentMessageInput,
   CreateAssignmentMessageOutput,
   GetAssignmentsMessageInput,
   GetAssignmentsMessageOutput,
 } from '@repo/dtos/tasks/assignments';
+import { GetUserByEmailUseCase } from '@/users/app/use-cases/get-user-by-email.use-case';
 
 @Controller()
 export class AssignmentsController {
@@ -32,6 +35,22 @@ export class AssignmentsController {
   @Inject()
   private getTaskUseCase: GetTaskUseCase;
 
+  // Users
+
+  @Inject()
+  private getUserByEmailUseCase: GetUserByEmailUseCase;
+
+  @MessagePattern(TasksService.Assignments.Messages.GET_ASSIGNMENTS)
+  async getAssignments(
+    @Payload() payload: GetAssignmentsMessageInput,
+  ): Promise<GetAssignmentsMessageOutput> {
+    const response = await this.getAssignmentsUseCase.execute({
+      taskId: payload.taskId,
+    });
+
+    return { assignments: response };
+  }
+
   @MessagePattern(TasksService.Assignments.Messages.CREATE_ASSIGNMENT)
   async createAssignment(
     @Payload() payload: CreateAssignmentMessageInput,
@@ -50,14 +69,25 @@ export class AssignmentsController {
     return { assignment: assignment };
   }
 
-  @MessagePattern(TasksService.Assignments.Messages.GET_ASSIGNMENTS)
-  async getAssignments(
-    @Payload() payload: GetAssignmentsMessageInput,
-  ): Promise<GetAssignmentsMessageOutput> {
-    const response = await this.getAssignmentsUseCase.execute({
+  @MessagePattern(TasksService.Assignments.Messages.CREATE_ASSIGNMENT_BY_EMAIL)
+  async createAssignmentByEmail(
+    @Payload() payload: CreateAssignmentByEmailMessageInput,
+  ): Promise<CreateAssignmentByEmailMessageOutput> {
+    const user = await this.getUserByEmailUseCase.execute({
+      email: payload.userEmail,
+    });
+    const task = await this.getTaskUseCase.execute({ taskId: payload.taskId });
+
+    const assignment = await this.createAssignmentUseCase.execute({
       taskId: payload.taskId,
+      userId: user.id,
     });
 
-    return { assignments: response };
+    this.notificationService.emitTaskAssignmentCreated({
+      targetId: user.id,
+      task,
+    });
+
+    return { assignment: assignment };
   }
 }

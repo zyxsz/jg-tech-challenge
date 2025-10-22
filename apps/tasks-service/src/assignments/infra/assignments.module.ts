@@ -6,9 +6,10 @@ import { AssignmentsRepository } from '../domain/repositories/assignments.reposi
 import { GetAssignmentsUseCase } from '../app/use-cases/get-assignments.use-case';
 import { ServicesModule } from '@/shared/infra/services/services.module';
 import { TasksModule } from '@/tasks/infra/tasks.module';
+import { UsersModule } from '@/users/infra/users.module';
 
 @Module({
-  imports: [ServicesModule, DatabaseModule, TasksModule],
+  imports: [ServicesModule, DatabaseModule, TasksModule, UsersModule],
   controllers: [AssignmentsController],
   providers: [
     {

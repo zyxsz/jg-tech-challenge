@@ -25,6 +25,7 @@ export namespace TasksService {
   export namespace Assignments {
     export enum Messages {
       CREATE_ASSIGNMENT = "create-assignment",
+      CREATE_ASSIGNMENT_BY_EMAIL = "create-assignment-by-email",
       GET_ASSIGNMENTS = "get-assignments",
     }
   }

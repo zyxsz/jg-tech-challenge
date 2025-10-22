@@ -1,27 +1,14 @@
-import { AuthService } from "@/api/services/auth.service";
 import { Spinner } from "@/components/ui/spinner";
 import { authStore } from "@/stores/auth.store";
-import { webSocketStore } from "@/stores/websocket.store";
 import { Outlet } from "@tanstack/react-router";
 import { Fragment, useEffect } from "react";
 
 export const RootLayout = () => {
   const isLoading = authStore((state) => state.isLoading);
+  const init = authStore((state) => state.init);
 
   useEffect(() => {
-    async function loadAuthenticatedUser() {
-      const user = await AuthService.getAuthenticatedUser().catch(() => null);
-
-      authStore.setState({
-        isLoading: false,
-        isAuthenticated: !!user,
-        user,
-      });
-
-      webSocketStore.getState().init();
-    }
-
-    loadAuthenticatedUser();
+    init();
   }, []);
 
   if (isLoading)

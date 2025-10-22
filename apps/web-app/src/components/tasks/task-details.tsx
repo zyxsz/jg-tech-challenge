@@ -51,18 +51,11 @@ export const TaskDetails = ({ task }: Props) => {
 
   const UpdateButton = () => {
     return (
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <Tag asChild>
-            <Link to="/tasks/$taskId/update" params={{ taskId: task.id }}>
-              <SquarePenIcon />
-            </Link>
-          </Tag>
-        </TooltipTrigger>
-        <TooltipContent side="bottom" sideOffset={4}>
-          <p>Atualizar tarefa</p>
-        </TooltipContent>
-      </Tooltip>
+      <Tag tooltip={<p>Atualizar tarefa</p>} asChild>
+        <Link to="/tasks/$taskId/update" params={{ taskId: task.id }}>
+          <SquarePenIcon />
+        </Link>
+      </Tag>
     );
   };
 
@@ -129,56 +122,48 @@ export const TaskDetails = ({ task }: Props) => {
 
   const TermTag = () => {
     return (
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <Tag>
-            <CalendarIcon />
-            {distanceToNow(parseISO(task.term))}
-          </Tag>
-        </TooltipTrigger>
-        <TooltipContent side="bottom" sideOffset={4}>
+      <Tag
+        tooltip={
           <p>
             O prazo da tarefa foi definido para{" "}
             <strong>{formatDate(parseISO(task.term))}</strong>
           </p>
-        </TooltipContent>
-      </Tooltip>
+        }
+      >
+        <CalendarIcon />
+        {distanceToNow(parseISO(task.term))}
+      </Tag>
     );
   };
 
   const PriorityTag = () => {
     return (
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <Tag className="ml-2 max-sm:ml-0">
-            <TaskPriorityIcon priority={task.priority} />
-            <TaskPriorityLabel priority={task.priority} />
-          </Tag>
-        </TooltipTrigger>
-        <TooltipContent side="bottom" sideOffset={4}>
+      <Tag
+        tooltip={
           <p>
             <TaskPriorityDescription priority={task.priority} />
           </p>
-        </TooltipContent>
-      </Tooltip>
+        }
+        className="ml-2 max-sm:ml-0"
+      >
+        <TaskPriorityIcon priority={task.priority} />
+        <TaskPriorityLabel priority={task.priority} />
+      </Tag>
     );
   };
 
   const StatusTag = () => {
     return (
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <Tag>
-            <TaskStatusIcon status={task.status} />
-            <TaskStatusLabel status={task.status} />
-          </Tag>
-        </TooltipTrigger>
-        <TooltipContent side="bottom" sideOffset={4}>
+      <Tag
+        tooltip={
           <p>
             <TaskStatusDescription status={task.status} />
           </p>
-        </TooltipContent>
-      </Tooltip>
+        }
+      >
+        <TaskStatusIcon status={task.status} />
+        <TaskStatusLabel status={task.status} />
+      </Tag>
     );
   };
 
@@ -210,19 +195,16 @@ export const TaskDetails = ({ task }: Props) => {
 
           <div className="flex items-center justify-end gap-2">
             {task.relations?.author && (
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Tag>
-                    <UserPlusIcon />
-                  </Tag>
-                </TooltipTrigger>
-                <TooltipContent side="bottom" sideOffset={4}>
+              <Tag
+                tooltip={
                   <p>
                     Tarefa criada por{" "}
                     <strong>{task.relations.author.username}</strong>
                   </p>
-                </TooltipContent>
-              </Tooltip>
+                }
+              >
+                <UserPlusIcon />
+              </Tag>
             )}
 
             <TermTag />

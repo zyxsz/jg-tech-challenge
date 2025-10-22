@@ -1,8 +1,6 @@
 import { DataSource } from 'typeorm';
 import 'reflect-metadata';
 
-console.log(process.env);
-
 const ds = new DataSource({
   type: 'postgres',
   host: process.env.DATABASE_HOST,

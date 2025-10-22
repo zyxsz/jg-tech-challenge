@@ -45,7 +45,6 @@ export class AuthService {
 
       return response;
     } catch (err) {
-      console.log('BLA', err);
       throw new RpcException(err);
     }
   }

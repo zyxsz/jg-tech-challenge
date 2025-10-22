@@ -64,8 +64,6 @@ export class AuthController {
   async loginUser(
     @Payload() data: LoginUserMessageInput,
   ): Promise<LoginUserMessageOutput> {
-    console.log(data);
-
     const user = await this.loginUseCase.execute(data);
     const tokens = await this.generateTokensUseCase.execute({
       userId: user.id,

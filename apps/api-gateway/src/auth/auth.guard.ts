@@ -21,16 +21,12 @@ export class AuthGuard implements CanActivate {
         accessToken: token,
       });
 
-      console.log(tokenResponse.isValid);
-
       if (!tokenResponse.isValid) throw new UnauthorizedException();
       if (!tokenResponse.user) throw new UnauthorizedException();
 
       request['userId'] = tokenResponse.user.id;
       request['user'] = tokenResponse.user;
     } catch (err) {
-      console.log(err);
-
       throw new UnauthorizedException('Token de acesso invalido');
     }
 
