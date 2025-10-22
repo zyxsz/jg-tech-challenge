@@ -149,6 +149,8 @@ architecture-beta
 
 Como a autenticação deve ser integrada utilizando o ApiGateway e outros serviços:
 
+> Obs: todos os diagramas abaixo utilizam o **mermaid**, caso eles não carreguem tente dar um F5.
+
 ```mermaid
 sequenceDiagram
     participant ApiGateway
@@ -162,7 +164,7 @@ sequenceDiagram
 
 #### Serviço de autenticação
 
-Veja as entidades do serviço de tarefas:
+Veja as entidades do serviço de autenticação:
 
 ```mermaid
 erDiagram
@@ -233,7 +235,7 @@ erDiagram
 
 #### Serviço de notificações
 
-Veja as entidades do serviço de tarefas:
+Veja as entidades do serviço de notificações:
 
 ```mermaid
 erDiagram
@@ -313,7 +315,7 @@ npm install
 
 #### Iniciar projeto utilizando o docker
 
-1. Primeiro passo, (instale as dependências)[#instalação].
+1. Primeiro passo, [instale as dependências](#instalação).
 2. Segundo passo, execute o seguinte comando:
 
 ```sh
