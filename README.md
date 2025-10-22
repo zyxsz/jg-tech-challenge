@@ -12,6 +12,7 @@ Construir um Sistema de Gestão de Tarefas Colaborativo com autenticação simpl
 - [Possíveis melhorias](#06-possíveis-melhorias)
 - [Rodar projeto](#07-rodar-projeto)
 - [Imagens](#08-imagens)
+- [Contato](#09-contato)
 - [Outros](#10-outros)
 
 ## 01 Pacotes
@@ -702,4 +703,6 @@ Dentre todas as decisões, acredito que essas tenham sido as principais. Algumas
 - Rate limit aplicado de 10 rotas por segundo.
 - Documentação da API disponível em /api/docs (api-gateway).
 - Utilização do React Query & axios na aplicação web.
-- Aplicação web disponível em temas claro e escura, a depender do padrão do seu navegador.
+- Aplicação web disponível em tema claro e escuro, a depender do padrão do seu navegador.
+
+> Qualquer duvida ou problema para rodar o código [entrar em contato](#09-contato).
