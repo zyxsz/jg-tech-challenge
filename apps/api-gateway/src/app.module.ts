@@ -3,11 +3,19 @@ import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
 import { TasksModule } from './tasks/tasks.module';
 import { CommentsModule } from './tasks/comments/comments.module';
-import { AssignmentsController } from './tasks/assignments/assignments.controller';
 import { AssignmentsModule } from './tasks/assignments/assignments.module';
+import { ThrottlerModule } from '@nestjs/throttler';
 
 @Module({
   imports: [
+    ThrottlerModule.forRoot({
+      throttlers: [
+        {
+          ttl: 60000,
+          limit: 10,
+        },
+      ],
+    }),
     ConfigModule.forRoot({
       isGlobal: true,
     }),
