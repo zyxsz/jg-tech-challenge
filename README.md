@@ -121,9 +121,12 @@ Algumas decisões que tomei mediante o projeto, o porquê delas e trade-offs.
     - Algo que valorizo bastante em páginas que contêm informações de paginação/filtros é a persistência desses estados utilizando search params.
     - Trade-offs: só vantagens, rs.
 
-Dentre todas as decisões, acredito que essas tenham sido as principais. Algumas, como a utilização de pacotes para seguir princípios como o DRY, já foram apresentadas acima.
+- Utilização de markdown.
+  - Optei por utilizar markdown para o conteúdo das tarefas, trazendo assim uma gama de opções na criação de tarefas.
+  - Utilizei o Monaco Editor como campo nos formulários de criação e atualização de tarefas, com o objetivo de auxiliar na criação de textos markdown.
+  - **Trade-offs**: O Monaco Editor é uma biblioteca um tanto quanto pesada.
 
-> Outra decisãozinha, só é possível você mesmo se associar a uma tarefa. (seja feliz e tenha autonomia rs)
+Dentre todas as decisões, acredito que essas tenham sido as principais. Algumas, como a utilização de pacotes para seguir princípios como o DRY, já foram apresentadas acima.
 
 ## 04 Diagramas
 
@@ -337,7 +340,15 @@ npm run dev
 docker compose -f docker-compose.yml --env-file .env.example up
 ```
 
-> Obs: acabei tendo que utilizar o modo de rede dos containers como **HOST** por conta de um bug no WSL.
+#### Iniciar projeto utilizando o docker com modo de rede HOST
+
+1. Primeiro passo, instale as dependências.
+2. Segundo passo, atualize o arquivo **.env.example** substituindo os campos **DATABASE_HOST** e **RMQ_HOST** para **localhost**.
+3. Terceiro passo, execute o seguinte comando:
+
+```sh
+docker compose -f docker-compose.host.yml --env-file .env.example up
+```
 
 <!--# Teste técnico JG
 
