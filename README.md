@@ -361,6 +361,10 @@ docker compose -f docker-compose.host.yml --env-file .env.example up
 ![Comentários](https://i.imgur.com/TaFgwSt.png)
 ![Tarefas white](https://i.imgur.com/YyQkMbI.png)
 
+## 09 Contato
+
+**Email\***: [lucasjsilva2006bg@gmail.com](mailto:lucasjsilva2006bg@gmail.com)
+
 <!--# Teste técnico JG
 
 Construir um Sistema de Gestão de Tarefas Colaborativo com autenticação simples, CRUD de tarefas, comentários, atribuição e notificações. O sistema deve rodar em monorepo e expor uma UI limpa, responsiva e usável. O back‑end deve ser composto por microsserviços Nest que se comunicam via RabbitMQ; o acesso HTTP externo passa por um API Gateway (Nest HTTP).
